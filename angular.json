@@ -121,6 +121,46 @@
           }
         }
       }
+    },
+    "kypo2-trainings-visualization-overview-lib": {
+      "root": "projects/kypo2-trainings-visualization-overview-lib",
+      "sourceRoot": "projects/kypo2-trainings-visualization-overview-lib/src",
+      "projectType": "library",
+      "prefix": "kypo2-viz-overview",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/kypo2-trainings-visualization-overview-lib/tsconfig.lib.json",
+            "project": "projects/kypo2-trainings-visualization-overview-lib/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/kypo2-trainings-visualization-overview-lib/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/kypo2-trainings-visualization-overview-lib/src/test.ts",
+            "tsConfig": "projects/kypo2-trainings-visualization-overview-lib/tsconfig.spec.json",
+            "karmaConfig": "projects/kypo2-trainings-visualization-overview-lib/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/kypo2-trainings-visualization-overview-lib/tsconfig.lib.json",
+              "projects/kypo2-trainings-visualization-overview-lib/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "kypo2-trainings-visualization-overview"

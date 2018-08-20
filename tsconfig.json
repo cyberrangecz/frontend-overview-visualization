@@ -15,6 +15,14 @@
     "lib": [
       "es2017",
       "dom"
-    ]
+    ],
+    "paths": {
+      "kypo2-trainings-visualization-overview-lib": [
+        "dist/kypo2-trainings-visualization-overview-lib"
+      ],
+      "kypo2-trainings-visualization-overview-lib/*": [
+        "dist/kypo2-trainings-visualization-overview-lib/*"
+      ]
+    }
   }
 }
