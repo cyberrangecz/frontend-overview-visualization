@@ -3,7 +3,11 @@
 (outputSelectedPlayerId)="selectPlayer($event)"
 [inputSelectedPlayerId]="selectedPlayerId"
 [feedbackLearnerId]="feedbackLearnerId"
->
-</kypo2-viz-overview-final>
+></kypo2-viz-overview-final>
 
-<kypo2-viz-overview-levels></kypo2-viz-overview-levels>
+<kypo2-viz-overview-levels
+[data]="gameData"
+(outputSelectedPlayerId)="selectPlayer($event)"
+[inputSelectedPlayerId]="selectedPlayerId"
+[feedbackLearnerId]="feedbackLearnerId">
+></kypo2-viz-overview-levels>
