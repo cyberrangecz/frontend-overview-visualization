@@ -5,3 +5,5 @@
 export * from './lib/kypo2-trainings-visualization-overview-lib.service';
 export * from './lib/kypo2-trainings-visualization-overview-lib.component';
 export * from './lib/kypo2-trainings-visualization-overview-lib.module';
+export * from './lib/components/clustering/clustering.component';
+export * from './lib/components/timeline/timeline.component';
