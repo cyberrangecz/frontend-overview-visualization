@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { GAME_INFORMATION } from './mocks/information.mock';
+import { EVENTS } from './mocks/events.mock';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app';
+  mockFeedbackLearnerId = 9003575;
+  mockGameData = {information: GAME_INFORMATION, events: EVENTS};
 }
