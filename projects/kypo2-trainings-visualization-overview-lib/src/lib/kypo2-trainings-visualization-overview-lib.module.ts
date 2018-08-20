@@ -7,6 +7,10 @@ import { FinalComponent } from './components/clustering/final/final.component';
 import { LevelsComponent } from './components/clustering/levels/levels.component';
 import { LineComponent } from './components/timeline/line/line.component';
 import { TableComponent } from './components/timeline/table/table.component';
+import { DataProcessor } from './services/data-processor.service';
+import { DataService } from './services/data.service';
+import { TimeService } from './services/time.service';
+import { ScoreService } from './services/score.service';
 
 @NgModule({
   imports: [
@@ -17,6 +21,12 @@ import { TableComponent } from './components/timeline/table/table.component';
     TimelineComponent,
     ClusteringComponent
   ],
-  providers: [D3Service]
+  providers: [
+    D3Service,
+    DataProcessor,
+    DataService,
+    ScoreService,
+    TimeService
+  ]
 })
 export class Kypo2TrainingsVisualizationOverviewLibModule { }
