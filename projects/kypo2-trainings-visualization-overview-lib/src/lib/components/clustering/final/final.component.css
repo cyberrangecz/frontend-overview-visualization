@@ -1,0 +1,24 @@
+
+:host ::ng-deep .score-final-bar-max {
+    fill: #F0F0F0;
+  }
+  
+  :host ::ng-deep .score-final-bar-avg {
+    fill: #D6D6D6;
+  }
+  
+  ol {
+    counter-reset: item;
+  }
+  
+  ol > li {
+    counter-increment: item;
+  }
+  
+  ol ol > li {
+    display: block;
+  }
+  
+  ol ol > li:before {
+    content: counters(item, ".") ". ";
+  }
