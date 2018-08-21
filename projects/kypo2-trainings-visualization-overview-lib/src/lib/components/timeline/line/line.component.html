@@ -20,7 +20,7 @@
   </div>
   <div class="pull-left" [ngStyle]="{'margin-top.px': svgMarginConfig.top}">
 
-      <!-- <app-score-table *ngIf="data"
+      <kypo2-viz-overview-table *ngIf="data"
                        [data]="data"
                        [players]="players"
                        [playerColorScale]="playerColorScale"
@@ -29,7 +29,7 @@
                        (rowClicked)="onRowClicked($event)"
                        (rowMouseover)="highlightLine($event)"
                        (rowMouseout)="unhighlightLine($event)">
-      </app-score-table> -->
+      </kypo2-viz-overview-table>
 
       <hr>
       <div class="filtersWrapper">
