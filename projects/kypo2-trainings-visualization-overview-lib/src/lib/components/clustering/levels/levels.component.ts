@@ -12,7 +12,7 @@ import { ScaleLinear, ScaleBand, ContainerElement } from 'd3-ng2-service/src/bun
   templateUrl: './levels.component.html',
   styleUrls: ['./levels.component.css']
 })
-export class LevelsComponent implements OnInit {
+export class LevelsComponent implements OnInit, OnChanges {
 
   @Input() data: GameData;
   @Input() inputSelectedPlayerId: number;

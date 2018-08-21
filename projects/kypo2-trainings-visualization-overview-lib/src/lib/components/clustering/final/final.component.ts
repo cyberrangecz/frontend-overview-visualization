@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, OnChanges } from '@angular/core';
 import { GameData } from '../../../shared/interfaces/game-data';
 import { D3, ScaleLinear, D3Service, ContainerElement } from 'd3-ng2-service';
 import { DataProcessor } from '../../../services/data-processor.service';
@@ -11,7 +11,7 @@ import { PlayerVisualizationData } from '../interfaces/player-visualization-data
   templateUrl: './final.component.html',
   styleUrls: ['./final.component.css']
 })
-export class FinalComponent implements OnInit {
+export class FinalComponent implements OnInit, OnChanges {
 
   @Input() data: GameData;
   @Input() inputSelectedPlayerId: number;
