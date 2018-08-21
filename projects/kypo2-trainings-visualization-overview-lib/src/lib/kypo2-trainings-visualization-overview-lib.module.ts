@@ -13,6 +13,7 @@ import { TimeService } from './services/time.service';
 import { ScoreService } from './services/score.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { FILTERS_ARRAY } from './components/timeline/line/filters/filters';
 
 @NgModule({
   imports: [

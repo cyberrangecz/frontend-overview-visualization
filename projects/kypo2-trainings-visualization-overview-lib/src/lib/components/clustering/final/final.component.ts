@@ -89,7 +89,7 @@ export class FinalComponent implements OnInit, OnChanges {
   /**
    * 
    * @param barsGroup D3 selection of group holding both bars
-   * @param {BarVisualizationData} data holding maximum time
+   * @param BarVisualizationData data holding maximum time
    */
   drawMaximumTimeBar(barsGroup, data: BarVisualizationData) {
     barsGroup.append('rect')
@@ -103,7 +103,7 @@ export class FinalComponent implements OnInit, OnChanges {
   /**
    * 
    * @param barsGroup D3 selection of group holding both bars
-   * @param {BarVisualizationData} data holding average time
+   * @param BarVisualizationData data holding average time
    */
   drawAverageTimeBar(barsGroup, data: BarVisualizationData) {
     barsGroup.append('rect')
@@ -675,14 +675,14 @@ export class FinalComponent implements OnInit, OnChanges {
   }
 
   /**
-   * @returns {PlayerVisualizationData} processed players' data for visualization
+   * @returns PlayerVisualizationData processed players' data for visualization
    */
   getPlayersData(): PlayerVisualizationData[] {
     return this.visualizationService.getScoreFinalPlayersData(this.data);
   }
 
   /**
-   * @returns {BarVisualizationData} processed data for visualizing bars
+   * @returns BarVisualizationData processed data for visualizing bars
    */
   getBarsData(): BarVisualizationData {
     return this.visualizationService.getScoreFinalBarsData(this.data);

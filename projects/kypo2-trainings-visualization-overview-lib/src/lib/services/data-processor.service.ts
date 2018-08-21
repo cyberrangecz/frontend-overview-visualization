@@ -58,7 +58,7 @@ export class DataProcessor {
 
   getScoreLevelMaxTime(gameData: GameData): number {
     const maxTimes = this.timeService.getEachLevelMaxTimes(gameData.events);
-    const maxTimesArray = Object.values(maxTimes).map(string => +string);
+    const maxTimesArray = <any>Object.values(maxTimes).map(string => +string);
     return Math.max(...maxTimesArray);
   }
 

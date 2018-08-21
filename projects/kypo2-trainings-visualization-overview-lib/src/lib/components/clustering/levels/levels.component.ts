@@ -402,7 +402,7 @@ export class LevelsComponent implements OnInit, OnChanges {
 
   /**
    * 
-   * @param {BarVisualizationData} barData
+   * @param BarVisualizationData barData
    */
   onBarMousemove(barData: BarVisualizationData) {
     const d3 = this.d3;
@@ -505,7 +505,7 @@ export class LevelsComponent implements OnInit, OnChanges {
 
   /**
    * Highlights player, shows tooltip and crosshair on hover
-   * @param {PlayerVisualizationData} player
+   * @param PlayerVisualizationData player
    */
   onPlayerPointMouseover(player: PlayerVisualizationData) {
     this.hideTooltip(); // Prevents showing multiple tooltips
@@ -536,7 +536,7 @@ export class LevelsComponent implements OnInit, OnChanges {
 
   /**
    * 
-   * @param {PlayerVisualizationData} player data held by <circle> element in __data__ property
+   * @param PlayerVisualizationData player data held by <circle> element in __data__ property
    */
   showTooltip(player: PlayerVisualizationData) {
     const playerTooltip = this.d3.select('body').append('div')

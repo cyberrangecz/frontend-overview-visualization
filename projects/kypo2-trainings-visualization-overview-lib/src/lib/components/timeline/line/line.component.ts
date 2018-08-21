@@ -952,7 +952,7 @@ export class LineComponent implements OnInit {
   /**
    * Parses the event message and returns our required message.
    * @param event
-   * @returns {any}
+   * @returns any
    */
   getEventMessage(event) {
     const split = event.event.toUpperCase().split(' ');
@@ -1008,7 +1008,6 @@ export class LineComponent implements OnInit {
 
   /**
    * Calculate new ticks when zooming.
-   * @param k
    */
   redrawAxes(k) {
     this.xAxis.tickArguments([this.d3.timeMinute.every(30 / Math.round(k))]);
@@ -1038,7 +1037,7 @@ export class LineComponent implements OnInit {
 
   /**
    *
-   * @returns {ProgressPlayer[]} players' data for visualization.
+   * @returns ProgressPlayer[] players' data for visualization.
    */
   getPlayersWithEvents() {
     return this.visualizationService.getScoreProgressPlayersWithEvents(this.data);
@@ -1046,7 +1045,7 @@ export class LineComponent implements OnInit {
 
   /**
    *
-   * @returns {number} longest game time.
+   * @returns number longest game time.
    */
   getMaximumTime() {
     return this.visualizationService.getScoreFinalMaxTime(this.data);
@@ -1054,7 +1053,7 @@ export class LineComponent implements OnInit {
 
   /**
    *
-   * @returns {number} highest achievable score.
+   * @returns number highest achievable score.
    */
   getMaximumScore() {
     return this.visualizationService.getScoreFinalGameMaxScore(this.data);
@@ -1072,7 +1071,6 @@ export class LineComponent implements OnInit {
 
   /**
    * Draws or removes player from the plane when row in score table clicked.
-   * @param player
    */
   onRowClicked(player) {
     if (player.checked) {
@@ -1081,6 +1079,4 @@ export class LineComponent implements OnInit {
       this.removePlayer(player.id);
     }
   }
-
-
 }
