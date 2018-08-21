@@ -20,6 +20,7 @@ export class LineComponent implements OnInit {
 
   @Input() data: GameData;
   @Input() feedbackLearnerId: number;
+  @Input() size: {width: number; height: number};
 
   players: ProgressPlayer[] = [];
 
@@ -116,8 +117,8 @@ export class LineComponent implements OnInit {
     const container = this.d3.select('#score-progress-container').html('');
     this.svg = container.append('svg')
       .attr('class', 'score-progress-svg')
-      .attr('width', SVG_CONFIG.width + SVG_MARGIN_CONFIG.left + SVG_MARGIN_CONFIG.right)
-      .attr('height', SVG_CONFIG.height + SVG_MARGIN_CONFIG.top + SVG_MARGIN_CONFIG.bottom)
+      .attr('width', this.size.width + SVG_MARGIN_CONFIG.left + SVG_MARGIN_CONFIG.right)
+      .attr('height', this.size.height + SVG_MARGIN_CONFIG.top + SVG_MARGIN_CONFIG.bottom)
       .append('g')
       .attr('transform', 'translate(' + SVG_MARGIN_CONFIG.left + ',' + SVG_MARGIN_CONFIG.top + ')');
   }
@@ -141,14 +142,14 @@ export class LineComponent implements OnInit {
   initializeZoomAndBrush() {
     this.zoom = this.d3.zoom()
       .scaleExtent([1, Infinity])
-      .translateExtent([[0, 0], [SVG_CONFIG.width, SVG_CONFIG.height]])
-      .extent([[0, 0], [SVG_CONFIG.width, SVG_CONFIG.height]])
+      .translateExtent([[0, 0], [this.size.width, this.size.height]])
+      .extent([[0, 0], [this.size.width, this.size.height]])
       .on('start', this.onZoomStart.bind(this))
       .on('zoom', this.onZoom.bind(this))
       .on('end', this.onZoomEnd.bind(this));
 
     this.brush = this.d3.brushX()
-      .extent([[0, 0], [SVG_CONFIG.width, 70]])
+      .extent([[0, 0], [this.size.width, 70]])
       .on('start', this.onBrushStart.bind(this))
       .on('brush', this.onBrush.bind(this))
       .on('end', this.onBrushEnd.bind(this));
@@ -223,7 +224,7 @@ export class LineComponent implements OnInit {
     this.timeAxisScale.domain([scaleDomainStart, scaleDomainEnd]);
 
     const transform = this.d3.zoomIdentity
-      .scale(SVG_CONFIG.width / (selection[1] - selection[0]))
+      .scale(this.size.width / (selection[1] - selection[0]))
       .translate(-selection[0], 0);
 
     this.redrawAxes(transform.k);
@@ -250,21 +251,21 @@ export class LineComponent implements OnInit {
     const scaleDomainStart = new Date(0, 0, 0, 0, 0, 0, 0);
     const scaleDomainEnd = new Date(0, 0, 0, 0, 0, this.getMaximumTime(), 0);
     this.timeAxisScale = this.d3.scaleTime()
-      .range([0, SVG_CONFIG.width])
+      .range([0, this.size.width])
       .domain([scaleDomainStart, scaleDomainEnd]);
 
     this.scoreScale = this.d3.scaleLinear()
-      .range([SVG_CONFIG.height, 0])
+      .range([this.size.height, 0])
       .domain([0, this.getMaximumScore()]);
 
     this.scoreScale.clamp(true);
 
     this.timeScale = this.d3.scaleLinear()
-      .range([0, SVG_CONFIG.width])
+      .range([0, this.size.width])
       .domain([0, this.getMaximumTime()]);
 
     this.contextTimeScale = this.d3.scaleLinear()
-      .range([0, SVG_CONFIG.width])
+      .range([0, this.size.width])
       .domain([0, this.getMaximumTime()]);
 
     this.contextScoreScale = this.d3.scaleLinear()
@@ -300,7 +301,7 @@ export class LineComponent implements OnInit {
       .attr('x', level => this.timeScale(level.offset))
       .attr('y', 0)
       .attr('width', level => this.timeScale(level.time))
-      .attr('height', SVG_CONFIG.height)
+      .attr('height', this.size.height)
       .style('fill', level => colorScale(level.number.toString()))
       .style('opacity', 1);
   }
@@ -409,7 +410,7 @@ export class LineComponent implements OnInit {
       .attr('d', (score: number) => {
         const x1 = 0;
         const y1 = this.scoreScale(score);
-        const x2 = SVG_CONFIG.width;
+        const x2 = this.size.width;
         const y2 = y1;
         return lineGenerator([[x1, y1], [x2, y2]]);
       });
@@ -421,8 +422,8 @@ export class LineComponent implements OnInit {
   addZoomableArea() {
     this.zoomableArea = this.svg.append('rect')
       .attr('class', 'score-progress-zoom')
-      .attr('width', SVG_CONFIG.width)
-      .attr('height', SVG_CONFIG.height);
+      .attr('width', this.size.width)
+      .attr('height', this.size.height);
   }
 
   /**
@@ -433,8 +434,8 @@ export class LineComponent implements OnInit {
       .append("svg:clipPath")
       .attr("id", "clip")
       .append("svg:rect")
-      .attr("width", SVG_CONFIG.width + 20)
-      .attr("height", SVG_CONFIG.height + 20)
+      .attr("width", this.size.width + 20)
+      .attr("height", this.size.height + 20)
       .attr("x", -7)
       .attr("y", -7);
 
@@ -442,8 +443,8 @@ export class LineComponent implements OnInit {
       .append("svg:clipPath")
       .attr("id", "lineClip")
       .append("svg:rect")
-      .attr("width", SVG_CONFIG.width + 5)
-      .attr("height", SVG_CONFIG.height)
+      .attr("width", this.size.width + 5)
+      .attr("height", this.size.height)
       .attr("x", 3)
       .attr("y", 0);
   }
@@ -497,7 +498,7 @@ export class LineComponent implements OnInit {
   buildContextAndReturn() {
     const context = this.svg.append('g')
       .attr('class', 'context')
-      .attr('transform', `translate(${AXES_CONFIG.xAxis.position.x}, ${SVG_CONFIG.height + CONTEXT_CONFIG.height})`);
+      .attr('transform', `translate(${AXES_CONFIG.xAxis.position.x}, ${this.size.height + CONTEXT_CONFIG.height})`);
 
     context.append('g')
       .attr('class', 'score-progress-context-x-axis')
@@ -587,11 +588,11 @@ export class LineComponent implements OnInit {
       .attr('x1', +x)
       .attr('y1', -10)
       .attr('x2', +x)
-      .attr('y2', SVG_CONFIG.height + 35);
+      .attr('y2', this.size.height + 35);
 
     focusLabels.select('#focus-label-time')
       .attr('x', +x + 10)
-      .attr('y', SVG_CONFIG.height + 15)
+      .attr('y', this.size.height + 15)
       .text(time);
   }
 

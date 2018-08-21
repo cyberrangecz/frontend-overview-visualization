@@ -10,6 +10,7 @@ export class TimelineComponent implements OnInit {
 
   @Input() feedbackLearnerId: number;
   @Input() gameData: GameData;
+  @Input() size: {width: number; height: number}
 
   constructor() { }
 

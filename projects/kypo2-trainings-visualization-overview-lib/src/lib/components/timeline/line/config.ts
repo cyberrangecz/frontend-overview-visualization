@@ -11,7 +11,7 @@ export const SVG_CONFIG: SvgConfig = {
 };
 export const SVG_MARGIN_CONFIG: SvgMarginConfig = {
     top: 70,
-    right: 150,
+    right: 50,
     bottom: 200,
     left: 160
 };
