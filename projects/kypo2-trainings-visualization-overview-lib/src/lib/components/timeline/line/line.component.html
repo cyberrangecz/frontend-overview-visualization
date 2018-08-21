@@ -1,3 +1,65 @@
-<p>
-  line works!
-</p>
+<!-- Stripe pattern -->
+<svg style="position: absolute">
+  <defs>
+      <pattern id="stripe" patternTransform="rotate(90)" patternUnits="userSpaceOnUse" width="40" height="20">
+          <line x1="10" y1="0" x2="30" y2="20" />
+          <line x1="-10" y1="0" x2="10" y2="20" />
+          <line x1="30" y1="0" x2="50" y2="20" />
+      </pattern>
+      <mask id="mask">
+          <rect [attr.height.px]="svgConfig.height" [attr.width.px]="svgConfig.width" style="fill: url(#stripe)" />
+      </mask>
+  </defs>
+</svg>
+
+
+<div [ngStyle]="{'height.px': (svgConfig.height + svgMarginConfig.top + svgMarginConfig.bottom)}">
+  <div class="pull-left">
+      <div id="score-progress-container">
+      </div>
+  </div>
+  <div class="pull-left" [ngStyle]="{'margin-top.px': svgMarginConfig.top}">
+
+      <!-- <app-score-table *ngIf="data"
+                       [data]="data"
+                       [players]="players"
+                       [playerColorScale]="playerColorScale"
+                       [filters]="filters"
+                       [feedbackLearnerId]="feedbackLearnerId"
+                       (rowClicked)="onRowClicked($event)"
+                       (rowMouseover)="highlightLine($event)"
+                       (rowMouseout)="unhighlightLine($event)">
+      </app-score-table> -->
+
+      <hr>
+      <div class="filtersWrapper">
+          <h3>Event filters</h3>
+          <form style="margin-left: 10px">
+              <div class="checkbox">
+                  <label>
+                      <input *ngIf="filters.correctFlagFilter" type="checkbox" name="correctFlagFilter" id="correctFlagFilter" [(ngModel)]="filters.correctFlagFilter.checked"
+                          (change)="onFilterChange()"> Correct flags
+                  </label>
+              </div>
+              <div class="checkbox">
+                  <label>
+                      <input *ngIf="filters.wrongFlagFilter" type="checkbox" name="wrongFlagFilter" id="wrongFlagFilter" [(ngModel)]="filters.wrongFlagFilter.checked"
+                          (change)="onFilterChange()"> Wrong flags
+                  </label>
+              </div>
+              <div class="checkbox">
+                  <label>
+                      <input *ngIf="filters.hintFilter" type="checkbox" name="hintFilter" id="hintFilter" [(ngModel)]="filters.hintFilter.checked"
+                          (change)="onFilterChange()"> Hints taken
+                  </label>
+              </div>
+              <div class="checkbox">
+                  <label>
+                      <input *ngIf="filters.skipFilter" type="checkbox" name="skipFilter" id="skipFilter" [(ngModel)]="filters.skipFilter.checked"
+                          (change)="onFilterChange()"> Level skips
+                  </label>
+              </div>
+          </form>
+      </div>
+  </div>
+</div>

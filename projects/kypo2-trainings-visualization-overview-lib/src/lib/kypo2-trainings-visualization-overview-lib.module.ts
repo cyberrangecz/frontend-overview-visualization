@@ -11,11 +11,23 @@ import { DataProcessor } from './services/data-processor.service';
 import { DataService } from './services/data.service';
 import { TimeService } from './services/time.service';
 import { ScoreService } from './services/score.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
+    CommonModule,
+    FormsModule
   ],
-  declarations: [Kypo2TrainingsVisualizationOverviewLibComponent, TimelineComponent, ClusteringComponent, FinalComponent, LevelsComponent, LineComponent, TableComponent],
+  declarations: [
+    Kypo2TrainingsVisualizationOverviewLibComponent, 
+    TimelineComponent, 
+    ClusteringComponent, 
+    FinalComponent, 
+    LevelsComponent, 
+    LineComponent, 
+    TableComponent
+  ],
   exports: [
     Kypo2TrainingsVisualizationOverviewLibComponent,
     TimelineComponent,
