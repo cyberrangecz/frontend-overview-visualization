@@ -97,7 +97,8 @@ export class FinalComponent implements OnInit, OnChanges {
       .attr('x', 0)
       .attr('y', 0)
       .attr('height', BAR_CONFIG.height)
-      .attr('width', this.xScale(data.maxTime));
+      .attr('width', this.xScale(data.maxTime))
+      .attr('fill', BAR_CONFIG.fillColorBright);
   }
 
   /**
@@ -111,7 +112,8 @@ export class FinalComponent implements OnInit, OnChanges {
       .attr('x', 0)
       .attr('y', 0)
       .attr('height', BAR_CONFIG.height)
-      .attr('width', this.xScale(data.avgTime));
+      .attr('width', this.xScale(data.avgTime))
+      .attr('fill', BAR_CONFIG.fillColorDark);
   }
 
   /**
