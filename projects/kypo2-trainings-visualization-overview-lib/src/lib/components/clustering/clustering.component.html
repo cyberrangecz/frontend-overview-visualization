@@ -1,13 +1,15 @@
-<kypo2-viz-overview-final
-[data]="gameData"
-(outputSelectedPlayerId)="selectPlayer($event)"
-[inputSelectedPlayerId]="selectedPlayerId"
-[feedbackLearnerId]="feedbackLearnerId"
-></kypo2-viz-overview-final>
-
-<kypo2-viz-overview-levels
-[data]="gameData"
-(outputSelectedPlayerId)="selectPlayer($event)"
-[inputSelectedPlayerId]="selectedPlayerId"
-[feedbackLearnerId]="feedbackLearnerId">
-></kypo2-viz-overview-levels>
+<div class="overview-visualization-container">
+    <kypo2-viz-overview-final
+        [data]="gameData"
+        (outputSelectedPlayerId)="selectPlayer($event)"
+        [inputSelectedPlayerId]="selectedPlayerId"
+        [feedbackLearnerId]="feedbackLearnerId"
+    ></kypo2-viz-overview-final>
+    
+    <kypo2-viz-overview-levels
+        [data]="gameData"
+        (outputSelectedPlayerId)="selectPlayer($event)"
+        [inputSelectedPlayerId]="selectedPlayerId"
+        [feedbackLearnerId]="feedbackLearnerId">
+    ></kypo2-viz-overview-levels>
+</div>
