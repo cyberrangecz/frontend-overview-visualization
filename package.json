@@ -7,7 +7,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "lib-build": "ng build --prod kypo2-trainings-visualization-overview-lib && cd ./dist/kypo2-trainings-visualization-overview-lib && npm pack"
   },
   "private": true,
   "dependencies": {

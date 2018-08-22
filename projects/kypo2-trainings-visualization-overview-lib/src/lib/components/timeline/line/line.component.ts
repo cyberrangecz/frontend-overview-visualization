@@ -102,7 +102,7 @@ export class LineComponent implements OnInit {
    * Builds svg, initializes line generator, zoom & behavior and scales
    */
   setup() {
-    this.svgConfig = SVG_CONFIG;
+    this.svgConfig = {width: this.size.width, height: this.size.height};
     this.svgMarginConfig = SVG_MARGIN_CONFIG;
     this.buildSVG();
     this.initializeLineGenerators();
@@ -328,7 +328,7 @@ export class LineComponent implements OnInit {
 
     this.svg.append('g')
       .attr('class', 'score-progress x-axis')
-      .attr('transform', `translate(${AXES_CONFIG.xAxis.position.x}, ${AXES_CONFIG.xAxis.position.y})`)
+      .attr('transform', `translate(${AXES_CONFIG.xAxis.position.x}, ${this.size.height + 20})`)
       .call(this.xAxis);
   }
 
