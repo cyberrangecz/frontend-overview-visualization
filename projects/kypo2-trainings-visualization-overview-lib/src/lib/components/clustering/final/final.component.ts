@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, OnChanges } from '@angular/core';
 import { GameData } from '../../../shared/interfaces/game-data';
 import { D3, ScaleLinear, D3Service, ContainerElement } from 'd3-ng2-service';
 import { DataProcessor } from '../../../services/data-processor.service';
@@ -11,7 +11,7 @@ import { PlayerVisualizationData } from '../interfaces/player-visualization-data
   templateUrl: './final.component.html',
   styleUrls: ['./final.component.css']
 })
-export class FinalComponent implements OnInit {
+export class FinalComponent implements OnInit, OnChanges {
 
   @Input() data: GameData;
   @Input() inputSelectedPlayerId: number;
@@ -89,7 +89,7 @@ export class FinalComponent implements OnInit {
   /**
    * 
    * @param barsGroup D3 selection of group holding both bars
-   * @param {BarVisualizationData} data holding maximum time
+   * @param BarVisualizationData data holding maximum time
    */
   drawMaximumTimeBar(barsGroup, data: BarVisualizationData) {
     barsGroup.append('rect')
@@ -97,13 +97,14 @@ export class FinalComponent implements OnInit {
       .attr('x', 0)
       .attr('y', 0)
       .attr('height', BAR_CONFIG.height)
-      .attr('width', this.xScale(data.maxTime));
+      .attr('width', this.xScale(data.maxTime))
+      .attr('fill', BAR_CONFIG.fillColorBright);
   }
 
   /**
    * 
    * @param barsGroup D3 selection of group holding both bars
-   * @param {BarVisualizationData} data holding average time
+   * @param BarVisualizationData data holding average time
    */
   drawAverageTimeBar(barsGroup, data: BarVisualizationData) {
     barsGroup.append('rect')
@@ -111,7 +112,8 @@ export class FinalComponent implements OnInit {
       .attr('x', 0)
       .attr('y', 0)
       .attr('height', BAR_CONFIG.height)
-      .attr('width', this.xScale(data.avgTime));
+      .attr('width', this.xScale(data.avgTime))
+      .attr('fill', BAR_CONFIG.fillColorDark);
   }
 
   /**
@@ -675,14 +677,14 @@ export class FinalComponent implements OnInit {
   }
 
   /**
-   * @returns {PlayerVisualizationData} processed players' data for visualization
+   * @returns PlayerVisualizationData processed players' data for visualization
    */
   getPlayersData(): PlayerVisualizationData[] {
     return this.visualizationService.getScoreFinalPlayersData(this.data);
   }
 
   /**
-   * @returns {BarVisualizationData} processed data for visualizing bars
+   * @returns BarVisualizationData processed data for visualizing bars
    */
   getBarsData(): BarVisualizationData {
     return this.visualizationService.getScoreFinalBarsData(this.data);

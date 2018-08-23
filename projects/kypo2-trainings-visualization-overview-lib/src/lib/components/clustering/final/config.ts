@@ -19,7 +19,9 @@ export const SVG_MARGIN_CONFIG: SvgMarginConfig = {
 
 export const BAR_CONFIG: BarConfig = {
     width: SVG_CONFIG.width * 0.7,
-    height: SVG_CONFIG.height
+    height: SVG_CONFIG.height,
+    fillColorDark: "#D6D6D6",
+    fillColorBright: "#F0F0F0" 
 };
 
 export const PLAYER_POINT_CONFIG: PlayerPointConfig = {

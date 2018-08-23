@@ -20,7 +20,7 @@ export class TimeService {
     const times = this.getEachLevelPlayerTime(events);
     const maximumTimesOfEachLevel = {};
     times.forEach((currentLevelTimes, i) => {
-      maximumTimesOfEachLevel[i + 1] = +this.d3.max(Object.values<number>(currentLevelTimes));
+      maximumTimesOfEachLevel[i + 1] = +this.d3.max(<any>Object.values<number>(currentLevelTimes));
     });
     return maximumTimesOfEachLevel;
   }
@@ -30,7 +30,7 @@ export class TimeService {
     const times = this.getEachLevelPlayerTime(events);
     const averageTimesOfEachLevel = {};
     times.forEach((currentLevelTimes, i) => {
-      averageTimesOfEachLevel[i+1] = +this.d3.mean(Object.values<number>(currentLevelTimes));
+      averageTimesOfEachLevel[i+1] = +this.d3.mean(<any>Object.values<number>(currentLevelTimes));
     });
     return averageTimesOfEachLevel;
   }
@@ -40,11 +40,11 @@ export class TimeService {
   }
 
   getFinalMaxTime(events: GameEvents): number {
-    return Object.values<number>(this.getFinalPlayersMaxTimes(events)).reduce((a, b) => Math.max(a, b));
+    return <any>Object.values<number>(this.getFinalPlayersMaxTimes(events)).reduce((a, b) => Math.max(a, b));
   }
 
   getFinalAvgTime(events: GameEvents): number {
-    const times = Object.values<number>(this.getFinalPlayersMaxTimes(events));
+    const times = <any>Object.values<number>(this.getFinalPlayersMaxTimes(events));
     return this.d3.mean(times);
   }
 

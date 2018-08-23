@@ -1,6 +1,4 @@
-import { GameInformation } from '../shared/interfaces/game-information';
-
-export const GAME_INFORMATION: GameInformation =  {
+export const GAME_INFORMATION=  {
   "name": "Photo Hunter",
   "levels": [
     {

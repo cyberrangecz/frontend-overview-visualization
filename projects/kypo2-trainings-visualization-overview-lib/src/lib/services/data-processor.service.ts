@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { BarVisualizationData } from '../components/score/interfaces/bar-visualization-data';
-import { PlayerVisualizationData } from '../components/score/interfaces/player-visualization-data';
-import { ProgressPlayer } from '../components/progress/interfaces/progress-player';
+import { BarVisualizationData } from '../components/clustering/interfaces/bar-visualization-data';
+import { PlayerVisualizationData } from '../components/clustering/interfaces/player-visualization-data';
+import { ProgressPlayer } from '../components/timeline/interfaces/progress-player';
 import { TimeService } from './time.service';
 import { ScoreService } from './score.service';
 import { GameData } from '../shared/interfaces/game-data';
 import { D3Service, D3 } from 'd3-ng2-service';
 import { Event } from '../shared/interfaces/event';
-import { ScoredEvent } from '../components/progress/interfaces/scored-event';
+import { ScoredEvent } from '../components/timeline/interfaces/scored-event';
 import { LevelEvents } from '../shared/interfaces/level-events';
 
 @Injectable()
@@ -58,7 +58,7 @@ export class DataProcessor {
 
   getScoreLevelMaxTime(gameData: GameData): number {
     const maxTimes = this.timeService.getEachLevelMaxTimes(gameData.events);
-    const maxTimesArray = Object.values(maxTimes).map(string => +string);
+    const maxTimesArray = <any>Object.values(maxTimes).map(string => +string);
     return Math.max(...maxTimesArray);
   }
 
