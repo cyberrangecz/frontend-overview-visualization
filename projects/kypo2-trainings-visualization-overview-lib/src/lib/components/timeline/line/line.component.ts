@@ -1084,17 +1084,17 @@ export class LineComponent implements OnInit {
   onResetZoom() {
     this.svg.select('.score-progress-zoom')
     .transition()
-    .duration(750)
+    .duration(250)
     .call(this.zoom.transform, this.d3.zoomIdentity);
   }
 
   onButtonZoom() {
     const zoomElement = this.svg.select('.score-progress-zoom');
-    this.zoom.scaleBy(zoomElement.transition().duration(750), 1.2);
+    this.zoom.scaleBy(zoomElement.transition().duration(250), 1.2);
   }
 
   onButtonZoomOut() {
     const zoomElement = this.svg.select('.score-progress-zoom');
-    this.zoom.scaleBy(zoomElement.transition().duration(750), 0.8);
+    this.zoom.scaleBy(zoomElement.transition().duration(250), 0.8);
   }
 }
