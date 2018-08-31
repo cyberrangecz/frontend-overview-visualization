@@ -1092,4 +1092,9 @@ export class LineComponent implements OnInit {
     const zoomElement = this.svg.select('.score-progress-zoom');
     this.zoom.scaleBy(zoomElement.transition().duration(750), 1.2);
   }
+
+  onButtonZoomOut() {
+    const zoomElement = this.svg.select('.score-progress-zoom');
+    this.zoom.scaleBy(zoomElement.transition().duration(750), 0.8);
+  }
 }

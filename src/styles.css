@@ -213,3 +213,25 @@ input[type=checkbox]
 .container {
   display: flex;
 }
+
+table {
+  border: 1px solid #ddd;
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 20px;
+  background-color: transparent;
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+table > tbody > tr > td {
+  border: 1px solid #ddd;
+}
+
+table>thead>tr>th {
+  border: 1px solid #ddd;
+}
+
+table>thead>tr>th {
+  border-bottom-width: 2px;
+}
