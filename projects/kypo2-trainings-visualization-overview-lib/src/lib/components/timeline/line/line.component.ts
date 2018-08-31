@@ -1081,6 +1081,9 @@ export class LineComponent implements OnInit {
     }
   }
 
+  /**
+   * Resets zoom to normal
+   */
   onResetZoom() {
     this.svg.select('.score-progress-zoom')
     .transition()
@@ -1088,11 +1091,17 @@ export class LineComponent implements OnInit {
     .call(this.zoom.transform, this.d3.zoomIdentity);
   }
 
-  onButtonZoom() {
+  /**
+   * Zooms in on button click
+   */
+  onButtonZoomIn() {
     const zoomElement = this.svg.select('.score-progress-zoom');
     this.zoom.scaleBy(zoomElement.transition().duration(250), 1.2);
   }
 
+  /**
+   * Zooms out on button click
+   */
   onButtonZoomOut() {
     const zoomElement = this.svg.select('.score-progress-zoom');
     this.zoom.scaleBy(zoomElement.transition().duration(250), 0.8);
