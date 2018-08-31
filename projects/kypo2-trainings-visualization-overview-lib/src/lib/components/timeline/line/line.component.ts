@@ -1080,4 +1080,30 @@ export class LineComponent implements OnInit {
       this.removePlayer(player.id);
     }
   }
+
+  /**
+   * Resets zoom to normal
+   */
+  onResetZoom() {
+    this.svg.select('.score-progress-zoom')
+    .transition()
+    .duration(250)
+    .call(this.zoom.transform, this.d3.zoomIdentity);
+  }
+
+  /**
+   * Zooms in on button click
+   */
+  onButtonZoomIn() {
+    const zoomElement = this.svg.select('.score-progress-zoom');
+    this.zoom.scaleBy(zoomElement.transition().duration(250), 1.2);
+  }
+
+  /**
+   * Zooms out on button click
+   */
+  onButtonZoomOut() {
+    const zoomElement = this.svg.select('.score-progress-zoom');
+    this.zoom.scaleBy(zoomElement.transition().duration(250), 0.8);
+  }
 }
