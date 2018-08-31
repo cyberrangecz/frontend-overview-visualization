@@ -1087,4 +1087,9 @@ export class LineComponent implements OnInit {
     .duration(750)
     .call(this.zoom.transform, this.d3.zoomIdentity);
   }
+
+  onButtonZoom() {
+    const zoomElement = this.svg.select('.score-progress-zoom');
+    this.zoom.scaleBy(zoomElement.transition().duration(750), 1.2);
+  }
 }
