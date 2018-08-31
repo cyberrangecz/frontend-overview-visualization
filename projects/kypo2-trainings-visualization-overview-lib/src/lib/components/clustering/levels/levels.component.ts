@@ -553,7 +553,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     const yOffset = (groupHeight - coordinates[1]) < 60 ? -50 : 10;
 
     playerTooltip
-      .html(`<p><b>${player.id} <br> score: ${player.score}</b>`)
+      .html(`<p><b>Player ID: ${player.id} <br> Score: ${player.score}</b>`)
       .style('left', (this.d3.event.pageX + 10) + 'px')
       .style('top', (this.d3.event.pageY + yOffset) + 'px');
   }
