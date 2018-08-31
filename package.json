@@ -8,7 +8,9 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "lib-build": "ng build --prod kypo2-trainings-visualization-overview-lib && cp ./src/styles.scss ./dist/kypo2-trainings-visualization-overview-lib && cd ./dist/kypo2-trainings-visualization-overview-lib && npm pack"
+    "lib-build": "ng build --prod kypo2-trainings-visualization-overview-lib && cp ./src/styles.scss ./dist/kypo2-trainings-visualization-overview-lib",
+    "lib-copy": "cp -a ./dist/kypo2-trainings-visualization-overview-lib/. ../kypo2-trainings-visualization-overview-package/",
+    "lib-push": "cd ../kypo2-trainings-visualization-overview-package && git add . && git commit -m 'Update according to master branch' && git push" 
   },
   "private": true,
   "dependencies": {
