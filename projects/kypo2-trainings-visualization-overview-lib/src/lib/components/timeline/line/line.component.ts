@@ -1080,4 +1080,11 @@ export class LineComponent implements OnInit {
       this.removePlayer(player.id);
     }
   }
+
+  onResetZoom() {
+    this.svg.select('.score-progress-zoom')
+    .transition()
+    .duration(750)
+    .call(this.zoom.transform, this.d3.zoomIdentity);
+  }
 }
