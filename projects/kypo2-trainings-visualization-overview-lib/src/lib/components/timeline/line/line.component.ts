@@ -741,12 +741,12 @@ export class LineComponent implements OnInit {
   updateLineTooltip(player) {
     const x: number = this.d3.event.pageX;
     const y: number = this.d3.event.pageY;
-    const topMargin: number = -40;
+    const topMargin: number = -50;
     const top: number = y + topMargin;
 
-    const content: string = player.id.toString();
+    const content: string = `Player ID: <br> ${player.id.toString()}`;
     this.lineTooltip.attr('class', 'score-progress-line-tooltip')
-      .style('left', x + 'px')
+      .style('left', (x - 5) + 'px')
       .style('top', top + 'px')
       .style('margin-left', -content.length / 4 + "em")
     this.lineTooltip.html(content);

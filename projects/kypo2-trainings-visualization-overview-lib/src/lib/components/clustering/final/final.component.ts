@@ -432,7 +432,7 @@ export class FinalComponent implements OnInit, OnChanges {
     const y = this.d3.event.pageY + yOffset;
 
     playerTooltip
-      .html(`<p><b>${player.id} <br> score: ${player.score}</b>`)
+      .html(`<p><b>Player ID: ${player.id} <br> Score: ${player.score}</b>`)
       .style('left', x + 'px')
       .style('top', y + 'px');
     

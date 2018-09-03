@@ -1,22 +1,7 @@
 .overview-visualization-container {
 
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  
-  .player-tooltip {
-    position: absolute;
-    text-align: center;
-    padding: 2px;
-    font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
-    background: lightsteelblue;
-    border: 0px;
-    border-radius: 8px;
-  }
-  
-  .player-tooltip p {
-    padding: 4px 10px;
-    margin: 0px;
-  }
-  
+    
   .focus-line {
     fill: none;
     stroke: black;
@@ -104,15 +89,7 @@
     stroke-dasharray: 15;
   }
   
-  .score-progress-tooltip {
-    position: absolute;
-    text-align: center;
-    padding: 8px;
-    font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
-    background-color: rgba(176, 196, 222, 0.9);
-    border: 0px;
-    border-radius: 8px;
-  }
+
   
   .score-progress-list{
     padding: 0;
@@ -183,16 +160,6 @@
     background: #bbbbbb !important;
   }
   
-  .score-progress-line-tooltip {
-    position: absolute;
-    text-align: center;
-    padding: 8px;
-    font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
-    background-color: rgba(176, 196, 222, 0.9);
-    border: 0px;
-    border-radius: 8px;
-  }
-  
   .player-point, .player-point-selected, .player-point-highlighted {
     stroke: black;
     stroke-width: 0.3px;
@@ -235,3 +202,40 @@
   }
 }
 
+.player-tooltip {
+  position: absolute;
+  z-index: 1;
+  text-align: center;
+  padding: 2px;
+  font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background: lightsteelblue;
+  border: 0px;
+  border-radius: 8px;
+}
+
+.player-tooltip p {
+  padding: 4px 10px;
+  margin: 0px;
+}
+
+.score-progress-tooltip {
+  position: absolute;
+  z-index: 1;
+  text-align: center;
+  padding: 8px;
+  font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background-color: rgba(176, 196, 222, 0.9);
+  border: 0px;
+  border-radius: 8px;
+}
+
+.score-progress-line-tooltip {
+  position: absolute;
+  z-index: 1;
+  text-align: center;
+  padding: 8px;
+  font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background-color: rgba(176, 196, 222, 0.9);
+  border: 0px;
+  border-radius: 8px;
+}
