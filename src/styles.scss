@@ -204,6 +204,7 @@
 
 .player-tooltip {
   position: absolute;
+  z-index: 1;
   text-align: center;
   padding: 2px;
   font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -219,6 +220,7 @@
 
 .score-progress-tooltip {
   position: absolute;
+  z-index: 1;
   text-align: center;
   padding: 8px;
   font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -229,6 +231,7 @@
 
 .score-progress-line-tooltip {
   position: absolute;
+  z-index: 1;
   text-align: center;
   padding: 8px;
   font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
