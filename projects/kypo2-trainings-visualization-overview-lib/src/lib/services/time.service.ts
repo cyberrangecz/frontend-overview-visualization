@@ -76,11 +76,16 @@ export class TimeService {
       return null;
     }
     const result = [];
+    const lastEvents = {};
     events.levels.forEach(level => {
       const playersMaxTimes = {};
       const playerNest = this.d3.nest().key((e: Event) => e.playerId).entries(level.events);
       playerNest.forEach(player => {
-        playersMaxTimes[player.key] = this.d3.max(player.values, (e: Event) => e.gametime);
+        const startTimestamp = (typeof lastEvents[player.key] === 'undefined') ? player.values[0].timestamp : lastEvents[player.key];
+        const endTimestamp = this.d3.max(player.values, (event: Event) => event.timestamp);
+        lastEvents[player.key] = endTimestamp;
+        const time = new Date(endTimestamp).getTime() - new Date(startTimestamp).getTime();
+        playersMaxTimes[player.key] = time/1000;
       });
       result.push(playersMaxTimes);
     });
