@@ -920,7 +920,7 @@ export class LineComponent implements OnInit {
    * @param player
    */
   updateEventTooltip(player) {
-    const topMargin = 10;
+    const topMargin = -75;
     const leftMargin = 8;
     const left = this.d3.event.pageX + leftMargin;
     const top = this.d3.event.pageY + topMargin;
