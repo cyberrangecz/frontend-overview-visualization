@@ -56,15 +56,15 @@ export class TableComponent implements OnInit {
 
   onRowClick(player) {
     player.checked = !player.checked;
-    this.rowClicked.emit(player);
+    this.tableService.sendTableRowClick(player);
   }
 
   onRowMouseover(player) {
-    this.rowMouseover.emit(player.id);
+    this.tableService.sendTableRowMouseover(player.id);
   }
 
   onRowMouseout(player) {
-    this.rowMouseout.emit(player.id);
+    this.tableService.sendTableRowMouseout(player.id);
   }
 
   onWrongClick(levelNumber) {

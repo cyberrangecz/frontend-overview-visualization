@@ -10,6 +10,8 @@ import { FILTERS_OBJECT, FILTERS_ARRAY } from './filters/filters';
 import { COLOR_SCHEME, SVG_CONFIG, AXES_CONFIG, CONTEXT_CONFIG, SVG_MARGIN_CONFIG } from './config';
 import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config';
 import { SvgMarginConfig } from '../../../shared/interfaces/configurations/svg-margin-config';
+import { TableService } from '../table.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'kypo2-viz-overview-line',
@@ -48,8 +50,32 @@ export class LineComponent implements OnInit {
   public filtersArray;
   private clip;
 
-  constructor(d3service: D3Service, private visualizationService: DataProcessor) {
+  private tableRowClicked: Subscription;
+  private tableRowMouseover: Subscription;
+  private tableRowMouseout: Subscription;
+
+  constructor(d3service: D3Service, private visualizationService: DataProcessor, private tableService: TableService) {
     this.d3 = d3service.getD3();
+    this.tableRowClicked = this.tableService.tableRowClicked$.subscribe(
+      (player: ProgressPlayer) => {
+        this.onRowClicked(player);
+    });
+    this.tableRowMouseover = this.tableService.tableRowMouseover$.subscribe(
+      (id: number) => {
+        this.highlightLine(id);
+      }
+    );
+    this.tableRowMouseout = this.tableService.tableRowMouseout$.subscribe(
+      (id: number) => {
+        this.unhighlightLine(id);
+      }
+    )
+  }
+
+  ngOnDestroy() {
+    this.tableRowClicked.unsubscribe();
+    this.tableRowMouseover.unsubscribe();
+    this.tableRowMouseout.unsubscribe();
   }
 
   ngOnInit() {
