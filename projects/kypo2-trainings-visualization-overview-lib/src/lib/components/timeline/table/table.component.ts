@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { GameData } from '../../../shared/interfaces/game-data';
 import { DataProcessor } from '../../../services/data-processor.service';
 import { ProgressPlayer } from '../interfaces/progress-player';
+import { FILTERS_OBJECT } from '../line/filters/filters';
 
 @Component({
   selector: 'kypo2-viz-overview-table',
@@ -14,7 +15,6 @@ export class TableComponent implements OnInit {
   @Input() players: ProgressPlayer[];
   @Input() playerColorScale;
   @Input() feedbackLearnerId: number;
-  @Input() filters;
   @Output() rowClicked = new EventEmitter<ProgressPlayer>();
   @Output() rowMouseover = new EventEmitter<number>();
   @Output() rowMouseout = new EventEmitter<number>();
@@ -24,10 +24,12 @@ export class TableComponent implements OnInit {
   public sortedColumn = null;
   public sortedDesc = false;
   public columnHovered = null;
+  private filters;
 
   constructor(private visualizationService: DataProcessor) { }
 
   ngOnInit() {
+    this.filters = FILTERS_OBJECT;
     this.scoreTableData = this.getLevelScores();
     this.orderPlayers();
   }
