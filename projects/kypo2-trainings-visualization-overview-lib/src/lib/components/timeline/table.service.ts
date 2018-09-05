@@ -11,6 +11,10 @@ export class TableService {
   private tableRowMouseover = new Subject<number>();
   private tableRowMouseout = new Subject<number>();
 
+  tableRowClicked$ = this.tableRowClicked.asObservable();
+  tableRowMouseover$ = this.tableRowMouseover.asObservable();
+  tableRowMouseout$ = this.tableRowMouseout.asObservable();
+
   constructor() { }
 
   sendTableRowClick(player: ProgressPlayer) {
@@ -23,18 +27,6 @@ export class TableService {
 
   sendTableRowMouseout(id: number) {
     this.tableRowMouseout.next(id);
-  }
-
-  getTableRowClicked(): Observable<any> {
-    return this.tableRowClicked.asObservable();
-  }
-
-  getTableRowMouseover(): Observable<any> {
-    return this.tableRowMouseover.asObservable();
-  }
-
-  getTableRowMouseout(): Observable<any> {
-    return this.tableRowMouseout.asObservable();
   }
   
 }
