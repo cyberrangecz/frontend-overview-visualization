@@ -50,25 +50,15 @@ export class TimeService {
 
   getFinalPlayersMaxTimes(events: GameEvents) {
     const playersMaxTimes = {};
-    const flattenedEvents = this.flattenEvents(events);
-
-    const eventsGroupedByPlayer = this.d3.nest().key((event: Event) => event.playerId).entries(flattenedEvents);
-
-    eventsGroupedByPlayer.forEach(player => {
-      const startTimestamp = this.d3.min(player.values, (event: Event) => event.timestamp);
-      const endTimestamp = this.d3.max(player.values, (event: Event) => event.timestamp);
-      const time = new Date(endTimestamp).getTime() - new Date(startTimestamp).getTime();
-      playersMaxTimes[player.key] = time/1000;
+    // For each level, group teams and get their max gametime, next level add up to the gametime
+    events.levels.forEach(level => {
+      const playerNest = this.d3.nest().key((e: Event) => e.playerId).entries(level.events);
+      playerNest.forEach(player => {
+        const maxTime = this.d3.max(player.values, (e: Event) => e.gametime);
+        playersMaxTimes[player.key] = (level.number <= 1) ? maxTime : playersMaxTimes[player.key] + maxTime;
+      });
     });
     return playersMaxTimes;
-  }
-
-  flattenEvents(events: GameEvents) {
-    const flattenedEvents = [];
-    events.levels.forEach(level => {
-      flattenedEvents.push(...level.events);
-    });
-    return flattenedEvents;
   }
 
   getEachLevelPlayerTime(events: GameEvents) {
