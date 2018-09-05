@@ -3,6 +3,7 @@ import { GameData } from '../../../shared/interfaces/game-data';
 import { DataProcessor } from '../../../services/data-processor.service';
 import { ProgressPlayer } from '../interfaces/progress-player';
 import { FILTERS_OBJECT } from '../line/filters/filters';
+import { TableService } from '../table.service';
 
 @Component({
   selector: 'kypo2-viz-overview-table',
@@ -26,7 +27,7 @@ export class TableComponent implements OnInit {
   public columnHovered = null;
   private filters;
 
-  constructor(private visualizationService: DataProcessor) { }
+  constructor(private visualizationService: DataProcessor, private tableService: TableService) { }
 
   ngOnInit() {
     this.filters = FILTERS_OBJECT;
