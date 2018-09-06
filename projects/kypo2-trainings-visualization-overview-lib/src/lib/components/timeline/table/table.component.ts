@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { GameData } from '../../../shared/interfaces/game-data';
 import { DataProcessor } from '../../../services/data-processor.service';
 import { ProgressPlayer } from '../interfaces/progress-player';
@@ -16,9 +16,6 @@ export class TableComponent implements OnInit {
   @Input() players: ProgressPlayer[];
   @Input() playerColorScale;
   @Input() feedbackLearnerId: number;
-  @Output() rowClicked = new EventEmitter<ProgressPlayer>();
-  @Output() rowMouseover = new EventEmitter<number>();
-  @Output() rowMouseout = new EventEmitter<number>();
 
   public scoreTableData;
   public playersOrdered;
