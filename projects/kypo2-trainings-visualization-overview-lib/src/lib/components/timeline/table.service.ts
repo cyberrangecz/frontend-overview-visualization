@@ -10,10 +10,12 @@ export class TableService {
   private tableRowClicked = new Subject<any>();
   private tableRowMouseover = new Subject<number>();
   private tableRowMouseout = new Subject<number>();
+  private playerColorScale = new Subject<any>();
 
   tableRowClicked$ = this.tableRowClicked.asObservable();
   tableRowMouseover$ = this.tableRowMouseover.asObservable();
   tableRowMouseout$ = this.tableRowMouseout.asObservable();
+  playerColorScale$ = this.tableRowMouseover.asObservable();
 
   constructor() { }
 
@@ -27,6 +29,10 @@ export class TableService {
 
   sendTableRowMouseout(id: number) {
     this.tableRowMouseout.next(id);
+  }
+
+  sendPlayerColorScale(scale: any) {
+    this.playerColorScale.next(scale);
   }
   
 }
