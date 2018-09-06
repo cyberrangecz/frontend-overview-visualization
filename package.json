@@ -27,7 +27,7 @@
     "core-js": "^2.5.4",
     "rxjs": "^6.0.0",
     "zone.js": "^0.8.26",
-    "d3-ng2-service": "^1.16.1"
+    "d3-ng2-service": "^2.2.0"
   },
   "devDependencies": {
     "@angular/compiler-cli": "^6.0.3",
