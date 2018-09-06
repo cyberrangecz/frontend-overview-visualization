@@ -1,19 +1,19 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { GameData } from '../../../shared/interfaces/game-data';
 import { DataProcessor } from '../../../services/data-processor.service';
 import { ProgressPlayer } from '../interfaces/progress-player';
 import { FILTERS_OBJECT } from '../line/filters/filters';
 import { TableService } from '../table.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'kypo2-viz-overview-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
 })
-export class TableComponent implements OnInit {
+export class TableComponent implements OnInit, OnDestroy {
 
   @Input() data: GameData;
-  @Input() playerColorScale;
   @Input() feedbackLearnerId: number;
 
   public scoreTableData;
@@ -23,8 +23,20 @@ export class TableComponent implements OnInit {
   public columnHovered = null;
   private filters;
   private players: ProgressPlayer[];
+  private playerColorScaleSource: Subscription;
+  private playerColorScale;
 
-  constructor(private visualizationService: DataProcessor, private tableService: TableService) { }
+  constructor(private visualizationService: DataProcessor, private tableService: TableService) {
+    this.playerColorScaleSource = this.tableService.playerColorScale$.subscribe(
+      (scale) => {
+        this.playerColorScale = scale;
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    this.playerColorScaleSource.unsubscribe();
+  }
 
   ngOnInit() {
     this.filters = FILTERS_OBJECT;

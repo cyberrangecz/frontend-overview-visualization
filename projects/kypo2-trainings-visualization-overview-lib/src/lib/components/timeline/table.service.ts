@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { ProgressPlayer } from './interfaces/progress-player';
 
 @Injectable({
@@ -10,12 +10,13 @@ export class TableService {
   private tableRowClicked = new Subject<any>();
   private tableRowMouseover = new Subject<number>();
   private tableRowMouseout = new Subject<number>();
-  private playerColorScale = new Subject<any>();
+  private playerColorScale = new BehaviorSubject<any>((playerId: string) => "black");
 
   tableRowClicked$ = this.tableRowClicked.asObservable();
   tableRowMouseover$ = this.tableRowMouseover.asObservable();
   tableRowMouseout$ = this.tableRowMouseout.asObservable();
-  playerColorScale$ = this.tableRowMouseover.asObservable();
+  playerColorScale$ = this.playerColorScale.asObservable();
+  
 
   constructor() { }
 

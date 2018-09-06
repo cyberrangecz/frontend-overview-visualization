@@ -273,6 +273,7 @@ export class LineComponent implements OnInit {
    */
   initializeScales() {
     this.playerColorScale = this.d3.scaleOrdinal().range(COLOR_SCHEME);
+    this.tableService.sendPlayerColorScale(this.playerColorScale);
 
     const scaleDomainStart = new Date(0, 0, 0, 0, 0, 0, 0);
     const scaleDomainEnd = new Date(0, 0, 0, 0, 0, this.getMaximumTime(), 0);
