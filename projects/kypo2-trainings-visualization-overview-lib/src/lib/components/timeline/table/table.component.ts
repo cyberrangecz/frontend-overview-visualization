@@ -24,12 +24,12 @@ export class TableComponent implements OnInit, OnDestroy {
   private filters;
   private players: ProgressPlayer[];
   private playerColorScaleSource: Subscription;
-  private playerColorScale;
+  private playerColorScale = (id) => "black";
 
   constructor(private visualizationService: DataProcessor, private tableService: TableService) {
     this.playerColorScaleSource = this.tableService.playerColorScale$.subscribe(
       (scale) => {
-        this.playerColorScale = scale;
+        setTimeout(() => this.playerColorScale = scale, 0);
       }
     );
   }
