@@ -21,10 +21,10 @@ export class TableComponent implements OnInit, OnDestroy {
   public sortedColumn = null;
   public sortedDesc = false;
   public columnHovered = null;
-  private filters;
+  public filters;
   private players: ProgressPlayer[];
   private playerColorScaleSource: Subscription;
-  private playerColorScale = (id) => "black";
+  public playerColorScale = (id) => "black";
 
   constructor(private visualizationService: DataProcessor, private tableService: TableService) {
     this.playerColorScaleSource = this.tableService.playerColorScale$.subscribe(
