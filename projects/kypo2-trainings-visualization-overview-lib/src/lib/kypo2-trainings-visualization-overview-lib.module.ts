@@ -32,7 +32,8 @@ import { FILTERS_ARRAY } from './components/timeline/line/filters/filters';
   exports: [
     Kypo2TrainingsVisualizationOverviewLibComponent,
     TimelineComponent,
-    ClusteringComponent
+    ClusteringComponent,
+    TableComponent
   ],
   providers: [
     D3Service,

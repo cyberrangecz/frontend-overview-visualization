@@ -1,7 +1,13 @@
-<kypo2-viz-overview-clustering
-  [gameData]="mockGameData"
-  [feedbackLearnerId]="mockFeedbackLearnerId"
-></kypo2-viz-overview-clustering>
+<div style="display: flex;">
+  <kypo2-viz-overview-clustering
+    [gameData]="mockGameData"
+    [feedbackLearnerId]="mockFeedbackLearnerId">
+  </kypo2-viz-overview-clustering>
+  <kypo2-viz-overview-table
+    [data]="mockGameData"
+    [feedbackLearnerId]="mockFeedbackLearnerId  ">
+  </kypo2-viz-overview-table>
+</div>
 <kypo2-viz-overview-timeline
   [gameData]="mockGameData"
   [feedbackLearnerId]="mockFeedbackLearnerId"
