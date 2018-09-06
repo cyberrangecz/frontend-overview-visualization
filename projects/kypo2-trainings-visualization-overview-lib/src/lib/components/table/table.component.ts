@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { GameData } from '../../../shared/interfaces/game-data';
-import { DataProcessor } from '../../../services/data-processor.service';
-import { ProgressPlayer } from '../interfaces/progress-player';
-import { FILTERS_OBJECT } from '../line/filters/filters';
-import { TableService } from '../table.service';
+import { GameData } from '../../shared/interfaces/game-data';
+import { DataProcessor } from '../../services/data-processor.service';
+import { ProgressPlayer } from '../timeline/interfaces/progress-player';
+import { FILTERS_OBJECT } from '../timeline/line/filters/filters';
+import { TableService } from '../../services/table.service';
 import { Subscription } from 'rxjs';
 
 @Component({

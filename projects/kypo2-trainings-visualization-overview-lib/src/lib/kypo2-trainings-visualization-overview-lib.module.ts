@@ -6,7 +6,7 @@ import { ClusteringComponent } from './components/clustering/clustering.componen
 import { FinalComponent } from './components/clustering/final/final.component';
 import { LevelsComponent } from './components/clustering/levels/levels.component';
 import { LineComponent } from './components/timeline/line/line.component';
-import { TableComponent } from './components/timeline/table/table.component';
+import { TableComponent } from './components/table/table.component';
 import { DataProcessor } from './services/data-processor.service';
 import { DataService } from './services/data.service';
 import { TimeService } from './services/time.service';

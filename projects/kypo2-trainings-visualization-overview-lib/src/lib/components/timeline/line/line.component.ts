@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { GameData } from '../../../shared/interfaces/game-data';
-import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 import { D3Service, D3 } from 'd3-ng2-service';
 import { DataProcessor } from '../../../services/data-processor.service';
 import { ScaleLinear, ScaleOrdinal, Selection, Axis, ScaleTime, ContainerElement, Line, ZoomBehavior, BrushBehavior } from 'd3-ng2-service/src/bundle-d3';
@@ -10,7 +9,7 @@ import { FILTERS_OBJECT, FILTERS_ARRAY } from './filters/filters';
 import { COLOR_SCHEME, SVG_CONFIG, AXES_CONFIG, CONTEXT_CONFIG, SVG_MARGIN_CONFIG } from './config';
 import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config';
 import { SvgMarginConfig } from '../../../shared/interfaces/configurations/svg-margin-config';
-import { TableService } from '../table.service';
+import { TableService } from '../../../services/table.service';
 import { Subscription } from 'rxjs';
 
 @Component({

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
-import { ProgressPlayer } from './interfaces/progress-player';
+import { ProgressPlayer } from '../components/timeline/interfaces/progress-player';
 
 /**
  * Communication service between table and other components
