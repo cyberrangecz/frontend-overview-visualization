@@ -1100,10 +1100,12 @@ export class LineComponent implements OnInit {
    * Draws or removes player from the plane when row in score table clicked.
    */
   onRowClicked(player) {
-    if (player.checked) {
-      this.drawPlayer(player.id);
+    const p = this.players.find((el) => el.id === player.id);
+    p.checked = !p.checked;
+    if (p.checked) {
+      this.drawPlayer(p.id);
     } else {
-      this.removePlayer(player.id);
+      this.removePlayer(p.id);
     }
   }
 

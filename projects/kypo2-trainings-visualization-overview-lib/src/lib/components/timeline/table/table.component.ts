@@ -13,7 +13,6 @@ import { TableService } from '../table.service';
 export class TableComponent implements OnInit {
 
   @Input() data: GameData;
-  @Input() players: ProgressPlayer[];
   @Input() playerColorScale;
   @Input() feedbackLearnerId: number;
 
@@ -23,13 +22,16 @@ export class TableComponent implements OnInit {
   public sortedDesc = false;
   public columnHovered = null;
   private filters;
+  private players: ProgressPlayer[];
 
   constructor(private visualizationService: DataProcessor, private tableService: TableService) { }
 
   ngOnInit() {
     this.filters = FILTERS_OBJECT;
     this.scoreTableData = this.getLevelScores();
+    this.players = this.visualizationService.getScoreProgressPlayersWithEvents(this.data);
     this.orderPlayers();
+    this.checkFeedbackLearner();
   }
 
   getLevelScores() {
@@ -49,6 +51,14 @@ export class TableComponent implements OnInit {
     const copy = this.players.slice();
     const splice = copy.splice(i);
     this.playersOrdered = splice.concat(copy);
+  }
+
+  /**
+   * Sets checked attribute of feedback learner in players array to true
+   */
+  checkFeedbackLearner() {
+    const feedbackLearner = this.players.find((player) => player.id === this.feedbackLearnerId);
+    feedbackLearner.checked = !feedbackLearner.checked;
   }
 
   onRowClick(player) {
