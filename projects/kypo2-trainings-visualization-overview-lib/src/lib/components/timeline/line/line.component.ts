@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { GameData } from '../../../shared/interfaces/game-data';
-import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 import { D3Service, D3 } from 'd3-ng2-service';
 import { DataProcessor } from '../../../services/data-processor.service';
 import { ScaleLinear, ScaleOrdinal, Selection, Axis, ScaleTime, ContainerElement, Line, ZoomBehavior, BrushBehavior } from 'd3-ng2-service/src/bundle-d3';
@@ -10,6 +9,8 @@ import { FILTERS_OBJECT, FILTERS_ARRAY } from './filters/filters';
 import { COLOR_SCHEME, SVG_CONFIG, AXES_CONFIG, CONTEXT_CONFIG, SVG_MARGIN_CONFIG } from './config';
 import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config';
 import { SvgMarginConfig } from '../../../shared/interfaces/configurations/svg-margin-config';
+import { TableService } from '../../../services/table.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'kypo2-viz-overview-line',
@@ -48,8 +49,32 @@ export class LineComponent implements OnInit {
   public filtersArray;
   private clip;
 
-  constructor(d3service: D3Service, private visualizationService: DataProcessor) {
+  private tableRowClicked: Subscription;
+  private tableRowMouseover: Subscription;
+  private tableRowMouseout: Subscription;
+
+  constructor(d3service: D3Service, private visualizationService: DataProcessor, private tableService: TableService) {
     this.d3 = d3service.getD3();
+    this.tableRowClicked = this.tableService.tableRowClicked$.subscribe(
+      (player: ProgressPlayer) => {
+        this.onRowClicked(player);
+    });
+    this.tableRowMouseover = this.tableService.tableRowMouseover$.subscribe(
+      (id: number) => {
+        this.highlightLine(id);
+      }
+    );
+    this.tableRowMouseout = this.tableService.tableRowMouseout$.subscribe(
+      (id: number) => {
+        this.unhighlightLine(id);
+      }
+    )
+  }
+
+  ngOnDestroy() {
+    this.tableRowClicked.unsubscribe();
+    this.tableRowMouseover.unsubscribe();
+    this.tableRowMouseout.unsubscribe();
   }
 
   ngOnInit() {
@@ -247,6 +272,7 @@ export class LineComponent implements OnInit {
    */
   initializeScales() {
     this.playerColorScale = this.d3.scaleOrdinal().range(COLOR_SCHEME);
+    this.tableService.sendPlayerColorScale(this.playerColorScale);
 
     const scaleDomainStart = new Date(0, 0, 0, 0, 0, 0, 0);
     const scaleDomainEnd = new Date(0, 0, 0, 0, 0, this.getMaximumTime(), 0);
@@ -1074,10 +1100,12 @@ export class LineComponent implements OnInit {
    * Draws or removes player from the plane when row in score table clicked.
    */
   onRowClicked(player) {
-    if (player.checked) {
-      this.drawPlayer(player.id);
+    const p = this.players.find((el) => el.id === player.id);
+    p.checked = !p.checked;
+    if (p.checked) {
+      this.drawPlayer(p.id);
     } else {
-      this.removePlayer(player.id);
+      this.removePlayer(p.id);
     }
   }
 

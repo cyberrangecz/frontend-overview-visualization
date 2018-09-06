@@ -1,35 +1,49 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { GameData } from '../../../shared/interfaces/game-data';
-import { DataProcessor } from '../../../services/data-processor.service';
-import { ProgressPlayer } from '../interfaces/progress-player';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { GameData } from '../../shared/interfaces/game-data';
+import { DataProcessor } from '../../services/data-processor.service';
+import { ProgressPlayer } from '../timeline/interfaces/progress-player';
+import { FILTERS_OBJECT } from '../timeline/line/filters/filters';
+import { TableService } from '../../services/table.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'kypo2-viz-overview-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
 })
-export class TableComponent implements OnInit {
+export class TableComponent implements OnInit, OnDestroy {
 
   @Input() data: GameData;
-  @Input() players: ProgressPlayer[];
-  @Input() playerColorScale;
   @Input() feedbackLearnerId: number;
-  @Input() filters;
-  @Output() rowClicked = new EventEmitter<ProgressPlayer>();
-  @Output() rowMouseover = new EventEmitter<number>();
-  @Output() rowMouseout = new EventEmitter<number>();
 
   public scoreTableData;
   public playersOrdered;
   public sortedColumn = null;
   public sortedDesc = false;
   public columnHovered = null;
+  private filters;
+  private players: ProgressPlayer[];
+  private playerColorScaleSource: Subscription;
+  private playerColorScale = (id) => "black";
 
-  constructor(private visualizationService: DataProcessor) { }
+  constructor(private visualizationService: DataProcessor, private tableService: TableService) {
+    this.playerColorScaleSource = this.tableService.playerColorScale$.subscribe(
+      (scale) => {
+        setTimeout(() => this.playerColorScale = scale, 0);
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    this.playerColorScaleSource.unsubscribe();
+  }
 
   ngOnInit() {
+    this.filters = FILTERS_OBJECT;
     this.scoreTableData = this.getLevelScores();
+    this.players = this.visualizationService.getScoreProgressPlayersWithEvents(this.data);
     this.orderPlayers();
+    this.checkFeedbackLearner();
   }
 
   getLevelScores() {
@@ -51,17 +65,25 @@ export class TableComponent implements OnInit {
     this.playersOrdered = splice.concat(copy);
   }
 
+  /**
+   * Sets checked attribute of feedback learner in players array to true
+   */
+  checkFeedbackLearner() {
+    const feedbackLearner = this.players.find((player) => player.id === this.feedbackLearnerId);
+    feedbackLearner.checked = !feedbackLearner.checked;
+  }
+
   onRowClick(player) {
     player.checked = !player.checked;
-    this.rowClicked.emit(player);
+    this.tableService.sendTableRowClick(player);
   }
 
   onRowMouseover(player) {
-    this.rowMouseover.emit(player.id);
+    this.tableService.sendTableRowMouseover(player.id);
   }
 
   onRowMouseout(player) {
-    this.rowMouseout.emit(player.id);
+    this.tableService.sendTableRowMouseout(player.id);
   }
 
   onWrongClick(levelNumber) {

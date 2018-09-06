@@ -25,11 +25,6 @@
     </div>
     <div [ngStyle]="{'margin-top.px': svgMarginConfig.top}">
 
-        <kypo2-viz-overview-table *ngIf="data" [data]="data" [players]="players" [playerColorScale]="playerColorScale" [filters]="filters"
-            [feedbackLearnerId]="feedbackLearnerId" (rowClicked)="onRowClicked($event)" (rowMouseover)="highlightLine($event)"
-            (rowMouseout)="unhighlightLine($event)">
-        </kypo2-viz-overview-table>
-
         <hr>
         <div class="filtersWrapper">
             <h3>Event filters</h3>
