@@ -23,38 +23,4 @@
         <div id="score-progress-container">
         </div>
     </div>
-    <div [ngStyle]="{'margin-top.px': svgMarginConfig.top}">
-
-        <hr>
-        <div class="filtersWrapper">
-            <h3>Event filters</h3>
-            <form style="margin-left: 10px">
-                <div class="checkbox">
-                    <label>
-                        <input *ngIf="filters.correctFlagFilter" type="checkbox" name="correctFlagFilter" id="correctFlagFilter" [(ngModel)]="filters.correctFlagFilter.checked"
-                            (change)="onFilterChange()"> Correct flags
-                    </label>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input *ngIf="filters.wrongFlagFilter" type="checkbox" name="wrongFlagFilter" id="wrongFlagFilter" [(ngModel)]="filters.wrongFlagFilter.checked"
-                            (change)="onFilterChange()"> Wrong flags
-                    </label>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input *ngIf="filters.hintFilter" type="checkbox" name="hintFilter" id="hintFilter" [(ngModel)]="filters.hintFilter.checked"
-                            (change)="onFilterChange()"> Hints taken
-                    </label>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input *ngIf="filters.skipFilter" type="checkbox" name="skipFilter" id="skipFilter" [(ngModel)]="filters.skipFilter.checked"
-                            (change)="onFilterChange()"> Level skips
-                    </label>
-                </div>
-            </form>
-
-        </div>
-    </div>
 </div>
