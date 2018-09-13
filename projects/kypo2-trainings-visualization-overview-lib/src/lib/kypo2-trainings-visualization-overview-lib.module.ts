@@ -14,6 +14,7 @@ import { ScoreService } from './services/score.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FILTERS_ARRAY } from './components/timeline/line/filters/filters';
+import { FiltersComponent } from './components/filters/filters.component';
 
 @NgModule({
   imports: [
@@ -27,7 +28,7 @@ import { FILTERS_ARRAY } from './components/timeline/line/filters/filters';
     FinalComponent, 
     LevelsComponent, 
     LineComponent, 
-    TableComponent
+    TableComponent, FiltersComponent
   ],
   exports: [
     Kypo2TrainingsVisualizationOverviewLibComponent,
