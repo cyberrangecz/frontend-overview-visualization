@@ -1,0 +1,35 @@
+label {
+    display: block;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 20px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+input {
+    position: absolute;
+    opacity: 0;
+}
+
+.custom-checkbox {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 22px;
+    width: 22px;
+    background-color: #eae2e2;
+}
+
+label:hover > .custom-checkbox {
+    background-color: #ccc;
+}
+
+input:checked + .custom-checkbox {
+    background-color: #707273;
+}

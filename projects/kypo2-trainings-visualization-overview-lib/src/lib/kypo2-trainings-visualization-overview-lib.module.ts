@@ -28,13 +28,15 @@ import { FiltersComponent } from './components/filters/filters.component';
     FinalComponent, 
     LevelsComponent, 
     LineComponent, 
-    TableComponent, FiltersComponent
+    TableComponent, 
+    FiltersComponent
   ],
   exports: [
     Kypo2TrainingsVisualizationOverviewLibComponent,
     TimelineComponent,
     ClusteringComponent,
-    TableComponent
+    TableComponent,
+    FiltersComponent
   ],
   providers: [
     D3Service,
