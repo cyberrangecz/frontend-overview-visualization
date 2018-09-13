@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FILTERS_OBJECT, FILTERS_ARRAY } from '../components/timeline/line/filters/filters';
+import { FILTERS_OBJECT, FILTERS_ARRAY } from './filters/filters';
 import { Subject } from 'rxjs';
 
 @Injectable({

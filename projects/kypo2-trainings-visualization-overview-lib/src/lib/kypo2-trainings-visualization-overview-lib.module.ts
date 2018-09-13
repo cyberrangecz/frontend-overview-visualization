@@ -13,7 +13,6 @@ import { TimeService } from './services/time.service';
 import { ScoreService } from './services/score.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { FILTERS_ARRAY } from './components/timeline/line/filters/filters';
 import { FiltersComponent } from './components/filters/filters.component';
 
 @NgModule({
@@ -43,7 +42,7 @@ import { FiltersComponent } from './components/filters/filters.component';
     DataProcessor,
     DataService,
     ScoreService,
-    TimeService
+    TimeService,
   ]
 })
 export class Kypo2TrainingsVisualizationOverviewLibModule { }
