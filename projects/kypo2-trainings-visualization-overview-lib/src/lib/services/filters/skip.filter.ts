@@ -6,6 +6,7 @@ const filterFunction = function(event: ScoredEvent) {
 
 export const skipFilter = {
     name: 'skipFilter',
+    labelName: 'Levels skipped',
     checked: false,
     filterFunction: filterFunction
 };

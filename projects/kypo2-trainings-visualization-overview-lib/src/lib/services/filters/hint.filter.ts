@@ -6,6 +6,7 @@ const filterFunction = function(event: ScoredEvent) {
 
 export const hintFilter = {
     name: 'hintFilter',
+    labelName: 'Hints taken',
     checked: false,
     filterFunction: filterFunction
 };

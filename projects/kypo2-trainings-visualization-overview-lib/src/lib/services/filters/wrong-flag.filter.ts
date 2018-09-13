@@ -6,6 +6,7 @@ const filterFunction = function(event: ScoredEvent) {
 
 export const wrongFlagFilter = {
     name: 'wrongFlagFilter',
+    labelName: 'Wrong flags',
     checked: false,
     filterFunction: filterFunction
 };
