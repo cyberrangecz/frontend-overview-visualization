@@ -33,3 +33,28 @@ label:hover > .custom-checkbox {
 input:checked + .custom-checkbox {
     background-color: #707273;
 }
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.custom-checkbox:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+input:checked + .custom-checkbox:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.custom-checkbox:after {
+    left: 7px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
