@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FiltersService } from '../../services/filters.service';
 
 @Component({
   selector: 'kypo2-viz-overview-filters',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FiltersComponent implements OnInit {
 
-  constructor() { }
+  filtersArray;
+
+  constructor(private filtersService: FiltersService) { }
 
   ngOnInit() {
+    this.filtersArray = this.filtersService.getFiltersArray();
   }
 
+  onFilterChange() {
+    this.filtersService.filter();
+  }
 }

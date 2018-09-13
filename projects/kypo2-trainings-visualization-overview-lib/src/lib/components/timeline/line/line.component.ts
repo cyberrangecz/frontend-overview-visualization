@@ -11,6 +11,7 @@ import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config'
 import { SvgMarginConfig } from '../../../shared/interfaces/configurations/svg-margin-config';
 import { TableService } from '../../../services/table.service';
 import { Subscription } from 'rxjs';
+import { FiltersService } from '../../../services/filters.service';
 
 @Component({
   selector: 'kypo2-viz-overview-line',
@@ -52,8 +53,14 @@ export class LineComponent implements OnInit {
   private tableRowClicked: Subscription;
   private tableRowMouseover: Subscription;
   private tableRowMouseout: Subscription;
+  private filterChanged: Subscription;
 
-  constructor(d3service: D3Service, private visualizationService: DataProcessor, private tableService: TableService) {
+  constructor(
+      d3service: D3Service, 
+      private visualizationService: DataProcessor, 
+      private tableService: TableService,
+      private fitlersService: FiltersService
+    ) {
     this.d3 = d3service.getD3();
     this.tableRowClicked = this.tableService.tableRowClicked$.subscribe(
       (player: ProgressPlayer) => {
@@ -67,6 +74,11 @@ export class LineComponent implements OnInit {
     this.tableRowMouseout = this.tableService.tableRowMouseout$.subscribe(
       (id: number) => {
         this.unhighlightLine(id);
+      }
+    );
+    this.filterChanged = this.fitlersService.filterChanged$.subscribe(
+      () => {
+        this.onFilterChange();
       }
     )
   }

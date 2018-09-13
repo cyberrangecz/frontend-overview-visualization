@@ -1,19 +1,11 @@
-<label for="correct">Correct flags
-  <input type="checkbox" id="correct" checked>
-  <span class="custom-checkbox"></span>
-</label>
-
-<label for="wrong">Wrong flags
-  <input type="checkbox" id="wrong">
-  <span class="custom-checkbox"></span>
-</label>
-
-<label for="hint">Hints taken
-  <input type="checkbox" id="hint">
-  <span class="custom-checkbox"></span>
-</label>
-
-<label for="skip">Level skips
-  <input type="checkbox" id="skip">
-  <span class="custom-checkbox"></span>
-</label>
+<ng-container *ngFor="let filter of filtersArray">
+  <label [for]="filter.name">
+    {{ filter.name }}
+    <input 
+      type="checkbox" 
+      [id]="filter.name"
+      (change)="onFilterChange()"
+      [(ngModel)]="filter.checked">
+    <span class="custom-checkbox"></span>
+  </label>
+</ng-container>
