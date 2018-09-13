@@ -5,7 +5,6 @@ import { DataProcessor } from '../../../services/data-processor.service';
 import { ScaleLinear, ScaleOrdinal, Selection, Axis, ScaleTime, ContainerElement, Line, ZoomBehavior, BrushBehavior } from 'd3-ng2-service/src/bundle-d3';
 import { ProgressPlayer } from '../interfaces/progress-player';
 import { ScoredEvent } from '../interfaces/scored-event';
-import { FILTERS_OBJECT, FILTERS_ARRAY } from './filters/filters';
 import { COLOR_SCHEME, SVG_CONFIG, AXES_CONFIG, CONTEXT_CONFIG, SVG_MARGIN_CONFIG } from './config';
 import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config';
 import { SvgMarginConfig } from '../../../shared/interfaces/configurations/svg-margin-config';
@@ -59,7 +58,7 @@ export class LineComponent implements OnInit {
       d3service: D3Service, 
       private visualizationService: DataProcessor, 
       private tableService: TableService,
-      private fitlersService: FiltersService
+      private filtersService: FiltersService
     ) {
     this.d3 = d3service.getD3();
     this.tableRowClicked = this.tableService.tableRowClicked$.subscribe(
@@ -76,7 +75,7 @@ export class LineComponent implements OnInit {
         this.unhighlightLine(id);
       }
     );
-    this.filterChanged = this.fitlersService.filterChanged$.subscribe(
+    this.filterChanged = this.filtersService.filterChanged$.subscribe(
       () => {
         this.onFilterChange();
       }
@@ -99,8 +98,8 @@ export class LineComponent implements OnInit {
    * Assign imported filters from ./filters
    */
   initializeFilters() {
-    this.filters = FILTERS_OBJECT;
-    this.filtersArray = FILTERS_ARRAY;
+    this.filters = this.filtersService.getFiltersObject();
+    this.filtersArray = this.filtersService.getFiltersArray();
   }
 
   /**
