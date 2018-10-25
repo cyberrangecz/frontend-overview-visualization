@@ -1,0 +1,11 @@
+<ng-container *ngFor="let filter of filtersArray">
+  <label [for]="filter.name">
+    {{ filter.labelName }}
+    <input 
+      type="checkbox" 
+      [id]="filter.name"
+      (change)="onFilterChange()"
+      [(ngModel)]="filter.checked">
+    <span class="custom-checkbox"></span>
+  </label>
+</ng-container>

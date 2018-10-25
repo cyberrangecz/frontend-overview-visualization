@@ -1,0 +1,9 @@
+.overview-visualization-container {
+    display: flex;
+}
+
+.overview-visualization-container .second-column {
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center
+}

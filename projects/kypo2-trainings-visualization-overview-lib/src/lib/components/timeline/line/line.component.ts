@@ -5,12 +5,12 @@ import { DataProcessor } from '../../../services/data-processor.service';
 import { ScaleLinear, ScaleOrdinal, Selection, Axis, ScaleTime, ContainerElement, Line, ZoomBehavior, BrushBehavior } from 'd3-ng2-service/src/bundle-d3';
 import { ProgressPlayer } from '../interfaces/progress-player';
 import { ScoredEvent } from '../interfaces/scored-event';
-import { FILTERS_OBJECT, FILTERS_ARRAY } from './filters/filters';
 import { COLOR_SCHEME, SVG_CONFIG, AXES_CONFIG, CONTEXT_CONFIG, SVG_MARGIN_CONFIG } from './config';
 import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config';
 import { SvgMarginConfig } from '../../../shared/interfaces/configurations/svg-margin-config';
 import { TableService } from '../../../services/table.service';
 import { Subscription } from 'rxjs';
+import { FiltersService } from '../../../services/filters.service';
 
 @Component({
   selector: 'kypo2-viz-overview-line',
@@ -52,8 +52,14 @@ export class LineComponent implements OnInit {
   private tableRowClicked: Subscription;
   private tableRowMouseover: Subscription;
   private tableRowMouseout: Subscription;
+  private filterChanged: Subscription;
 
-  constructor(d3service: D3Service, private visualizationService: DataProcessor, private tableService: TableService) {
+  constructor(
+      d3service: D3Service, 
+      private visualizationService: DataProcessor, 
+      private tableService: TableService,
+      private filtersService: FiltersService
+    ) {
     this.d3 = d3service.getD3();
     this.tableRowClicked = this.tableService.tableRowClicked$.subscribe(
       (player: ProgressPlayer) => {
@@ -67,6 +73,11 @@ export class LineComponent implements OnInit {
     this.tableRowMouseout = this.tableService.tableRowMouseout$.subscribe(
       (id: number) => {
         this.unhighlightLine(id);
+      }
+    );
+    this.filterChanged = this.filtersService.filterChanged$.subscribe(
+      () => {
+        this.onFilterChange();
       }
     )
   }
@@ -87,8 +98,8 @@ export class LineComponent implements OnInit {
    * Assign imported filters from ./filters
    */
   initializeFilters() {
-    this.filters = FILTERS_OBJECT;
-    this.filtersArray = FILTERS_ARRAY;
+    this.filters = this.filtersService.getFiltersObject();
+    this.filtersArray = this.filtersService.getFiltersArray();
   }
 
   /**

@@ -2,12 +2,11 @@ import { hintFilter } from "./hint.filter";
 import { correctFlagFilter } from './correct-flag.filter';
 import { wrongFlagFilter } from './wrong-flag.filter';
 import { skipFilter } from './skip.filter';
-import { ScoredEvent } from '../../interfaces/scored-event';
 
 // Add every new filter to this array
 export const FILTERS_ARRAY = [
+    correctFlagFilter,
     hintFilter, 
-    correctFlagFilter, 
     wrongFlagFilter, 
     skipFilter
 ];

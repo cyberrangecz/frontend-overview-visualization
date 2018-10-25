@@ -2,9 +2,9 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { GameData } from '../../shared/interfaces/game-data';
 import { DataProcessor } from '../../services/data-processor.service';
 import { ProgressPlayer } from '../timeline/interfaces/progress-player';
-import { FILTERS_OBJECT } from '../timeline/line/filters/filters';
 import { TableService } from '../../services/table.service';
 import { Subscription } from 'rxjs';
+import { FiltersService } from '../../services/filters.service';
 
 @Component({
   selector: 'kypo2-viz-overview-table',
@@ -26,7 +26,11 @@ export class TableComponent implements OnInit, OnDestroy {
   private playerColorScaleSource: Subscription;
   public playerColorScale = (id) => "black";
 
-  constructor(private visualizationService: DataProcessor, private tableService: TableService) {
+  constructor(
+      private visualizationService: DataProcessor, 
+      private tableService: TableService,
+      private filtersService: FiltersService
+    ) {
     this.playerColorScaleSource = this.tableService.playerColorScale$.subscribe(
       (scale) => {
         setTimeout(() => this.playerColorScale = scale, 0);
@@ -39,7 +43,7 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.filters = FILTERS_OBJECT;
+    this.filters = this.filtersService.getFiltersObject();
     this.scoreTableData = this.getLevelScores();
     this.players = this.visualizationService.getScoreProgressPlayersWithEvents(this.data);
     this.orderPlayers();
