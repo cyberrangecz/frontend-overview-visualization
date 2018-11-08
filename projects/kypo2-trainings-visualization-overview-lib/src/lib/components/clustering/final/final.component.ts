@@ -393,6 +393,11 @@ export class FinalComponent implements OnInit, OnChanges {
     if (this.playerClicked === false ) {
       this.outputSelectedPlayerId.emit(+player.id);
     }
+
+    const noEventServiceWasPassed = typeof this.eventService === 'undefined' || this.eventService === null;
+    if (!noEventServiceWasPassed) {
+      this.eventService.clusteringFinalOnPlayerMouseover(player);
+    }
   }
 
   /**
@@ -474,6 +479,11 @@ export class FinalComponent implements OnInit, OnChanges {
     };
 
     this.updateCrosshair(groups, playersData);
+
+    const noEventServiceWasPassed = typeof this.eventService === 'undefined' || this.eventService === null;
+    if (!noEventServiceWasPassed) {
+      this.eventService.clusteringFinalOnPlayerMousemove(player);
+    }
   }
 
   /**
@@ -531,6 +541,11 @@ export class FinalComponent implements OnInit, OnChanges {
     if (this.playerClicked === false ) {
       this.outputSelectedPlayerId.emit(); // Unhiglight with fade
     }
+
+    const noEventServiceWasPassed = typeof this.eventService === 'undefined' || this.eventService === null;
+    if (!noEventServiceWasPassed) {
+      this.eventService.clusteringFinalOnPlayerMouseout(player);
+    }
   }
 
   /**
@@ -569,6 +584,11 @@ export class FinalComponent implements OnInit, OnChanges {
     this.d3.event.stopPropagation();
     this.outputSelectedPlayerId.emit(player.id);
     this.playerClicked = true;
+
+    const noEventServiceWasPassed = typeof this.eventService === 'undefined' || this.eventService === null;
+    if (!noEventServiceWasPassed) {
+      this.eventService.clusteringFinalOnPlayerClick(player);
+    }
   }
 
   /**
