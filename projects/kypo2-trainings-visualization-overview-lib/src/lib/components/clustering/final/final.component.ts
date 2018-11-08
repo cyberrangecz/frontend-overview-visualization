@@ -5,6 +5,7 @@ import { DataProcessor } from '../../../services/data-processor.service';
 import { BAR_CONFIG, SVG_CONFIG, SVG_MARGIN_CONFIG, PLAYER_POINT_CONFIG, AXES_CONFIG, CROSSHAIR_CONFIG } from './config';
 import { BarVisualizationData } from '../interfaces/bar-visualization-data';
 import { PlayerVisualizationData } from '../interfaces/player-visualization-data';
+import { ClusteringFinalEventService } from '../interfaces/clustering-final-event-service';
 
 @Component({
   selector: 'kypo2-viz-overview-final',
@@ -16,6 +17,7 @@ export class FinalComponent implements OnInit, OnChanges {
   @Input() data: GameData;
   @Input() inputSelectedPlayerId: number;
   @Input() feedbackLearnerId: number;
+  @Input() eventService: ClusteringFinalEventService;
   @Output() outputSelectedPlayerId = new EventEmitter<number>();
 
   private d3: D3;
