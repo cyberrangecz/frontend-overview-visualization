@@ -9,3 +9,6 @@ export * from './lib/components/clustering/clustering.component';
 export * from './lib/components/timeline/timeline.component';
 export * from './lib/components/table/table.component';
 export * from './lib/components/filters/filters.component';
+export * from './lib/components/clustering/interfaces/clustering-final-event-service';
+export * from './lib/components/clustering/interfaces/clustering-levels-event-service';
+export * from './lib/components/clustering/interfaces/player-visualization-data';

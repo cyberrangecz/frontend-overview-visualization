@@ -3,7 +3,7 @@ import {GameData} from '../../shared/interfaces/game-data';
 import { ClusteringFinalEventService } from './interfaces/clustering-final-event-service';
 import { FinalComponent } from './final/final.component';
 import { TouchSequence } from 'selenium-webdriver';
-import { LevelsComponent } from 'kypo2-trainings-visualization-overview-lib/lib/components/clustering/levels/levels.component';
+import { LevelsComponent } from './levels/levels.component';
 
 @Component({
   selector: 'kypo2-viz-overview-clustering',
