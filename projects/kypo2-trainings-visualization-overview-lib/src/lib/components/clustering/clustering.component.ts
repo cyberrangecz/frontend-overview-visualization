@@ -3,6 +3,7 @@ import {GameData} from '../../shared/interfaces/game-data';
 import { ClusteringFinalEventService } from './interfaces/clustering-final-event-service';
 import { FinalComponent } from './final/final.component';
 import { TouchSequence } from 'selenium-webdriver';
+import { LevelsComponent } from 'kypo2-trainings-visualization-overview-lib/lib/components/clustering/levels/levels.component';
 
 @Component({
   selector: 'kypo2-viz-overview-clustering',
@@ -12,6 +13,7 @@ import { TouchSequence } from 'selenium-webdriver';
 export class ClusteringComponent implements OnInit {
 
   @ViewChild(FinalComponent) finalComponent;
+  @ViewChild(LevelsComponent) levelsComponent;
 
   public selectedPlayerId: number;
   @Input() feedbackLearnerId: number;
@@ -29,6 +31,10 @@ export class ClusteringComponent implements OnInit {
 
   getFinalComponent(): FinalComponent {
     return this.finalComponent;
+  }
+
+  getLevelsComponent(): LevelsComponent {
+    return this.levelsComponent;
   }
 
 }
