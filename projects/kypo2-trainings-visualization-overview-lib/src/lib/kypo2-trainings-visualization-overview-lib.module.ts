@@ -14,7 +14,6 @@ import { ScoreService } from './services/score.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FiltersComponent } from './components/filters/filters.component';
-import { ClusteringFinalEventService } from './components/clustering/interfaces/clustering-final-event-service';
 
 @NgModule({
   imports: [CommonModule, FormsModule],
