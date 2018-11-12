@@ -14,20 +14,18 @@ import { ScoreService } from './services/score.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FiltersComponent } from './components/filters/filters.component';
+import { ClusteringFinalEventService } from './components/clustering/interfaces/clustering-final-event-service';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
+  imports: [CommonModule, FormsModule],
   declarations: [
-    Kypo2TrainingsVisualizationOverviewLibComponent, 
-    TimelineComponent, 
-    ClusteringComponent, 
-    FinalComponent, 
-    LevelsComponent, 
-    LineComponent, 
-    TableComponent, 
+    Kypo2TrainingsVisualizationOverviewLibComponent,
+    TimelineComponent,
+    ClusteringComponent,
+    FinalComponent,
+    LevelsComponent,
+    LineComponent,
+    TableComponent,
     FiltersComponent
   ],
   exports: [
@@ -35,14 +33,10 @@ import { FiltersComponent } from './components/filters/filters.component';
     TimelineComponent,
     ClusteringComponent,
     TableComponent,
-    FiltersComponent
+    FiltersComponent,
+    FinalComponent,
+    LevelsComponent
   ],
-  providers: [
-    D3Service,
-    DataProcessor,
-    DataService,
-    ScoreService,
-    TimeService,
-  ]
+  providers: [D3Service, DataProcessor, DataService, ScoreService, TimeService]
 })
-export class Kypo2TrainingsVisualizationOverviewLibModule { }
+export class Kypo2TrainingsVisualizationOverviewLibModule {}
