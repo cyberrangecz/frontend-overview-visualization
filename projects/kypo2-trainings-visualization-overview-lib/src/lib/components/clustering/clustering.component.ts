@@ -1,5 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import {GameData} from '../../shared/interfaces/game-data';
+import { ClusteringFinalEventService } from './interfaces/clustering-final-event-service';
+import { FinalComponent } from './final/final.component';
+import { TouchSequence } from 'selenium-webdriver';
+import { LevelsComponent } from './levels/levels.component';
 
 @Component({
   selector: 'kypo2-viz-overview-clustering',
@@ -8,9 +12,13 @@ import {GameData} from '../../shared/interfaces/game-data';
 })
 export class ClusteringComponent implements OnInit {
 
+  @ViewChild(FinalComponent) finalComponent;
+  @ViewChild(LevelsComponent) levelsComponent;
+
   public selectedPlayerId: number;
   @Input() feedbackLearnerId: number;
   @Input() gameData: GameData;
+  @Input() eventService: ClusteringFinalEventService;
 
   constructor() { }
 
@@ -19,6 +27,14 @@ export class ClusteringComponent implements OnInit {
 
   selectPlayer(id) {
     this.selectedPlayerId = id;
+  }
+
+  getFinalComponent(): FinalComponent {
+    return this.finalComponent;
+  }
+
+  getLevelsComponent(): LevelsComponent {
+    return this.levelsComponent;
   }
 
 }

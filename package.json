@@ -10,8 +10,9 @@
     "e2e": "ng e2e",
     "lib-build": "ng build --prod kypo2-trainings-visualization-overview-lib && cp ./src/styles.scss ./dist/kypo2-trainings-visualization-overview-lib",
     "lib-copy": "cp -a ./dist/kypo2-trainings-visualization-overview-lib/. ../kypo2-trainings-visualization-overview-package/",
-    "lib-push": "cd ../kypo2-trainings-visualization-overview-package && git add . && git commit -m 'Update according to master branch' && git push",
-    "lib-build-and-push": "npm run lib-build && npm run lib-copy && npm run lib-push"
+    "lib-push": "mkdir -p ../kypo2-trainings-visualization-overview-package && cd ../kypo2-trainings-visualization-overview-package && git add . && git commit -m 'Update according to master branch' && git push",
+    "lib-build-and-push": "npm run lib-build && npm run lib-copy && npm run lib-push",
+    "push": "git push && npm run lib-build-and-push"
   },
   "private": true,
   "dependencies": {

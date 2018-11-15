@@ -9,3 +9,5 @@ export * from './lib/components/clustering/clustering.component';
 export * from './lib/components/timeline/timeline.component';
 export * from './lib/components/table/table.component';
 export * from './lib/components/filters/filters.component';
+export * from './lib/components/clustering/final/final.component';
+export * from './lib/components/clustering/levels/levels.component';
