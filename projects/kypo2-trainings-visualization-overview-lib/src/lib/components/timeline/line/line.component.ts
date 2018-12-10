@@ -1077,7 +1077,7 @@ export class LineComponent implements OnInit {
    *
    * @returns ProgressPlayer[] players' data for visualization.
    */
-  getPlayersWithEvents() {
+  getPlayersWithEvents(): ProgressPlayer[] {
     return this.visualizationService.getScoreProgressPlayersWithEvents(this.data);
   }
 

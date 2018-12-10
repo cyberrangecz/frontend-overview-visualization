@@ -20,6 +20,7 @@ import {
 import { BarVisualizationData } from '../interfaces/bar-visualization-data';
 import { PlayerVisualizationData } from '../interfaces/player-visualization-data';
 import { ClusteringFinalEventService } from '../interfaces/clustering-final-event-service';
+import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config';
 
 @Component({
   selector: 'kypo2-viz-overview-final',
@@ -31,6 +32,7 @@ export class FinalComponent implements OnInit, OnChanges {
   @Input() inputSelectedPlayerId: number;
   @Input() feedbackLearnerId: number;
   @Input() eventService: ClusteringFinalEventService;
+  @Input() size: SvgConfig;
   @Output() outputSelectedPlayerId = new EventEmitter<number>();
 
   private d3: D3;
@@ -38,15 +40,25 @@ export class FinalComponent implements OnInit, OnChanges {
   private yScale: ScaleLinear<number, number>;
   private svg; // D3 selection of main <svg> element
 
+  private barWidth;
+  private svgHeight;
+  private svgWidth;
+
   private playerClicked = false; // If no player is selected, hover out of player will cancel the highlight
 
   constructor(d3: D3Service, private visualizationService: DataProcessor) {
     this.d3 = d3.getD3();
+
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   ngOnChanges() {
+    this.barWidth = typeof this.size !== 'undefined' && this.size !== null ? this.size.width : SVG_CONFIG.width;
+    this.barWidth *= 0.7;
+    this.svgHeight = typeof this.size !== 'undefined' && this.size !== null ? this.size.height : SVG_CONFIG.height;
+    this.svgWidth = typeof this.size !== 'undefined' && this.size !== null ? this.size.width : SVG_CONFIG.width;
     this.setup();
     this.drawBars();
     this.drawAxes();
@@ -68,9 +80,10 @@ export class FinalComponent implements OnInit, OnChanges {
    * Initialize D3 scales for time/x axis and score/y axis.
    */
   initializeScales() {
+    
     this.xScale = this.d3
       .scaleLinear()
-      .range([0, BAR_CONFIG.width])
+      .range([0, this.barWidth])
       .domain([0, this.getMaximumTime()]);
 
     this.yScale = this.d3
@@ -127,7 +140,7 @@ export class FinalComponent implements OnInit, OnChanges {
       .attr('class', 'score-final-bar-max')
       .attr('x', 0)
       .attr('y', 0)
-      .attr('height', BAR_CONFIG.height)
+      .attr('height', this.svgHeight)
       .attr('width', this.xScale(data.maxTime))
       .attr('fill', BAR_CONFIG.fillColorBright);
   }
@@ -143,7 +156,7 @@ export class FinalComponent implements OnInit, OnChanges {
       .attr('class', 'score-final-bar-avg')
       .attr('x', 0)
       .attr('y', 0)
-      .attr('height', BAR_CONFIG.height)
+      .attr('height', this.svgHeight)
       .attr('width', this.xScale(data.avgTime))
       .attr('fill', BAR_CONFIG.fillColorDark);
   }
@@ -159,8 +172,8 @@ export class FinalComponent implements OnInit, OnChanges {
    * Draws legend under bar label
    */
   drawLegend() {
-    const x = 0.75 * SVG_CONFIG.width;
-    const y = SVG_CONFIG.height * 0.15;
+    const x = 0.75 * this.svgWidth;
+    const y = this.svgHeight * 0.15;
     const yOffset = 20;
     const labelOffset = 25;
 
@@ -262,7 +275,7 @@ export class FinalComponent implements OnInit, OnChanges {
       .attr(
         'transform',
         `translate(${AXES_CONFIG.xAxis.position.x}, ${
-          AXES_CONFIG.xAxis.position.y
+          SVG_CONFIG.height + 20
         })`
       )
       .call(xAxis);
@@ -272,7 +285,7 @@ export class FinalComponent implements OnInit, OnChanges {
   }
 
   /**
-   * Initialize time scale of range [0, BAR_CONFIG.width] and domain [0, maximum game time]
+   * Initialize time scale of range [0, this.barWidth] and domain [0, maximum game time]
    * @returns D3 ScaleTime
    */
   getTimeScale(): any {
@@ -280,7 +293,7 @@ export class FinalComponent implements OnInit, OnChanges {
     const scaleDomainEnd = new Date(0, 0, 0, 0, 0, this.getMaximumTime(), 0);
     const timeScale = this.d3
       .scaleTime()
-      .range([0, BAR_CONFIG.width])
+      .range([0, this.barWidth])
       .domain([scaleDomainStart, scaleDomainEnd]);
     return timeScale;
   }
@@ -293,7 +306,7 @@ export class FinalComponent implements OnInit, OnChanges {
       .append('text')
       .attr(
         'transform',
-        `translate(${BAR_CONFIG.width - 50}, ${AXES_CONFIG.xAxis.position.y +
+        `translate(${this.barWidth - 50}, ${this.svgHeight + 20 +
           26})`
       )
       .style('fill', '#4c4a4a')
@@ -347,7 +360,7 @@ export class FinalComponent implements OnInit, OnChanges {
       .append('text')
       .attr(
         'transform',
-        `translate(${AXES_CONFIG.xAxis.position.x - 35}, ${BAR_CONFIG.height /
+        `translate(${AXES_CONFIG.xAxis.position.x - 35}, ${this.svgHeight /
           2}) rotate(-90)`
       )
       .text('score')
@@ -609,7 +622,7 @@ export class FinalComponent implements OnInit, OnChanges {
       .attr('x1', playersData.x)
       .attr('y1', crosshairConfig.score.line.y1)
       .attr('x2', playersData.x)
-      .attr('y2', crosshairConfig.score.line.y2);
+      .attr('y2', this.svgHeight + 30);
 
     groups.labels
       .select('#focus-label-score')
@@ -632,13 +645,13 @@ export class FinalComponent implements OnInit, OnChanges {
       .select('#focus-line-time')
       .attr('x1', crosshairConfig.time.line.x1)
       .attr('y1', playersData.y)
-      .attr('x2', crosshairConfig.time.line.x2)
+      .attr('x2', this.barWidth + 10)
       .attr('y2', playersData.y);
 
     groups.labels
       .select('#focus-label-time')
       .attr('x', +playersData.x + crosshairConfig.time.label.x)
-      .attr('y', crosshairConfig.time.label.y)
+      .attr('y', this.svgHeight + 15)
       .text(playersData.time);
   }
 
@@ -750,7 +763,7 @@ export class FinalComponent implements OnInit, OnChanges {
 
     const xScale = this.d3
       .scaleLinear()
-      .range([0, BAR_CONFIG.width])
+      .range([0, this.barWidth])
       .domain([0, this.getMaximumTime()]);
 
     xScale.clamp(true);

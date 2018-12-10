@@ -19,10 +19,15 @@ export class ClusteringComponent implements OnInit {
   @Input() feedbackLearnerId: number;
   @Input() gameData: GameData;
   @Input() eventService: ClusteringFinalEventService;
+  @Input() size: {width: number; height: number};
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  get levelsCount() {
+    return this.gameData.information.levels.length;
   }
 
   selectPlayer(id) {

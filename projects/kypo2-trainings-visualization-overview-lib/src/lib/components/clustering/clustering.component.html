@@ -5,6 +5,7 @@
         [inputSelectedPlayerId]="selectedPlayerId"
         [feedbackLearnerId]="feedbackLearnerId"
         [eventService]="eventService"
+        [size]="{width: size.width, height: 100}"
     ></kypo2-viz-overview-final>
     
     <kypo2-viz-overview-levels
@@ -12,6 +13,7 @@
         (outputSelectedPlayerId)="selectPlayer($event)"
         [inputSelectedPlayerId]="selectedPlayerId"
         [feedbackLearnerId]="feedbackLearnerId"
-        [eventService]="eventService">
+        [eventService]="eventService"
+        [size]="size">
     ></kypo2-viz-overview-levels>
 </div>

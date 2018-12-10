@@ -27,6 +27,7 @@ import {
   ContainerElement
 } from 'd3-ng2-service/src/bundle-d3';
 import { ClusteringLevelsEventService } from '../interfaces/clustering-levels-event-service';
+import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config';
 
 @Component({
   selector: 'kypo2-viz-overview-levels',
@@ -38,12 +39,18 @@ export class LevelsComponent implements OnInit, OnChanges {
   @Input() inputSelectedPlayerId: number;
   @Input() feedbackLearnerId: number;
   @Input() eventService: ClusteringLevelsEventService;
+  @Input() size: SvgConfig;
   @Output() outputSelectedPlayerId = new EventEmitter<number>();
 
   private d3: D3;
   private xScale: ScaleLinear<number, number>;
   private yScaleBandBars: ScaleBand<string>;
   private svg;
+
+  private svgWidth;
+  private svgHeight;
+  private barWidth;
+
   private playerClicked = false; // If no player is selected, hover out of player will cancel the highlight
 
   constructor(d3: D3Service, private visualizationDataService: DataProcessor) {
@@ -53,6 +60,9 @@ export class LevelsComponent implements OnInit, OnChanges {
   ngOnInit() {}
 
   ngOnChanges() {
+    this.svgHeight = typeof this.size !== 'undefined' && this.size !== null ? this.size.height : SVG_CONFIG.height;
+    this.svgWidth = typeof this.size !== 'undefined' && this.size !== null ? this.size.width : SVG_CONFIG.width;
+    this.barWidth = 0.7 * this.svgWidth;
     this.setup();
     this.drawBars();
     this.drawAxes();
@@ -76,7 +86,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   initializeScales() {
     this.xScale = this.d3
       .scaleLinear()
-      .range([0, BARS_CONFIG.width])
+      .range([0, this.barWidth])
       .domain([0, this.getMaximumTime()]);
   }
 
@@ -89,11 +99,11 @@ export class LevelsComponent implements OnInit, OnChanges {
       .append('svg')
       .attr(
         'width',
-        SVG_CONFIG.width + SVG_MARGIN_CONFIG.left + SVG_MARGIN_CONFIG.right
+        this.svgWidth + SVG_MARGIN_CONFIG.left + SVG_MARGIN_CONFIG.right
       )
       .attr(
         'height',
-        SVG_CONFIG.height + SVG_MARGIN_CONFIG.top + SVG_MARGIN_CONFIG.bottom
+        this.svgHeight + SVG_MARGIN_CONFIG.top + SVG_MARGIN_CONFIG.bottom
       )
       .append('g')
       .attr(
@@ -124,7 +134,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   initializeScaleBand(data: BarVisualizationData[]) {
     this.yScaleBandBars = this.d3
       .scaleBand()
-      .range([0, SVG_CONFIG.height]) // [this.svgConfig.height, 0] results with reversed order
+      .range([0, this.svgHeight]) // [this.svgConfig.height, 0] results with reversed order
       .domain(data.map(d => d.number.toString()))
       .padding(BARS_CONFIG.padding);
   }
@@ -242,7 +252,7 @@ export class LevelsComponent implements OnInit, OnChanges {
       .attr(
         'transform',
         `translate(${AXES_CONFIG.xAxis.position.x}, ${
-          AXES_CONFIG.xAxis.position.y
+          this.svgHeight + 0.3 * 0.3
         })`
       )
       .call(xAxis);
@@ -258,7 +268,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     const scaleDomainEnd = new Date(0, 0, 0, 0, 0, this.getMaximumTime(), 0);
     const timeScale = this.d3
       .scaleTime()
-      .range([0, BARS_CONFIG.width])
+      .range([0, this.barWidth])
       .domain([scaleDomainStart, scaleDomainEnd]);
     return timeScale;
   }
@@ -271,7 +281,7 @@ export class LevelsComponent implements OnInit, OnChanges {
       .append('text')
       .attr(
         'transform',
-        `translate(${BARS_CONFIG.width - 50}, ${AXES_CONFIG.xAxis.position.y +
+        `translate(${this.barWidth - 50}, ${this.svgHeight + 0.3 * 0.3 +
           26})`
       )
       .style('fill', '#4c4a4a')
@@ -306,7 +316,7 @@ export class LevelsComponent implements OnInit, OnChanges {
       .append('path')
       .attr(
         'd',
-        `M0,${SVG_CONFIG.height - SVG_MARGIN_CONFIG.bottom * 0.3}.5V0.5H0`
+        `M0,${this.svgHeight - SVG_MARGIN_CONFIG.bottom * 0.3}.5V0.5H0`
       );
   }
 
@@ -350,7 +360,7 @@ export class LevelsComponent implements OnInit, OnChanges {
       .append('text')
       .attr(
         'transform',
-        `translate(${AXES_CONFIG.yAxis.position.x - 50}, ${SVG_CONFIG.height /
+        `translate(${AXES_CONFIG.yAxis.position.x - 50}, ${this.svgHeight /
           2}) rotate(-90)`
       )
       .attr('text-anchor', 'middle')
@@ -401,7 +411,7 @@ export class LevelsComponent implements OnInit, OnChanges {
 
     const xScale = (this.xScale = this.d3
       .scaleLinear()
-      .range([0, BARS_CONFIG.width])
+      .range([0, this.barWidth])
       .domain([0, this.getMaximumTime()]));
 
     playersGroup
@@ -521,7 +531,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     const y = coordinates[1];
     const xScale = this.d3
       .scaleLinear()
-      .range([0, BARS_CONFIG.width])
+      .range([0, this.barWidth])
       .domain([0, this.getMaximumTime()]);
     xScale.clamp(true);
     const yScale = d3
