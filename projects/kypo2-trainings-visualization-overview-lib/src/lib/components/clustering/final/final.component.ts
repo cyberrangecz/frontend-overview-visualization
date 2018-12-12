@@ -80,7 +80,7 @@ export class FinalComponent implements OnInit, OnChanges {
    * Initialize D3 scales for time/x axis and score/y axis.
    */
   initializeScales() {
-    
+
     this.xScale = this.d3
       .scaleLinear()
       .range([0, this.barWidth])
@@ -101,11 +101,11 @@ export class FinalComponent implements OnInit, OnChanges {
       .append('svg')
       .attr(
         'width',
-        SVG_CONFIG.width + SVG_MARGIN_CONFIG.left + SVG_MARGIN_CONFIG.right
+        this.svgWidth + SVG_MARGIN_CONFIG.left + SVG_MARGIN_CONFIG.right
       )
       .attr(
         'height',
-        SVG_CONFIG.height + SVG_MARGIN_CONFIG.top + SVG_MARGIN_CONFIG.bottom
+        this.svgHeight + SVG_MARGIN_CONFIG.top + SVG_MARGIN_CONFIG.bottom
       )
       .append('g')
       .attr(
