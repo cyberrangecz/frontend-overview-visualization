@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { GameData } from '../../../shared/interfaces/game-data';
 import { D3Service, D3 } from 'd3-ng2-service';
 import { DataProcessor } from '../../../services/data-processor.service';
@@ -15,7 +15,8 @@ import { FiltersService } from '../../../services/filters.service';
 @Component({
   selector: 'kypo2-viz-overview-line',
   templateUrl: './line.component.html',
-  styleUrls: ['./line.component.css']
+  styleUrls: ['./line.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LineComponent implements OnInit {
 
