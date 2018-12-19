@@ -122,6 +122,7 @@ export class LineComponent implements OnInit {
   }
 
   ngOnChanges() {
+    this.players = this.getPlayersWithEvents();
     this.setup();
     this.drawEstimatedTimesBars();
     this.drawAxes();
