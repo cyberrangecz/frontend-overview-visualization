@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { GameData } from '../../shared/interfaces/game-data';
-import { LineComponent } from 'kypo2-trainings-visualization-overview-lib/lib/components/timeline/line/line.component';
+import { LineComponent } from './line/line.component';
 
 @Component({
   selector: 'kypo2-viz-overview-timeline',
