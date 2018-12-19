@@ -34,7 +34,8 @@ import { FiltersComponent } from './components/filters/filters.component';
     TableComponent,
     FiltersComponent,
     FinalComponent,
-    LevelsComponent
+    LevelsComponent,
+    LineComponent
   ],
   providers: [D3Service, DataProcessor, DataService, ScoreService, TimeService]
 })
