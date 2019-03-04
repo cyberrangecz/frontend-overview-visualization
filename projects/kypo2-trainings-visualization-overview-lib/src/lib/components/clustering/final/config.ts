@@ -20,14 +20,14 @@ export const SVG_MARGIN_CONFIG: SvgMarginConfig = {
 export const BAR_CONFIG: BarConfig = {
     width: SVG_CONFIG.width * 0.7,
     height: SVG_CONFIG.height,
-    fillColorDark: "#D6D6D6",
-    fillColorBright: "#F0F0F0" 
+    fillColorDark: "#979797",
+    fillColorBright: "#dbdbdb"
 };
 
 export const PLAYER_POINT_CONFIG: PlayerPointConfig = {
     pointRadius: 5,
     pointHighlight: 1.2,
-    fillColor: '#8c8c8c',
+    fillColor: '#7b7b7b',
     feedbackLearner: {
         pointRadius: 10
     }

@@ -1,13 +1,13 @@
 <!-- Stripe pattern -->
 <svg style="position: absolute">
     <defs>
-        <pattern id="stripe" patternTransform="rotate(90)" patternUnits="userSpaceOnUse" width="40" height="20">
-            <line x1="10" y1="0" x2="30" y2="20" />
-            <line x1="-10" y1="0" x2="10" y2="20" />
-            <line x1="30" y1="0" x2="50" y2="20" />
+        <pattern id="stripe" patternTransform="rotate(90)" patternUnits="userSpaceOnUse" width="20" height="10">
+            <line x1="5" y1="0" x2="15" y2="10" style="stroke-width:3.5"/>
+            <line x1="-5" y1="0" x2="5" y2="10" style="stroke-width:3.5"/>
+            <line x1="15" y1="0" x2="25" y2="10" style="stroke-width:3.5"/>
         </pattern>
         <mask id="mask">
-            <rect [attr.height.px]="svgConfig.height" [attr.width.px]="svgConfig.width" style="fill: url(#stripe)" />
+            <rect [attr.height.px]="svgConfig.height" [attr.width.px]="svgConfig.width" style="fill: url(#stripe);opacity: 0.5" />
         </mask>
     </defs>
 </svg>

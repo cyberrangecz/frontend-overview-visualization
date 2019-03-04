@@ -11,6 +11,7 @@ export class TimelineComponent implements OnInit {
 
   @Input() feedbackLearnerId: number;
   @Input() gameData: GameData;
+  @Input() colorScheme: string[];
   @Input() size: {width: number; height: number};
 
   @ViewChild(LineComponent) lineComponent: LineComponent;

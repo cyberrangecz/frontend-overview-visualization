@@ -27,7 +27,7 @@ export class TableComponent implements OnInit, OnDestroy {
   public playerColorScale = (id) => "black";
 
   constructor(
-      private visualizationService: DataProcessor, 
+      private visualizationService: DataProcessor,
       private tableService: TableService,
       private filtersService: FiltersService
     ) {
@@ -74,7 +74,9 @@ export class TableComponent implements OnInit, OnDestroy {
    */
   checkFeedbackLearner() {
     const feedbackLearner = this.players.find((player) => player.id === this.feedbackLearnerId);
-    feedbackLearner.checked = !feedbackLearner.checked;
+    if (feedbackLearner !== undefined) {
+      feedbackLearner.checked = !feedbackLearner.checked;
+    }
   }
 
   onRowClick(player) {

@@ -7,8 +7,6 @@ import { CrosshairConfig } from '../../../shared/interfaces/configurations/cross
 import { LevelLabelsConfig } from '../interfaces/level-labels-config';
 
 
-export const COLOR_SCHEME: ColorScheme = ['#fbb4ae', '#b3cde3', '#ccebc5', '#decbe4', '#fed9a6', '#ffffcc', '#e5d8bd', '#fddaec', '#f2f2f2'];
-
 export const SVG_CONFIG: SvgConfig = {
     width: 1200,
     height: 500
