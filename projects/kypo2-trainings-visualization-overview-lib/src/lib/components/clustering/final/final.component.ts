@@ -313,9 +313,9 @@ export class FinalComponent implements OnInit, OnChanges {
         `translate(${this.barWidth - 50}, ${this.svgHeight + 20 +
           26})`
       )
-      .style('fill', '#4c4a4a')
-      .style('font-weight', 'bold')
-      .text('time');
+      .style('fill', '#4c4a4a');
+      /*.style('font-weight', 'bold')
+      .text('');*/
   }
 
   /**

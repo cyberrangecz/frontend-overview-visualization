@@ -284,9 +284,7 @@ export class LevelsComponent implements OnInit, OnChanges {
         `translate(${this.barWidth - 50}, ${this.svgHeight + 0.3 * 0.3 +
           26})`
       )
-      .style('fill', '#4c4a4a')
-      .style('font-weight', 'bold')
-      .text('time');
+      .style('fill', '#4c4a4a');
   }
 
   /**
