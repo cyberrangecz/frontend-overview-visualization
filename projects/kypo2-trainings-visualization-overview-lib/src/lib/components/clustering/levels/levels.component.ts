@@ -18,7 +18,7 @@ import {
   BARS_CONFIG,
   CROSSHAIR_CONFIG,
   PLAYER_POINT_CONFIG,
-  LEVEL_LABELS_CONFIG
+  LEVEL_LABELS_CONFIG, colorScheme
 } from './config';
 import {
   ScaleLinear,
@@ -145,7 +145,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    * @param data holding necessary values for bar visualization
    */
   drawMaximumBars(barsGroup, data: BarVisualizationData[]) {
-    const colorScale = this.d3.scaleOrdinal().range(this.colorScheme);
+    const colorScale = this.d3.scaleOrdinal().range((this.colorScheme || colorScheme));
     barsGroup
       .selectAll('.score-level-bar-max')
       .data(data)
@@ -174,7 +174,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    * @param data holding necessary values for bar visualization
    */
   drawAverageBars(barsGroup, data: BarVisualizationData[]) {
-    const colorScale = this.d3.scaleOrdinal().range(this.colorScheme);
+    const colorScale = this.d3.scaleOrdinal().range(this.colorScheme || colorScheme);
     barsGroup
       .selectAll('.score-level-bar-avg')
       .data(data)
@@ -372,7 +372,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    */
   drawPlayers() {
     const yScaleBand = this.yScaleBandBars;
-    const colorScale = this.d3.scaleOrdinal().range(this.colorScheme);
+    const colorScale = this.d3.scaleOrdinal().range(this.colorScheme || colorScheme);
     const playersGroupedByLevel = this.getPlayersData();
     playersGroupedByLevel.forEach((playersInCurrentLevel, i) => {
       this.drawPlayersOnSingleBar(playersInCurrentLevel, i, colorScale);
