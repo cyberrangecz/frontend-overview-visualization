@@ -28,14 +28,19 @@ import {
 } from 'd3-ng2-service/src/bundle-d3';
 import { ClusteringLevelsEventService } from '../interfaces/clustering-levels-event-service';
 import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config';
+import {GAME_INFORMATION} from '../../../../../../../src/app/mocks/information.mock';
+import {EVENTS} from '../../../../../../../src/app/mocks/events.mock';
+import {DataService} from '../../../services/data.service';
+import {Level} from '../../../shared/interfaces/level';
 
 @Component({
   selector: 'kypo2-viz-overview-levels',
   templateUrl: './levels.component.html',
   styleUrls: ['./levels.component.css']
 })
-export class LevelsComponent implements OnInit, OnChanges {
-  @Input() data: GameData;
+export class LevelsComponent implements OnInit/*, OnChanges */{
+  // @Input() data: GameData;
+  private data: GameData = {information: GAME_INFORMATION, events: EVENTS};
   @Input() inputSelectedPlayerId: number;
   @Input() feedbackLearnerId: number;
   @Input() eventService: ClusteringLevelsEventService;
@@ -53,13 +58,15 @@ export class LevelsComponent implements OnInit, OnChanges {
 
   private playerClicked = false; // If no player is selected, hover out of player will cancel the highlight
 
-  constructor(d3: D3Service, private visualizationDataService: DataProcessor) {
+  constructor(d3: D3Service, private visualizationDataService: DataProcessor, private dataService: DataService) {
     this.d3 = d3.getD3();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.load();
+  }
 
-  ngOnChanges() {
+  /*ngOnChanges() {
     this.svgHeight = typeof this.size !== 'undefined' && this.size !== null ? this.size.height : SVG_CONFIG.height;
     this.svgWidth = typeof this.size !== 'undefined' && this.size !== null ? this.size.width : SVG_CONFIG.width;
     this.barWidth = 0.7 * this.svgWidth;
@@ -70,7 +77,51 @@ export class LevelsComponent implements OnInit, OnChanges {
     this.buildCrosshair();
     this.addListeners();
     this.highlightSelectedPlayer();
+  }*/
+
+  load() {
+    this.dataService.getAllData().subscribe(res => {
+    // console.log(res[1]);
+    // console.log(this.data.events);
+    // this.data.information = res[0];
+    // this.data.events = res[1];
+
+    this.svgHeight = typeof this.size !== 'undefined' && this.size !== null ? this.size.height : SVG_CONFIG.height;
+    this.svgWidth = typeof this.size !== 'undefined' && this.size !== null ? this.size.width : SVG_CONFIG.width;
+    this.barWidth = 0.7 * this.svgWidth;
+    this.setup();
+    this.drawBars();
+    this.drawAxes();
+    this.drawPlayers();
+    this.buildCrosshair();
+    this.addListeners();
+    this.highlightSelectedPlayer();
+    });
   }
+/*
+  mapLoadedData(res) {
+    // console.log(res);
+    // console.log(this.data.information);
+    this.data.information.name = res.title;
+    this.data.information.levels = this.loadLevels(res.levels);
+    this.data.information.estimatedTime = res.levels.length * 900;
+  }*/
+/*
+  loadLevels(levels): Level[] {
+    const newLevels: Level[] = [];
+    let levelNum = 1;
+    levels.forEach((level) => {
+      const l: Level = {
+        name: level.title,
+        number: levelNum++,
+        estimatedTime: 900,
+        points: level.max_score,
+        hints: level.hints === undefined ? [] : level.hints
+      };
+      newLevels.push(l);
+    });
+    return newLevels;
+  }*/
 
   /**
    * Initialize scales
