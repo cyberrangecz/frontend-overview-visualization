@@ -41,8 +41,8 @@ export class TimeService {
     return this.d3.max(events.levels[ level - 1 ].events, (e: Event) => e.gametime);
   }
 
-  getFinalMaxTime(events: GameEvents): number {
-    return <any>Object.values<number>(this.getFinalPlayersMaxTimes(events)).reduce((a, b) => Math.max(a, b));
+  getFinalMaxTime(events: GameEvents, includeTimeGaps: boolean = false): number {
+    return <any>Object.values<number>(this.getFinalPlayersMaxTimes(events, includeTimeGaps)).reduce((a, b) => Math.max(a, b));
   }
 
   getFinalAvgTime(events: GameEvents): number {
@@ -50,7 +50,7 @@ export class TimeService {
     return this.d3.mean(times);
   }
 
-  getFinalPlayersMaxTimes(events: GameEvents) {
+  getFinalPlayersMaxTimes(events: GameEvents, includeTimeGaps: boolean = false) {
     const playersMaxTimes = {};
     const flattenedEvents = this.flattenEvents(events);
 
@@ -58,14 +58,16 @@ export class TimeService {
 
     eventsGroupedByPlayer.forEach(player => {
       let time: any;
-      if (true) { // TODO
+      // console.log(includeTimeGaps);
+      if (!includeTimeGaps) {
         time = new Date(player.values[player.values.length - 1].gametime).getTime();
+        playersMaxTimes[player.key] = time;
       } else {
         const startTimestamp: any = this.d3.min(player.values, (event: Event) => event.timestamp);
         const endTimestamp: any =  this.d3.max(player.values, (event: Event) => event.timestamp);
         time = new Date(endTimestamp).getTime() - new Date(startTimestamp).getTime();
+        playersMaxTimes[player.key] = time / 1000;
       }
-      playersMaxTimes[player.key] = time;
     });
     return playersMaxTimes;
   }

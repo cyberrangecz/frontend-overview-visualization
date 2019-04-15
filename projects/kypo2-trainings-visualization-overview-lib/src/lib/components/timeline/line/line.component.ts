@@ -57,6 +57,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   private eventTooltip;
   private lineTooltip;
   private zoomableArea;
+  private typePrefix = 'cz.muni.csirt.kypo.events.trainings.';
 
   private tableRowClicked: Subscription;
   private tableRowMouseover: Subscription;
@@ -102,6 +103,21 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
     this.load();
   }
 
+  ngOnChanges() {
+    this.players = this.getPlayersWithEvents();
+    this.setup();
+    this.drawEstimatedTimesBars();
+    this.drawAxes();
+    this.drawLevelThresholds();
+    this.addZoomableArea();
+    this.buildSvgDefs();
+    this.buildPlayersGroup();
+    this.buildTooltips();
+    this.addZoomAndBrush();
+    this.buildCrosshair();
+    this.drawLegend();
+  }
+
   load() {
     this.dataService.getAllData().subscribe((res: [GameInformation, GameEvents]) => {
       this.data.information = res[0];
@@ -110,6 +126,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
       this.players = this.getPlayersWithEvents();
       this.initializeFilters();
       this.drawFeedbackLearner();
+      this.initializeScales();
     });
   }
 
@@ -128,7 +145,6 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
     this.checkFeedbackLearner();
     if (this.feedbackLearnerId !== null) {this.drawPlayer(this.feedbackLearnerId); }
   }
-
   /**
    * Sets checked attribute of feedback learner in players array to true
    */
@@ -137,21 +153,6 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
       if (player.id === this.feedbackLearnerId) { player.checked = true; }
       return player;
     });
-  }
-
-  ngOnChanges() {
-    this.players = this.getPlayersWithEvents();
-    this.setup();
-    this.drawEstimatedTimesBars();
-    this.drawAxes();
-    this.drawLevelThresholds();
-    this.addZoomableArea();
-    this.buildSvgDefs();
-    this.buildPlayersGroup();
-    this.buildTooltips();
-    this.addZoomAndBrush();
-    this.buildCrosshair();
-    this.drawLegend();
   }
 
   /**
@@ -306,7 +307,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
     this.tableService.sendPlayerColorScale(this.playerColorScale);
 
     const scaleDomainStart = new Date(0, 0, 0, 0, 0, 0, 0);
-    const scaleDomainEnd = new Date(0, 0, 0, 0, 0, this.getMaximumTime(), 0);
+    const scaleDomainEnd = new Date(0, 0, 0, 0, 0, this.getMaximumTime(true), 0);
     this.timeAxisScale = this.d3.scaleTime()
       .range([0, this.size.width])
       .domain([scaleDomainStart, scaleDomainEnd]);
@@ -319,11 +320,11 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
 
     this.timeScale = this.d3.scaleLinear()
       .range([0, this.size.width])
-      .domain([0, this.getMaximumTime()]);
+      .domain([0, this.getMaximumTime(true)]);
 
     this.contextTimeScale = this.d3.scaleLinear()
       .range([0, this.size.width])
-      .domain([0, this.getMaximumTime()]);
+      .domain([0, this.getMaximumTime(true)]);
 
     this.contextScoreScale = this.d3.scaleLinear()
       .range([CONTEXT_CONFIG.height, 0])
@@ -1108,8 +1109,11 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    *
    * @returns number longest game time.
    */
-  getMaximumTime() {
-    return this.visualizationService.getScoreFinalMaxTime(this.data);
+  getMaximumTime(includeTimeGaps: boolean = true) {
+    console.log('t');
+    console.log(includeTimeGaps);
+    console.log(this.data);
+    return this.visualizationService.getScoreFinalMaxTime(this.data, includeTimeGaps);
   }
 
   /**

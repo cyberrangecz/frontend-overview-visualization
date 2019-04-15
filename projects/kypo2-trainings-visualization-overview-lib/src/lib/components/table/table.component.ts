@@ -21,7 +21,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   // @Input() data: GameData;
   @Input() feedbackLearnerId: string;
 
-  public scoreTableData: {playerIds: string[], levels: any[], finalScores: {}} = {playerIds: [], levels: [], finalScores: {}};
+  public scoreTableData = {playerIds: [], levels: [], finalScores: {}};
   public playersOrdered = [];
   public sortedColumn = null;
   public sortedDesc = false;

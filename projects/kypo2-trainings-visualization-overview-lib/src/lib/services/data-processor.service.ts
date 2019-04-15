@@ -84,8 +84,9 @@ export class DataProcessor {
     return result;
   }
 
-  getScoreFinalMaxTime(gameData: GameData): number {
-    return this.timeService.getFinalMaxTime(gameData.events);
+  getScoreFinalMaxTime(gameData: GameData, includeTimeGaps: boolean = false): number {
+    console.log(includeTimeGaps);
+    return this.timeService.getFinalMaxTime(gameData.events, includeTimeGaps);
   }
 
   getScoreFinalGameMaxScore(gameData: GameData): number {
