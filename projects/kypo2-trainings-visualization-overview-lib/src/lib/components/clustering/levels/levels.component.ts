@@ -40,7 +40,7 @@ import {throwError} from 'rxjs';
   templateUrl: './levels.component.html',
   styleUrls: ['./levels.component.css']
 })
-export class LevelsComponent implements OnInit/*, OnChanges */{
+export class LevelsComponent implements OnInit, OnChanges {
   // @Input() data: GameData;
   private data: GameData = {information: GAME_INFORMATION, events: EVENTS};
   @Input() inputSelectedPlayerId: string;
@@ -68,25 +68,20 @@ export class LevelsComponent implements OnInit/*, OnChanges */{
   ngOnInit() {
     this.load();
   }
-/*
+
   ngOnChanges() {
-    this.svgHeight = typeof this.size !== 'undefined' && this.size !== null ? this.size.height : SVG_CONFIG.height;
-    this.svgWidth = typeof this.size !== 'undefined' && this.size !== null ? this.size.width : SVG_CONFIG.width;
-    this.barWidth = 0.7 * this.svgWidth;
-    this.setup();
-    this.drawBars();
-    this.drawAxes();
-    this.drawPlayers();
-    this.buildCrosshair();
-    this.addListeners();
-    this.highlightSelectedPlayer();
-  }*/
+    this.updateCanvas();
+  }
 
   load() {
     this.dataService.getAllData().subscribe((res: [GameInformation, GameEvents]) => {
     this.data.information = res[0];
     this.data.events = res[1];
+    this.updateCanvas();
+    });
+  }
 
+  updateCanvas() {
     this.svgHeight = typeof this.size !== 'undefined' && this.size !== null ? this.size.height : SVG_CONFIG.height;
     this.svgWidth = typeof this.size !== 'undefined' && this.size !== null ? this.size.width : SVG_CONFIG.width;
     this.barWidth = 0.7 * this.svgWidth;
@@ -97,7 +92,6 @@ export class LevelsComponent implements OnInit/*, OnChanges */{
     this.buildCrosshair();
     this.addListeners();
     this.highlightSelectedPlayer();
-    });
   }
 
   /**
@@ -766,7 +760,7 @@ export class LevelsComponent implements OnInit/*, OnChanges */{
     const playersData = {
       x: x,
       y: y,
-      time: d3.timeFormat('%H:%M:%S')(new Date(0, 0, 0, 0, 0, 0, player.time)),
+      time: d3.timeFormat('%H:%M:%S')(new Date(0, 0, 0, 0, 0, player.time, 0)),
       score: player.score.toFixed(0)
     };
 

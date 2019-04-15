@@ -32,7 +32,7 @@ import {DataService} from '../../../services/data.service';
   templateUrl: './final.component.html',
   styleUrls: ['./final.component.css']
 })
-export class FinalComponent implements OnInit/*, OnChanges */{
+export class FinalComponent implements OnInit, OnChanges {
   // @Input() data: GameData;
   private data: GameData = {information: GAME_INFORMATION, events: EVENTS};
   @Input() inputSelectedPlayerId: string;
@@ -65,34 +65,27 @@ export class FinalComponent implements OnInit/*, OnChanges */{
     this.dataService.getAllData().subscribe((res: [GameInformation, GameEvents]) => {
       this.data.information = res[0];
       this.data.events = res[1];
-
-      this.svgHeight = typeof this.size !== 'undefined' && this.size !== null ? this.size.height : SVG_CONFIG.height;
-      this.svgWidth = typeof this.size !== 'undefined' && this.size !== null ? this.size.width : SVG_CONFIG.width;
-      this.barWidth = 0.7 * this.svgWidth;
-      this.setup();
-      this.drawBars();
-      this.drawAxes();
-      this.drawPlayers();
-      this.buildCrosshair();
-      this.addListeners();
-      this.highlightSelectedPlayer();
+      this.updateCanvas();
     });
   }
 
-  /*
-    ngOnChanges() {
-      this.barWidth = typeof this.size !== 'undefined' && this.size !== null ? this.size.width : SVG_CONFIG.width;
-      this.barWidth *= 0.7;
-      this.svgHeight = typeof this.size !== 'undefined' && this.size !== null ? this.size.height : SVG_CONFIG.height;
-      this.svgWidth = typeof this.size !== 'undefined' && this.size !== null ? this.size.width : SVG_CONFIG.width;
-      this.setup();
-      this.drawBars();
-      this.drawAxes();
-      this.drawPlayers();
-      this.buildCrosshair();
-      this.addListeners();
-      this.highlightSelectedPlayer();
-    }*/
+  ngOnChanges() {
+    this.updateCanvas();
+  }
+
+  updateCanvas() {
+    this.barWidth = typeof this.size !== 'undefined' && this.size !== null ? this.size.width : SVG_CONFIG.width;
+    this.barWidth *= 0.7;
+    this.svgHeight = typeof this.size !== 'undefined' && this.size !== null ? this.size.height : SVG_CONFIG.height;
+    this.svgWidth = typeof this.size !== 'undefined' && this.size !== null ? this.size.width : SVG_CONFIG.width;
+    this.setup();
+    this.drawBars();
+    this.drawAxes();
+    this.drawPlayers();
+    this.buildCrosshair();
+    this.addListeners();
+    this.highlightSelectedPlayer();
+  }
 
   /**
    * Initialize D3 scales and build SVG element
@@ -612,7 +605,7 @@ export class FinalComponent implements OnInit/*, OnChanges */{
     const playersData = {
       x: playerElementNode.getAttribute('cx'),
       y: playerElementNode.getAttribute('cy'),
-      time: d3.timeFormat('%H:%M:%S')(new Date(0, 0, 0, 0, 0, 0, player.time)),
+      time: d3.timeFormat('%H:%M:%S')(new Date(0, 0, 0, 0, 0, player.time, 0)),
       score: player.score
     };
 
