@@ -32,6 +32,9 @@ import {GAME_INFORMATION} from '../../../../../../../src/app/mocks/information.m
 import {EVENTS} from '../../../../../../../src/app/mocks/events.mock';
 import {DataService} from '../../../services/data.service';
 import {Level} from '../../../shared/interfaces/level';
+import {GameInformation} from '../../../shared/interfaces/game-information';
+import {GameEvents} from '../../../shared/interfaces/game-events';
+import {throwError} from 'rxjs';
 
 @Component({
   selector: 'kypo2-viz-overview-levels',
@@ -65,8 +68,8 @@ export class LevelsComponent implements OnInit/*, OnChanges */{
   ngOnInit() {
     this.load();
   }
-
-  /*ngOnChanges() {
+/*
+  ngOnChanges() {
     this.svgHeight = typeof this.size !== 'undefined' && this.size !== null ? this.size.height : SVG_CONFIG.height;
     this.svgWidth = typeof this.size !== 'undefined' && this.size !== null ? this.size.width : SVG_CONFIG.width;
     this.barWidth = 0.7 * this.svgWidth;
@@ -80,11 +83,11 @@ export class LevelsComponent implements OnInit/*, OnChanges */{
   }*/
 
   load() {
-    this.dataService.getAllData().subscribe(res => {
+    this.dataService.getAllData().subscribe((res: [GameInformation, GameEvents]) => {
     // console.log(res[1]);
     // console.log(this.data.events);
-    // this.data.information = res[0];
-    // this.data.events = res[1];
+    this.data.information = res[0];
+    this.data.events = res[1];
 
     this.svgHeight = typeof this.size !== 'undefined' && this.size !== null ? this.size.height : SVG_CONFIG.height;
     this.svgWidth = typeof this.size !== 'undefined' && this.size !== null ? this.size.width : SVG_CONFIG.width;
@@ -98,30 +101,6 @@ export class LevelsComponent implements OnInit/*, OnChanges */{
     this.highlightSelectedPlayer();
     });
   }
-/*
-  mapLoadedData(res) {
-    // console.log(res);
-    // console.log(this.data.information);
-    this.data.information.name = res.title;
-    this.data.information.levels = this.loadLevels(res.levels);
-    this.data.information.estimatedTime = res.levels.length * 900;
-  }*/
-/*
-  loadLevels(levels): Level[] {
-    const newLevels: Level[] = [];
-    let levelNum = 1;
-    levels.forEach((level) => {
-      const l: Level = {
-        name: level.title,
-        number: levelNum++,
-        estimatedTime: 900,
-        points: level.max_score,
-        hints: level.hints === undefined ? [] : level.hints
-      };
-      newLevels.push(l);
-    });
-    return newLevels;
-  }*/
 
   /**
    * Initialize scales

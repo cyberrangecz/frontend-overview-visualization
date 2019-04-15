@@ -15,8 +15,6 @@ import {GAME_INFORMATION} from '../../../../../../src/app/mocks/information.mock
 })
 export class ClusteringComponent implements OnInit {
 
-  constructor(private dataService: DataService) {}
-
   @ViewChild(FinalComponent) finalComponent;
   @ViewChild(LevelsComponent) levelsComponent;
 
@@ -28,11 +26,9 @@ export class ClusteringComponent implements OnInit {
 
   private gameData: GameData = {information: GAME_INFORMATION, events: EVENTS};
 
-  // constructor() { }
+  constructor() { }
 
-  ngOnInit() {
-    // this.gameData = {information: this.dataService.getInformation(), events: EVENTS};
-  }
+  ngOnInit() {}
 
   get levelsCount() {
     return this.gameData.information.levels.length;

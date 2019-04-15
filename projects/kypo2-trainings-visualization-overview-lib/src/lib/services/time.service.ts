@@ -21,7 +21,9 @@ export class TimeService {
     const maximumTimesOfEachLevel = {};
     times.forEach((currentLevelTimes, i) => {
       maximumTimesOfEachLevel[i + 1] = +this.d3.max(<any>Object.values<number>(currentLevelTimes));
+      if (isNaN(maximumTimesOfEachLevel[i + 1]) ) { maximumTimesOfEachLevel[i + 1] = 0; }
     });
+    // console.log(maximumTimesOfEachLevel);
     return maximumTimesOfEachLevel;
   }
 
@@ -30,7 +32,7 @@ export class TimeService {
     const times = this.getEachLevelPlayerTime(events);
     const averageTimesOfEachLevel = {};
     times.forEach((currentLevelTimes, i) => {
-      averageTimesOfEachLevel[i+1] = +this.d3.mean(<any>Object.values<number>(currentLevelTimes));
+      averageTimesOfEachLevel[i + 1] = +this.d3.mean(<any>Object.values<number>(currentLevelTimes));
     });
     return averageTimesOfEachLevel;
   }
@@ -85,7 +87,7 @@ export class TimeService {
         const endTimestamp = this.d3.max(player.values, (event: Event) => event.timestamp);
         lastEvents[player.key] = endTimestamp;
         const time = new Date(endTimestamp).getTime() - new Date(startTimestamp).getTime();
-        playersMaxTimes[player.key] = time/1000;
+        playersMaxTimes[player.key] = time / 1000;
       });
       result.push(playersMaxTimes);
     });

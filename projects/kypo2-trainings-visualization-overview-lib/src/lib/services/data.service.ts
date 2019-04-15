@@ -1,25 +1,22 @@
 import { Injectable } from '@angular/core';
 import { GameInformation } from '../shared/interfaces/game-information';
 import { GameEvents } from '../shared/interfaces/game-events';
-import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
-import {map} from 'rxjs/operators';
-import {forkJoin, Observable} from 'rxjs';
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from '@angular/common/http';
+import {catchError, map} from 'rxjs/operators';
+import { Event } from '../shared/interfaces/event';
+import {forkJoin, Observable, throwError} from 'rxjs';
 import {Level} from '../shared/interfaces/level';
 import {LevelEvents} from '../shared/interfaces/level-events';
+import {Hint} from '../shared/interfaces/hint';
 
 @Injectable()
 /**
  * Fetches the data from the REST API.
  */
 export class DataService {
-  token = 'eyJqa3UiOiJodHRwczpcL1wvb2lkYy5pY3MubXVuaS5jelwvb2lkY1wvandrIiwia2lkIjoicnNhMSIsImFsZyI6IlJTMjU2In0.' +
-    'eyJzdWIiOiIzOTYyOTZAbXVuaS5jeiIsImF6cCI6IjU5M2JiZjQ5LWE4MmItNGY2ZS05YmFmLWM0ZWQ0ODhkNTA2NiIsImlzcyI6Imh0dH' +
-    'BzOlwvXC9vaWRjLmljcy5tdW5pLmN6XC9vaWRjXC8iLCJleHAiOjE1NTUwNTYzNDcsImlhdCI6MTU1NTA1Mjc0NywianRpIjoiMjkzNDVm' +
-    'NmQtNzViOS00ZGFjLTllNmItMTAyNDYyMDVjMjFmIn0.P6qtC6m9EFDCWh8aWL-rLKcD1GDObWzbo8ClkaKTiRkTGq_jPIIhub5v7SJttO' +
-    'rEfSm4cdhzyGxCg838g6Fn_6ozSgwX3-CVjGf9aD7Ynyiyomr2VvO6cBSZ2kukxNBkT8FUldmHwOZ2zkpEEac9WesqqkJuyjg9zeIDHLro' +
-    'X3mg4HKC63uhnzjcgs-E_egIrliZSo_qIczywpfQYiOUDsKEuj3HFcV1aS750tUdGagonk_h1IOdUtI_Bl8Ey91Xenc-BWuq_HKlF5dkq1' +
-    'PtpOQYrTm799PbEpz6FBu6I9KjNGr5GabR2JABRZh-djaS6uG3KtStIEY4uOcwD8QT9Q';
+  token = 'eyJqa3UiOiJodHRwczpcL1wvb2lkYy5pY3MubXVuaS5jelwvb2lkY1wvandrIiwia2lkIjoicnNhMSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIzOTYyOTZAbXVuaS5jeiIsImF6cCI6IjU5M2JiZjQ5LWE4MmItNGY2ZS05YmFmLWM0ZWQ0ODhkNTA2NiIsImlzcyI6Imh0dHBzOlwvXC9vaWRjLmljcy5tdW5pLmN6XC9vaWRjXC8iLCJleHAiOjE1NTUzMjYwODIsImlhdCI6MTU1NTMyMjQ4MiwianRpIjoiMWFkNDQxMzUtMjQ4OS00MGU2LWJjOTUtZDc3ZTVhOGViMzUwIn0.TxZ_rFe15Ye9_H4LonFJEzVMyWe8ivUq37GOpy7YMbdqGEQfD84xM3_WZlSjJtlGNWZkHosadAko0yJ0WnEvBewPoeeTHL-UuBdTLElet0h6P0N6nEXuQJ9_RfFNiWplf9BsmNglb5dbG40CsuvfZEatLCjbQZBvPPzXm6cNNAjQSDE7yUGZ5iAJ01qOhiIXoIl_rexaxi94j8_X3hFrYYFrNIj-flqldLQ4T5R6h6EMAsr2_Ai8x_IY_mZYaFk5tNhjvn1hd8dv9ditH5CGyg3zuk_8vUhdFb3hOwjty4TJPNNp3N6YzMyw8vev4uAjsqx6OEFFbNFdFt3oxpwC3g';
   baseUrl = 'http://147.251.21.216:8083/kypo2-rest-training/api/v1';
+  trainingRun = 12;
   constructor(private http: HttpClient) { }
 
   public getAllData() {
@@ -27,28 +24,36 @@ export class DataService {
       this.getInformation(),
       this.getEvents()
     ]).pipe(map(
-      (data: any[]) => {
+      (data) => {
         const info = data[0];
         const events = data[1];
 
         const result = this.processData(info, events);
         return result;
       }
-    ));
+    ), catchError( (error) => {
+      return throwError('Could not connect to API: ' + error.message);
+    }));
   }
 
   processData(info, events): [GameInformation, GameEvents] {
+    // we acquire game info first
     const gameInfo: GameInformation = {
       name: info.title,
       levels: this.loadLevels(info.levels),
       estimatedTime: info.levels.length * 900
     };
 
-    const levels: LevelEvents[] = this.initializeLevels(info.levels.length);
+    // then we get level-divided event structure
+    let levels: LevelEvents[] = this.initializeLevels(info.levels);
+    // and finally we put all events into suitble levels
+    levels = this.sortAllEvents(levels, events);
     const gameEvents: GameEvents = {
       levels: levels,
     };
 
+    console.log(gameInfo);
+    console.log(gameEvents);
     return [gameInfo, gameEvents];
   }
 
@@ -56,43 +61,75 @@ export class DataService {
     const newLevels: Level[] = [];
     let levelNum = 1;
     levels.forEach((level) => {
-      const l: Level = {
-        name: level.title,
-        number: levelNum++,
-        estimatedTime: 900,
-        points: level.max_score,
-        hints: level.hints === undefined ? [] : level.hints
-      };
-      newLevels.push(l);
+      if (level.level_type === 'GAME_LEVEL') {
+        // first we get all the hints of a level
+        const hints: Hint[] = [];
+        level.hints.forEach((hint, i) => {
+          const h: Hint = {points: hint.hint_penalty, number: i + 1, id: hint.id};
+          hints.push(h);
+        });
+
+        // then we can create new level
+        const l: Level = {
+          name: level.title,
+          number: levelNum++,
+          estimatedTime: 900,
+          points: level.max_score,
+          hints: hints,
+          id: level.id
+        };
+        newLevels.push(l);
+      }
     });
     return newLevels;
   }
 
-  initializeLevels(size: number): LevelEvents[] {
+  initializeLevels(allLevels: any[]): LevelEvents[] {
     const levels: LevelEvents[] = [];
-    for (let i = 1; i <= size; i++) {
-      levels.push({number: i, events: []});
+    let levelNum = 1;
+    for (let i = 0; i < allLevels.length; i++) {
+      if (allLevels[i].level_type === 'GAME_LEVEL') {
+        levels.push({id: allLevels[i].id, number: levelNum++, events: []});
+      }
     }
+    return levels;
+  }
+
+  sortAllEvents(levels: LevelEvents[], events: any[]): LevelEvents[] {
+    events.forEach((event) => {
+      let e: Event;
+      // so far, we dont want any info or assessment levels
+      if (event.training_run_id === this.trainingRun &&
+         (event.level_type === undefined || event.level_type === 'GAME')) {
+        e = {
+          playerId: event.player_login,
+          timestamp: event.timestamp,
+          gametime: event.game_time,
+          event: event.type};
+
+        levels.forEach((level) => {
+          if (level.id === event.level) {
+            level.events.push(e);
+          }
+        });
+      }
+    });
     return levels;
   }
 
   /**
    * Fetches static game information data
    */
-  getInformation(): Observable<GameInformation> {
+  getInformation(): Observable<any> {
     const headers = new HttpHeaders().set('authorization', 'Bearer ' + this.token);
-    return this.http.get<GameInformation>(`${this.baseUrl}/training-definitions/1`, {headers});
-     // .toPromise()
-     // .then(response => response);
+    return this.http.get<GameInformation>(`${this.baseUrl}/training-definitions/4`, {headers});
   }
 
   /**
    * Fetches game events data
    */
-  getEvents(): Promise<any> {
+  getEvents(): Observable<any> {
     const headers = new HttpHeaders().set('authorization', 'Bearer ' + this.token);
-    return this.http.get(`${this.baseUrl}/training-events/training-definitions/1/training-instances/1`, {headers})
-      .toPromise()
-      .then(response => response);
+    return this.http.get(`${this.baseUrl}/training-events/training-definitions/4/training-instances/5`, {headers});
   }
 }

@@ -9,4 +9,5 @@ export interface Level {
   estimatedTime: number; // Level's estimated time of solving
   points: number; // Level's max achievable score
   hints: Hint[]; // Array of provided hints
+  id: number;
 }
