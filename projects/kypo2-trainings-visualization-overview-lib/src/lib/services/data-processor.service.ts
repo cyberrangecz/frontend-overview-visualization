@@ -46,7 +46,7 @@ export class DataProcessor {
       const playersInCurrentLevel = Object.keys(currentLevel);
 
       playersInCurrentLevel.forEach(playerId => {
-        const playerData: PlayerVisualizationData = { id: +playerId,
+        const playerData: PlayerVisualizationData = { id: playerId,
                                                       score: +currentLevel[playerId],
                                                       time: +times[i][playerId]};
         levelData.push(playerData);
@@ -75,7 +75,7 @@ export class DataProcessor {
     const times = this.timeService.getFinalPlayersMaxTimes(gameData.events);
     const result = [];
     scores.forEach(player => {
-      const playerData: PlayerVisualizationData = {id: +player.id,
+      const playerData: PlayerVisualizationData = {id: player.id,
                                                    score: +player.score,
                                                    time: +times[player.id]
                                                   };
@@ -116,15 +116,15 @@ export class DataProcessor {
       const levelEvents: Event[] = level.values;
       let currentLevelScore = gameData.information.levels[levelNumber - 1].points;
       if (i !== 0) {
-        playerScoredEvents.push({time: time, 
-          score: currentScore + currentLevelScore, 
-          event: 'Correct flag submited', 
-          show: false, 
+        playerScoredEvents.push({time: time,
+          score: currentScore + currentLevelScore,
+          event: 'Correct flag submited',
+          show: false,
           level: levelNumber
         });
       }
       levelEvents.forEach((event: Event) => {
-        let currentTime = new Date(event.timestamp).getTime();
+        const currentTime = new Date(event.timestamp).getTime();
         time = currentTime - startTime;
         time /= 1000; // to seconds
 
@@ -144,7 +144,9 @@ export class DataProcessor {
           playerScoredEvents.push(scoredEvent);
         }
 
-        const scoreChange = (event.event.toUpperCase().split(' ')[0] === 'CORRECT') ? gameData.information.levels[levelNumber % gameData.information.levels.length].points : currentLevelScore - beforeChangeLevelScore;
+        const scoreChange = (event.event.toUpperCase().split(' ')[0] === 'CORRECT') ?
+          gameData.information.levels[levelNumber % gameData.information.levels.length].points :
+          currentLevelScore - beforeChangeLevelScore;
 
         const scoredEvent: ScoredEvent = {
           time: time,
@@ -163,7 +165,7 @@ export class DataProcessor {
 
   updateLevelScore(event: Event, level, currentLevelScore) {
     const split = event.event.toUpperCase().split(' ');
-    switch(split[0]) {
+    switch (split[0]) {
       case 'HINT':
         currentLevelScore += this.scoreService.getHintScore(level, event);
         break;
@@ -207,7 +209,7 @@ export class DataProcessor {
       const playerIds = Object.keys(level);
       playerIds.forEach(id => {
         const scoreInCurrentLevel = level[id];
-        const hintsTakenInCurrentLevel = hintsTakenEachLevel[i][id]; 
+        const hintsTakenInCurrentLevel = hintsTakenEachLevel[i][id];
         const wrongFlagsSubmittedInCurrentLevel = wrongFlagsSubmittedEachLevel[i][id];
         currentLevelData[id] = {
           score: scoreInCurrentLevel,
@@ -219,7 +221,7 @@ export class DataProcessor {
       currentLevelData = {};
     });
     return {
-      playerIds: playerIds, 
+      playerIds: playerIds,
       levels: levelsData,
       finalScores: scores};
   }

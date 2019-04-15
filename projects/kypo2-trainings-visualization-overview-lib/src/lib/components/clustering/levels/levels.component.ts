@@ -27,20 +27,28 @@ import {
 } from 'd3-ng2-service/src/bundle-d3';
 import { ClusteringLevelsEventService } from '../interfaces/clustering-levels-event-service';
 import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config';
+import {GAME_INFORMATION} from '../../../../../../../src/app/mocks/information.mock';
+import {EVENTS} from '../../../../../../../src/app/mocks/events.mock';
+import {DataService} from '../../../services/data.service';
+import {Level} from '../../../shared/interfaces/level';
+import {GameInformation} from '../../../shared/interfaces/game-information';
+import {GameEvents} from '../../../shared/interfaces/game-events';
+import {throwError} from 'rxjs';
 
 @Component({
   selector: 'kypo2-viz-overview-levels',
   templateUrl: './levels.component.html',
   styleUrls: ['./levels.component.css']
 })
-export class LevelsComponent implements OnInit, OnChanges {
-  @Input() data: GameData;
-  @Input() inputSelectedPlayerId: number;
-  @Input() feedbackLearnerId: number;
+export class LevelsComponent implements OnInit/*, OnChanges */{
+  // @Input() data: GameData;
+  private data: GameData = {information: GAME_INFORMATION, events: EVENTS};
+  @Input() inputSelectedPlayerId: string;
+  @Input() feedbackLearnerId: string;
   @Input() eventService: ClusteringLevelsEventService;
   @Input() size: SvgConfig;
   @Input() colorScheme: string[];
-  @Output() outputSelectedPlayerId = new EventEmitter<number>();
+  @Output() outputSelectedPlayerId = new EventEmitter<string>();
 
   private d3: D3;
   private xScale: ScaleLinear<number, number>;
@@ -53,12 +61,14 @@ export class LevelsComponent implements OnInit, OnChanges {
 
   private playerClicked = false; // If no player is selected, hover out of player will cancel the highlight
 
-  constructor(d3: D3Service, private visualizationDataService: DataProcessor) {
+  constructor(d3: D3Service, private visualizationDataService: DataProcessor, private dataService: DataService) {
     this.d3 = d3.getD3();
   }
 
-  ngOnInit() {}
-
+  ngOnInit() {
+    this.load();
+  }
+/*
   ngOnChanges() {
     this.svgHeight = typeof this.size !== 'undefined' && this.size !== null ? this.size.height : SVG_CONFIG.height;
     this.svgWidth = typeof this.size !== 'undefined' && this.size !== null ? this.size.width : SVG_CONFIG.width;
@@ -70,6 +80,24 @@ export class LevelsComponent implements OnInit, OnChanges {
     this.buildCrosshair();
     this.addListeners();
     this.highlightSelectedPlayer();
+  }*/
+
+  load() {
+    this.dataService.getAllData().subscribe((res: [GameInformation, GameEvents]) => {
+    this.data.information = res[0];
+    this.data.events = res[1];
+
+    this.svgHeight = typeof this.size !== 'undefined' && this.size !== null ? this.size.height : SVG_CONFIG.height;
+    this.svgWidth = typeof this.size !== 'undefined' && this.size !== null ? this.size.width : SVG_CONFIG.width;
+    this.barWidth = 0.7 * this.svgWidth;
+    this.setup();
+    this.drawBars();
+    this.drawAxes();
+    this.drawPlayers();
+    this.buildCrosshair();
+    this.addListeners();
+    this.highlightSelectedPlayer();
+    });
   }
 
   /**
@@ -647,7 +675,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     this.showTooltip(player);
     this.showCrosshair();
     if (this.playerClicked === false) {
-      this.outputSelectedPlayerId.emit(+player.id);
+      this.outputSelectedPlayerId.emit(player.id);
     }
     const noEventServiceWasPassed =
       typeof this.eventService === 'undefined' || this.eventService === null;
@@ -738,7 +766,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     const playersData = {
       x: x,
       y: y,
-      time: d3.timeFormat('%H:%M:%S')(new Date(0, 0, 0, 0, 0, player.time, 0)),
+      time: d3.timeFormat('%H:%M:%S')(new Date(0, 0, 0, 0, 0, 0, player.time)),
       score: player.score.toFixed(0)
     };
 
@@ -799,7 +827,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    */
   onPlayerPointClick(player: PlayerVisualizationData) {
     this.d3.event.stopPropagation();
-    this.outputSelectedPlayerId.emit(+player.id);
+    this.outputSelectedPlayerId.emit(player.id);
     this.playerClicked = true;
     const noEventServiceWasPassed =
     typeof this.eventService === 'undefined' || this.eventService === null;

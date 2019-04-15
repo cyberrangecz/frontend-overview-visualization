@@ -4,6 +4,9 @@ import { ClusteringFinalEventService } from './interfaces/clustering-final-event
 import { FinalComponent } from './final/final.component';
 import { TouchSequence } from 'selenium-webdriver';
 import { LevelsComponent } from './levels/levels.component';
+import {DataService} from '../../services/data.service';
+import {EVENTS} from '../../../../../../src/app/mocks/events.mock';
+import {GAME_INFORMATION} from '../../../../../../src/app/mocks/information.mock';
 
 @Component({
   selector: 'kypo2-viz-overview-clustering',
@@ -17,15 +20,16 @@ export class ClusteringComponent implements OnInit {
 
   public selectedPlayerId: number;
   @Input() feedbackLearnerId: number;
-  @Input() gameData: GameData;
   @Input() colorScheme: string[];
+  // @Input() gameData: GameData;
   @Input() eventService: ClusteringFinalEventService;
   @Input() size: {width: number; height: number};
 
+  private gameData: GameData = {information: GAME_INFORMATION, events: EVENTS};
+
   constructor() { }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   get levelsCount() {
     return this.gameData.information.levels.length;

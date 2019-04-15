@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { Kypo2TrainingsVisualizationOverviewLibModule } from 'projects/kypo2-trainings-visualization-overview-lib/src/public_api';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -10,7 +11,8 @@ import { Kypo2TrainingsVisualizationOverviewLibModule } from 'projects/kypo2-tra
   ],
   imports: [
     BrowserModule,
-    Kypo2TrainingsVisualizationOverviewLibModule
+    Kypo2TrainingsVisualizationOverviewLibModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

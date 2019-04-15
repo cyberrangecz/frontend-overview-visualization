@@ -21,6 +21,7 @@ export class TimeService {
     const maximumTimesOfEachLevel = {};
     times.forEach((currentLevelTimes, i) => {
       maximumTimesOfEachLevel[i + 1] = +this.d3.max(<any>Object.values<number>(currentLevelTimes));
+      if (isNaN(maximumTimesOfEachLevel[i + 1]) ) { maximumTimesOfEachLevel[i + 1] = 0; }
     });
     return maximumTimesOfEachLevel;
   }
@@ -30,7 +31,8 @@ export class TimeService {
     const times = this.getEachLevelPlayerTime(events);
     const averageTimesOfEachLevel = {};
     times.forEach((currentLevelTimes, i) => {
-      averageTimesOfEachLevel[i+1] = +this.d3.mean(<any>Object.values<number>(currentLevelTimes));
+      averageTimesOfEachLevel[i + 1] = +this.d3.mean(<any>Object.values<number>(currentLevelTimes));
+      if (isNaN(averageTimesOfEachLevel[i + 1]) ) { averageTimesOfEachLevel[i + 1] = 0; }
     });
     return averageTimesOfEachLevel;
   }
@@ -55,10 +57,15 @@ export class TimeService {
     const eventsGroupedByPlayer = this.d3.nest().key((event: Event) => event.playerId).entries(flattenedEvents);
 
     eventsGroupedByPlayer.forEach(player => {
-      const startTimestamp = this.d3.min(player.values, (event: Event) => event.timestamp);
-      const endTimestamp = this.d3.max(player.values, (event: Event) => event.timestamp);
-      const time = new Date(endTimestamp).getTime() - new Date(startTimestamp).getTime();
-      playersMaxTimes[player.key] = time/1000;
+      let time: any;
+      if (true) { // TODO
+        time = new Date(player.values[player.values.length - 1].gametime).getTime();
+      } else {
+        const startTimestamp: any = this.d3.min(player.values, (event: Event) => event.timestamp);
+        const endTimestamp: any =  this.d3.max(player.values, (event: Event) => event.timestamp);
+        time = new Date(endTimestamp).getTime() - new Date(startTimestamp).getTime();
+      }
+      playersMaxTimes[player.key] = time;
     });
     return playersMaxTimes;
   }
@@ -81,11 +88,11 @@ export class TimeService {
       const playersMaxTimes = {};
       const playerNest = this.d3.nest().key((e: Event) => e.playerId).entries(level.events);
       playerNest.forEach(player => {
-        const startTimestamp = (typeof lastEvents[player.key] === 'undefined') ? player.values[0].timestamp : lastEvents[player.key];
-        const endTimestamp = this.d3.max(player.values, (event: Event) => event.timestamp);
+        const startTimestamp = player.values[0].gametime;
+        const endTimestamp = player.values[player.values.length - 1].gametime;
         lastEvents[player.key] = endTimestamp;
         const time = new Date(endTimestamp).getTime() - new Date(startTimestamp).getTime();
-        playersMaxTimes[player.key] = time/1000;
+        playersMaxTimes[player.key] = time;
       });
       result.push(playersMaxTimes);
     });

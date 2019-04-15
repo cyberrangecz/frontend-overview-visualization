@@ -1,6 +1,7 @@
 export const EVENTS = {
   'levels': [
     {
+      'id': 1,
       'number': 1,
       'events': [
         {
@@ -240,6 +241,7 @@ export const EVENTS = {
       ]
     },
     {
+      'id': 2,
       'number': 2,
       'events': [
         {
@@ -485,6 +487,7 @@ export const EVENTS = {
       ]
     },
     {
+      'id': 3,
       'number': 3,
       'events': [
         {
@@ -820,6 +823,7 @@ export const EVENTS = {
       ]
     },
     {
+      'id': 4,
       'number': 4,
       'events': [
         {

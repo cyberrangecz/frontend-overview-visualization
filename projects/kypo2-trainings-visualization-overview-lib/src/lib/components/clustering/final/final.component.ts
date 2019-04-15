@@ -21,20 +21,26 @@ import { BarVisualizationData } from '../interfaces/bar-visualization-data';
 import { PlayerVisualizationData } from '../interfaces/player-visualization-data';
 import { ClusteringFinalEventService } from '../interfaces/clustering-final-event-service';
 import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config';
+import {GAME_INFORMATION} from '../../../../../../../src/app/mocks/information.mock';
+import {EVENTS} from '../../../../../../../src/app/mocks/events.mock';
+import {GameInformation} from '../../../shared/interfaces/game-information';
+import {GameEvents} from '../../../shared/interfaces/game-events';
+import {DataService} from '../../../services/data.service';
 
 @Component({
   selector: 'kypo2-viz-overview-final',
   templateUrl: './final.component.html',
   styleUrls: ['./final.component.css']
 })
-export class FinalComponent implements OnInit, OnChanges {
-  @Input() data: GameData;
-  @Input() inputSelectedPlayerId: number;
-  @Input() feedbackLearnerId: number;
+export class FinalComponent implements OnInit/*, OnChanges */{
+  // @Input() data: GameData;
+  private data: GameData = {information: GAME_INFORMATION, events: EVENTS};
+  @Input() inputSelectedPlayerId: string;
+  @Input() feedbackLearnerId: string;
   @Input() colorScheme: string[];
   @Input() eventService: ClusteringFinalEventService;
   @Input() size: SvgConfig;
-  @Output() outputSelectedPlayerId = new EventEmitter<number>();
+  @Output() outputSelectedPlayerId = new EventEmitter<string>();
 
   private d3: D3;
   private xScale: ScaleLinear<number, number>;
@@ -47,27 +53,46 @@ export class FinalComponent implements OnInit, OnChanges {
 
   private playerClicked = false; // If no player is selected, hover out of player will cancel the highlight
 
-  constructor(d3: D3Service, private visualizationService: DataProcessor) {
+  constructor(d3: D3Service, private visualizationService: DataProcessor, private dataService: DataService) {
     this.d3 = d3.getD3();
-
   }
 
   ngOnInit() {
+    this.load();
   }
 
-  ngOnChanges() {
-    this.barWidth = typeof this.size !== 'undefined' && this.size !== null ? this.size.width : SVG_CONFIG.width;
-    this.barWidth *= 0.7;
-    this.svgHeight = typeof this.size !== 'undefined' && this.size !== null ? this.size.height : SVG_CONFIG.height;
-    this.svgWidth = typeof this.size !== 'undefined' && this.size !== null ? this.size.width : SVG_CONFIG.width;
-    this.setup();
-    this.drawBars();
-    this.drawAxes();
-    this.drawPlayers();
-    this.buildCrosshair();
-    this.addListeners();
-    this.highlightSelectedPlayer();
+  load() {
+    this.dataService.getAllData().subscribe((res: [GameInformation, GameEvents]) => {
+      this.data.information = res[0];
+      this.data.events = res[1];
+
+      this.svgHeight = typeof this.size !== 'undefined' && this.size !== null ? this.size.height : SVG_CONFIG.height;
+      this.svgWidth = typeof this.size !== 'undefined' && this.size !== null ? this.size.width : SVG_CONFIG.width;
+      this.barWidth = 0.7 * this.svgWidth;
+      this.setup();
+      this.drawBars();
+      this.drawAxes();
+      this.drawPlayers();
+      this.buildCrosshair();
+      this.addListeners();
+      this.highlightSelectedPlayer();
+    });
   }
+
+  /*
+    ngOnChanges() {
+      this.barWidth = typeof this.size !== 'undefined' && this.size !== null ? this.size.width : SVG_CONFIG.width;
+      this.barWidth *= 0.7;
+      this.svgHeight = typeof this.size !== 'undefined' && this.size !== null ? this.size.height : SVG_CONFIG.height;
+      this.svgWidth = typeof this.size !== 'undefined' && this.size !== null ? this.size.width : SVG_CONFIG.width;
+      this.setup();
+      this.drawBars();
+      this.drawAxes();
+      this.drawPlayers();
+      this.buildCrosshair();
+      this.addListeners();
+      this.highlightSelectedPlayer();
+    }*/
 
   /**
    * Initialize D3 scales and build SVG element
@@ -496,7 +521,7 @@ export class FinalComponent implements OnInit, OnChanges {
     this.showTooltip(player);
     this.showCrosshair();
     if (this.playerClicked === false) {
-      this.outputSelectedPlayerId.emit(+player.id);
+      this.outputSelectedPlayerId.emit(player.id);
     }
 
     const noEventServiceWasPassed =
@@ -587,7 +612,7 @@ export class FinalComponent implements OnInit, OnChanges {
     const playersData = {
       x: playerElementNode.getAttribute('cx'),
       y: playerElementNode.getAttribute('cy'),
-      time: d3.timeFormat('%H:%M:%S')(new Date(0, 0, 0, 0, 0, player.time, 0)),
+      time: d3.timeFormat('%H:%M:%S')(new Date(0, 0, 0, 0, 0, 0, player.time)),
       score: player.score
     };
 
