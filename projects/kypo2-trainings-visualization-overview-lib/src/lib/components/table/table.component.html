@@ -1,6 +1,9 @@
 <div class="overview-visualization-container">
   <div>
     <div>
+      {{scoreTableData.levels.length}}
+    </div>
+    <div>
       <table class="table table-striped table-bordered table-condensed">
           <thead>
             <tr>
@@ -72,7 +75,7 @@
           </thead>
           <tbody>
             <ng-container *ngFor="let player of playersOrdered">
-              <tr *ngIf="player.id" 
+              <tr *ngIf="player"
                 style="cursor:pointer" 
                 (click)="onRowClick(player)" 
                 (mouseover)="onRowMouseover(player)"

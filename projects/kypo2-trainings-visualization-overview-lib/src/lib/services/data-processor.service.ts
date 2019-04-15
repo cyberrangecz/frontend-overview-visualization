@@ -97,11 +97,11 @@ export class DataProcessor {
     const progressPlayers: ProgressPlayer[] = [];
 
     playersWithEvents.forEach(player => {
-      const playerId = player.key;
+      const playerId: string = player.key;
       const playerEvents: Event[] = player.values;
       const playerEventsGroupedByLevel = this.d3.nest().key((event: Event) => event.level.toString()).entries(playerEvents);
       const playerScoredEvents: ScoredEvent[] = this.getScoredEvents(playerEventsGroupedByLevel, gameData);
-      progressPlayers.push({id: +playerId, events: playerScoredEvents, checked: false});
+      progressPlayers.push({id: playerId, events: playerScoredEvents, checked: false});
     });
     return progressPlayers;
   }
@@ -176,7 +176,7 @@ export class DataProcessor {
         currentLevelScore = 0;
         break;
       case 'GAME':
-        if(split[1] === 'EXITED') {
+        if (split[1] === 'EXITED') {
           currentLevelScore = 0;
         }
         break;
@@ -220,6 +220,13 @@ export class DataProcessor {
       levelsData.push(currentLevelData);
       currentLevelData = {};
     });
+
+    console.log({
+      playerIds: playerIds,
+      levels: levelsData,
+      finalScores: scores}
+    );
+
     return {
       playerIds: playerIds,
       levels: levelsData,

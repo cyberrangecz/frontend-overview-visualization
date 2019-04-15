@@ -1,35 +1,42 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import {Component, OnInit, Input, OnDestroy, OnChanges} from '@angular/core';
 import { GameData } from '../../shared/interfaces/game-data';
 import { DataProcessor } from '../../services/data-processor.service';
 import { ProgressPlayer } from '../timeline/interfaces/progress-player';
 import { TableService } from '../../services/table.service';
 import { Subscription } from 'rxjs';
 import { FiltersService } from '../../services/filters.service';
+import {GAME_INFORMATION} from '../../../../../../src/app/mocks/information.mock';
+import {EVENTS} from '../../../../../../src/app/mocks/events.mock';
+import {GameInformation} from '../../shared/interfaces/game-information';
+import {GameEvents} from '../../shared/interfaces/game-events';
+import {DataService} from '../../services/data.service';
 
 @Component({
   selector: 'kypo2-viz-overview-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
 })
-export class TableComponent implements OnInit, OnDestroy {
+export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
-  @Input() data: GameData;
-  @Input() feedbackLearnerId: number;
+  // @Input() data: GameData;
+  @Input() feedbackLearnerId: string;
 
-  public scoreTableData;
-  public playersOrdered;
+  public scoreTableData: {playerIds: string[], levels: any[], finalScores: {}} = {playerIds: [], levels: [], finalScores: {}};
+  public playersOrdered = [];
   public sortedColumn = null;
   public sortedDesc = false;
   public columnHovered = null;
   public filters;
+  private data: GameData = {information: GAME_INFORMATION, events: EVENTS};
   private players: ProgressPlayer[];
   private playerColorScaleSource: Subscription;
-  public playerColorScale = (id) => "black";
+  public playerColorScale = (id) => 'black';
 
   constructor(
       private visualizationService: DataProcessor,
       private tableService: TableService,
-      private filtersService: FiltersService
+      private filtersService: FiltersService,
+      private dataService: DataService
     ) {
     this.playerColorScaleSource = this.tableService.playerColorScale$.subscribe(
       (scale) => {
@@ -43,6 +50,10 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+   this.load();
+  }
+
+  ngOnChanges() {
     this.filters = this.filtersService.getFiltersObject();
     this.scoreTableData = this.getLevelScores();
     this.players = this.visualizationService.getScoreProgressPlayersWithEvents(this.data);
@@ -50,12 +61,25 @@ export class TableComponent implements OnInit, OnDestroy {
     this.checkFeedbackLearner();
   }
 
+  load() {
+    this.dataService.getAllData().subscribe((res: [GameInformation, GameEvents]) => {
+      this.data.information = res[0];
+      this.data.events = res[1];
+
+      this.filters = this.filtersService.getFiltersObject();
+      this.scoreTableData = this.getLevelScores();
+      this.players = this.visualizationService.getScoreProgressPlayersWithEvents(this.data);
+      this.orderPlayers();
+      this.checkFeedbackLearner();
+    });
+  }
+
   getLevelScores() {
     return this.visualizationService.getScoreTableData(this.data);
   }
 
   orderPlayers() {
-    this.players.sort((player1, player2) => +player1.id - +player2.id);
+    this.players.sort((player1: ProgressPlayer, player2: ProgressPlayer) => player1.id - player2.id);
     let i = 0;
     for (let index = 0; index < this.players.length; index++) {
       const element = this.players[index];
@@ -67,6 +91,7 @@ export class TableComponent implements OnInit, OnDestroy {
     const copy = this.players.slice();
     const splice = copy.splice(i);
     this.playersOrdered = splice.concat(copy);
+    console.log(this.playersOrdered);
   }
 
   /**
@@ -94,36 +119,39 @@ export class TableComponent implements OnInit, OnDestroy {
 
   onWrongClick(levelNumber) {
 
-    if (this.sortedColumn == "w" + levelNumber) {
+    if (this.sortedColumn === 'w' + levelNumber) {
       this.playersOrdered.reverse();
       this.sortedDesc = !this.sortedDesc;
       return;
     }
     this.playersOrdered.sort((a, b) => {
-      if (typeof this.scoreTableData.levels[levelNumber][a.id] === 'undefined' || typeof this.scoreTableData.levels[levelNumber][b.id] === 'undefined') {
+      if (typeof this.scoreTableData.levels[levelNumber][a.id] === 'undefined' ||
+          typeof this.scoreTableData.levels[levelNumber][b.id] === 'undefined') {
         return 1;
       }
-      const result = this.scoreTableData.levels[levelNumber][b.id].wrongFlags - this.scoreTableData.levels[levelNumber][a.id].wrongFlags;
+      const result = this.scoreTableData.levels[levelNumber][b.id].wrongFlags -
+                     this.scoreTableData.levels[levelNumber][a.id].wrongFlags;
       return (this.sortedDesc) ? result : -result;
     });
-    this.sortedColumn = "w" + levelNumber;
+    this.sortedColumn = 'w' + levelNumber;
   }
 
   onHintsClick(levelNumber) {
 
-    if (this.sortedColumn == "h" + levelNumber) {
+    if (this.sortedColumn === 'h' + levelNumber) {
       this.playersOrdered.reverse();
       this.sortedDesc = !this.sortedDesc;
       return;
     }
     this.playersOrdered.sort((a, b) => {
-      if (typeof this.scoreTableData.levels[levelNumber][a.id] === 'undefined' || typeof this.scoreTableData.levels[levelNumber][b.id] === 'undefined') {
+      if (typeof this.scoreTableData.levels[levelNumber][a.id] === 'undefined' ||
+          typeof this.scoreTableData.levels[levelNumber][b.id] === 'undefined') {
         return 1;
       }
       const result = this.scoreTableData.levels[levelNumber][b.id].hints - this.scoreTableData.levels[levelNumber][a.id].hints;
       return (this.sortedDesc) ? result : -result;
     });
-    this.sortedColumn = "h" + levelNumber;
+    this.sortedColumn = 'h' + levelNumber;
   }
 
   onLevelClick(levelNumber) {
@@ -136,8 +164,7 @@ export class TableComponent implements OnInit, OnDestroy {
     this.playersOrdered.sort((a, b) => {
       if (typeof this.scoreTableData.levels[levelNumber][a.id] === 'undefined') {
         return -1;
-      } else if (typeof this.scoreTableData.levels[levelNumber][b.id] === 'undefined')
-      {return 1}
+      } else if (typeof this.scoreTableData.levels[levelNumber][b.id] === 'undefined') { return 1; }
       const result = this.scoreTableData.levels[levelNumber][b.id].score - this.scoreTableData.levels[levelNumber][a.id].score;
       return (this.sortedDesc) ? result : -result;
     });
@@ -152,7 +179,9 @@ export class TableComponent implements OnInit, OnDestroy {
       return;
     }
     this.playersOrdered.sort((a, b) => {
-      return (this.sortedDesc) ? this.scoreTableData.finalScores[b.id] - this.scoreTableData.finalScores[a.id] : this.scoreTableData.finalScores[a.id] - this.scoreTableData.finalScores[b.id];
+      return (this.sortedDesc) ?
+        this.scoreTableData.finalScores[b.id] - this.scoreTableData.finalScores[a.id] :
+        this.scoreTableData.finalScores[a.id] - this.scoreTableData.finalScores[b.id];
     });
     this.sortedColumn = -2;
   }

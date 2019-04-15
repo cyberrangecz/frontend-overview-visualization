@@ -8,6 +8,6 @@ export interface ScoredEvent {
     show: boolean;
     level: number;
     scoreChange?: number;
-    playerId?: number;
+    playerId?: string;
     filtered?: boolean;
 }

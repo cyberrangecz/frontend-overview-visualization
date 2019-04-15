@@ -10,7 +10,7 @@ import { LineComponent } from './line/line.component';
 export class TimelineComponent implements OnInit {
 
   @Input() feedbackLearnerId: number;
-  @Input() gameData: GameData;
+  // @Input() gameData: GameData;
   @Input() colorScheme: string[];
   @Input() size: {width: number; height: number};
 
