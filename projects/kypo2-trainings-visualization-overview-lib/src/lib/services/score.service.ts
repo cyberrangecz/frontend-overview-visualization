@@ -12,6 +12,11 @@ import { GameInformation } from '../shared/interfaces/game-information';
 export class ScoreService {
 
   private d3: D3;
+  private CORRECT = '';
+  private HINT = '';
+  private HELP = '';
+  private LEVEL = '';
+  private GAME = '';
 
   constructor(d3: D3Service) {
     this.d3 = d3.getD3();
@@ -24,18 +29,18 @@ export class ScoreService {
       const levelGroupedEvents = this.d3.nest().key((e: Event) => e.playerId).entries(level.events);
       const levelInfo = information.levels[ level.number - 1 ];
       levelGroupedEvents.forEach(player => {
-        player.values.forEach((event, i) => {
-
-          // Assign level's max points to player on first assignment to prevent adding up to undefined => NaN
-          const isFirstAssignment: boolean = (i < 1);
-          if (isFirstAssignment) {levelGroup[player.key] = levelInfo.points; }
-
-          levelGroup[player.key] += this.getScore(levelInfo, event);
-
-          const isNegative = levelGroup[player.key] < 0;
-          if (isNegative) {levelGroup[player.key] = 0; } // If level skipped, help level accessed or exited prematurely
-
-        });
+        const actualScore = player.values[player.values.length - 1].actualScore;
+        // backward compatibility loop:
+        if (actualScore === undefined) {
+          player.values.forEach((event, i) => {
+            // Assign level's max points to player on first assignment to prevent adding up to undefined => NaN
+            const isFirstAssignment: boolean = (i < 1);
+            if (isFirstAssignment) {levelGroup[player.key] = levelInfo.points; }
+            levelGroup[player.key] += this.getScore(levelInfo, event);
+            const isNegative = levelGroup[player.key] < 0;
+            if (isNegative) {levelGroup[player.key] = 0; } // If level skipped, help level accessed or exited prematurely
+          });
+        } else { levelGroup[player.key] = actualScore; }
       });
       eachLevelScores.push(levelGroup);
       levelGroup = {};
@@ -46,7 +51,7 @@ export class ScoreService {
   /**
    * Count hints that player took in each level and return an array of objects {playerId : hintsTaken}
    * @param information
-   * @param events 
+   * @param events
    */
   getEachLevelHintsTaken(information: GameInformation, events: GameEvents): {}[] {
     return this.getEachLevelEventCountByType("hint", information, events);
@@ -109,8 +114,8 @@ export class ScoreService {
   }
 
   getFinalScores(events: GameEvents, information: GameInformation) {
-    let scoresByLevel = this.getEachLevelScores(information, events);
-    
+    const scoresByLevel = this.getEachLevelScores(information, events);
+
     const finalScoresObject = {};
     const playerIds = Object.keys(scoresByLevel[0]);
     playerIds.forEach(id => {
@@ -125,8 +130,8 @@ export class ScoreService {
 
     const finalScoresArray = [];
     playerIds.forEach(id => {
-      const player: {id: number; score: number} = {
-        id: +id,
+      const player: {id: string; score: number} = {
+        id: id,
         score: finalScoresObject[id]
       };
       finalScoresArray.push(player);

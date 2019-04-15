@@ -44,11 +44,11 @@ import {throwError} from 'rxjs';
 export class LevelsComponent implements OnInit/*, OnChanges */{
   // @Input() data: GameData;
   private data: GameData = {information: GAME_INFORMATION, events: EVENTS};
-  @Input() inputSelectedPlayerId: number;
-  @Input() feedbackLearnerId: number;
+  @Input() inputSelectedPlayerId: string;
+  @Input() feedbackLearnerId: string;
   @Input() eventService: ClusteringLevelsEventService;
   @Input() size: SvgConfig;
-  @Output() outputSelectedPlayerId = new EventEmitter<number>();
+  @Output() outputSelectedPlayerId = new EventEmitter<string>();
 
   private d3: D3;
   private xScale: ScaleLinear<number, number>;
@@ -84,8 +84,6 @@ export class LevelsComponent implements OnInit/*, OnChanges */{
 
   load() {
     this.dataService.getAllData().subscribe((res: [GameInformation, GameEvents]) => {
-    // console.log(res[1]);
-    // console.log(this.data.events);
     this.data.information = res[0];
     this.data.events = res[1];
 
@@ -679,7 +677,7 @@ export class LevelsComponent implements OnInit/*, OnChanges */{
     this.showTooltip(player);
     this.showCrosshair();
     if (this.playerClicked === false) {
-      this.outputSelectedPlayerId.emit(+player.id);
+      this.outputSelectedPlayerId.emit(player.id);
     }
     const noEventServiceWasPassed =
       typeof this.eventService === 'undefined' || this.eventService === null;
@@ -770,7 +768,7 @@ export class LevelsComponent implements OnInit/*, OnChanges */{
     const playersData = {
       x: x,
       y: y,
-      time: d3.timeFormat('%H:%M:%S')(new Date(0, 0, 0, 0, 0, player.time, 0)),
+      time: d3.timeFormat('%H:%M:%S')(new Date(0, 0, 0, 0, 0, 0, player.time)),
       score: player.score.toFixed(0)
     };
 
@@ -831,7 +829,7 @@ export class LevelsComponent implements OnInit/*, OnChanges */{
    */
   onPlayerPointClick(player: PlayerVisualizationData) {
     this.d3.event.stopPropagation();
-    this.outputSelectedPlayerId.emit(+player.id);
+    this.outputSelectedPlayerId.emit(player.id);
     this.playerClicked = true;
     const noEventServiceWasPassed =
     typeof this.eventService === 'undefined' || this.eventService === null;

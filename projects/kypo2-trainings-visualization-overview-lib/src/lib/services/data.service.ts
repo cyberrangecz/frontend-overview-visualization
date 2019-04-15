@@ -14,9 +14,8 @@ import {Hint} from '../shared/interfaces/hint';
  * Fetches the data from the REST API.
  */
 export class DataService {
-  token = 'eyJqa3UiOiJodHRwczpcL1wvb2lkYy5pY3MubXVuaS5jelwvb2lkY1wvandrIiwia2lkIjoicnNhMSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIzOTYyOTZAbXVuaS5jeiIsImF6cCI6IjU5M2JiZjQ5LWE4MmItNGY2ZS05YmFmLWM0ZWQ0ODhkNTA2NiIsImlzcyI6Imh0dHBzOlwvXC9vaWRjLmljcy5tdW5pLmN6XC9vaWRjXC8iLCJleHAiOjE1NTUzMjYwODIsImlhdCI6MTU1NTMyMjQ4MiwianRpIjoiMWFkNDQxMzUtMjQ4OS00MGU2LWJjOTUtZDc3ZTVhOGViMzUwIn0.TxZ_rFe15Ye9_H4LonFJEzVMyWe8ivUq37GOpy7YMbdqGEQfD84xM3_WZlSjJtlGNWZkHosadAko0yJ0WnEvBewPoeeTHL-UuBdTLElet0h6P0N6nEXuQJ9_RfFNiWplf9BsmNglb5dbG40CsuvfZEatLCjbQZBvPPzXm6cNNAjQSDE7yUGZ5iAJ01qOhiIXoIl_rexaxi94j8_X3hFrYYFrNIj-flqldLQ4T5R6h6EMAsr2_Ai8x_IY_mZYaFk5tNhjvn1hd8dv9ditH5CGyg3zuk_8vUhdFb3hOwjty4TJPNNp3N6YzMyw8vev4uAjsqx6OEFFbNFdFt3oxpwC3g';
+  token = 'eyJqa3UiOiJodHRwczpcL1wvb2lkYy5pY3MubXVuaS5jelwvb2lkY1wvandrIiwia2lkIjoicnNhMSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIzOTYyOTZAbXVuaS5jeiIsImF6cCI6IjU5M2JiZjQ5LWE4MmItNGY2ZS05YmFmLWM0ZWQ0ODhkNTA2NiIsImlzcyI6Imh0dHBzOlwvXC9vaWRjLmljcy5tdW5pLmN6XC9vaWRjXC8iLCJleHAiOjE1NTUzNDYzNjEsImlhdCI6MTU1NTM0Mjc2MSwianRpIjoiNWFjOWYzZGMtNTdhYy00ZTI1LTkwNjItZTI1YzhiZDVlNTM0In0.LdTzGD1pre4HO483EeUMwcAx8Y8dH9vJdJJngUvzz6Ta0eCtQPQm6ggwWS93_AQnrvjKXwSxTkVE1unSlgQsaEfqTweBcKKBuSOuzhcVDhxj5qGxFPp466qWjs7C7qKkoGaJDexHPiRX4XqaQmydMWcrvSieudo9U44LVYpHvhPX6nYlMiXuDmPX011UfCFQWlruIp-aJBSBR9zkybmu9eTGbjv2H9NsbaHxfARxCtpKiAr9ryelx3I_JSjD2G63XT6i0wQRX0piH56W-MexVIfCqw2mx2ragU62hDBOhYGSAWr5vHCO849j6Srf0AWdzZSdEYto4gU4DBEZfxXD7g';
   baseUrl = 'http://147.251.21.216:8083/kypo2-rest-training/api/v1';
-  trainingRun = 12;
   constructor(private http: HttpClient) { }
 
   public getAllData() {
@@ -52,8 +51,8 @@ export class DataService {
       levels: levels,
     };
 
-    console.log(gameInfo);
-    console.log(gameEvents);
+    // console.log(gameInfo);
+    // console.log(gameEvents);
     return [gameInfo, gameEvents];
   }
 
@@ -99,13 +98,13 @@ export class DataService {
     events.forEach((event) => {
       let e: Event;
       // so far, we dont want any info or assessment levels
-      if (event.training_run_id === this.trainingRun &&
-         (event.level_type === undefined || event.level_type === 'GAME')) {
+      if (event.level_type === undefined || event.level_type === 'GAME') {
         e = {
           playerId: event.player_login,
           timestamp: event.timestamp,
-          gametime: event.game_time,
-          event: event.type};
+          gametime: event.game_time / 1000,
+          event: event.type,
+          actualScore: event.actual_score_in_level};
 
         levels.forEach((level) => {
           if (level.id === event.level) {
