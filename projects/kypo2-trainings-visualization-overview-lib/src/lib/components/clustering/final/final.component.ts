@@ -31,6 +31,7 @@ export class FinalComponent implements OnInit, OnChanges {
   @Input() data: GameData;
   @Input() inputSelectedPlayerId: number;
   @Input() feedbackLearnerId: number;
+  @Input() colorScheme: string[];
   @Input() eventService: ClusteringFinalEventService;
   @Input() size: SvgConfig;
   @Output() outputSelectedPlayerId = new EventEmitter<number>();
@@ -179,8 +180,11 @@ export class FinalComponent implements OnInit, OnChanges {
 
     this.drawAverageTimeLegend({ x: x, y: y }, labelOffset);
     this.drawMaximumTimeLegend({ x: x, y: y + yOffset }, labelOffset);
-    this.drawOtherPlayersLegend({ x: x, y: y + yOffset * 2 }, labelOffset);
-    this.drawFeedbackLearnerLegend({ x: x, y: y + yOffset * 3 }, labelOffset);
+
+    if (this.feedbackLearnerId != null) {
+      this.drawOtherPlayersLegend({x: x, y: y + yOffset * 2}, labelOffset);
+      this.drawFeedbackLearnerLegend({x: x, y: y + yOffset * 3}, labelOffset);
+    }
   }
 
   drawAverageTimeLegend(coordinates: { x: number; y: number }, labelOffset) {
@@ -309,9 +313,9 @@ export class FinalComponent implements OnInit, OnChanges {
         `translate(${this.barWidth - 50}, ${this.svgHeight + 20 +
           26})`
       )
-      .style('fill', '#4c4a4a')
-      .style('font-weight', 'bold')
-      .text('time');
+      .style('fill', '#4c4a4a');
+      /*.style('font-weight', 'bold')
+      .text('');*/
   }
 
   /**

@@ -4,15 +4,17 @@
         (outputSelectedPlayerId)="selectPlayer($event)"
         [inputSelectedPlayerId]="selectedPlayerId"
         [feedbackLearnerId]="feedbackLearnerId"
+        [colorScheme]="colorScheme"
         [eventService]="eventService"
         [size]="{width: size.width, height: 100}"
     ></kypo2-viz-overview-final>
-    
+
     <kypo2-viz-overview-levels
         [data]="gameData"
         (outputSelectedPlayerId)="selectPlayer($event)"
         [inputSelectedPlayerId]="selectedPlayerId"
         [feedbackLearnerId]="feedbackLearnerId"
+        [colorScheme]="colorScheme"
         [eventService]="eventService"
         [size]="size">
     ></kypo2-viz-overview-levels>

@@ -8,6 +8,7 @@ import { EVENTS } from './mocks/events.mock';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  mockFeedbackLearnerId = 9003575;
+  mockFeedbackLearnerId = null;
+  colorScheme = ['#307bc1', '#41ae43', '#ff9d3c', '#fc5248', '#f2d64f', '#8035c6'];
   mockGameData = {information: GAME_INFORMATION, events: EVENTS};
 }

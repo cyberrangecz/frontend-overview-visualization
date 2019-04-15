@@ -5,11 +5,11 @@ import { DataProcessor } from '../../../services/data-processor.service';
 import { ScaleLinear, ScaleOrdinal, Selection, Axis, ScaleTime, ContainerElement, Line, ZoomBehavior, BrushBehavior } from 'd3-ng2-service/src/bundle-d3';
 import { ProgressPlayer } from '../interfaces/progress-player';
 import { ScoredEvent } from '../interfaces/scored-event';
-import { COLOR_SCHEME, SVG_CONFIG, AXES_CONFIG, CONTEXT_CONFIG, SVG_MARGIN_CONFIG } from './config';
+import {SVG_CONFIG, AXES_CONFIG, CONTEXT_CONFIG, SVG_MARGIN_CONFIG, colorScheme} from './config';
 import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config';
 import { SvgMarginConfig } from '../../../shared/interfaces/configurations/svg-margin-config';
 import { TableService } from '../../../services/table.service';
-import { Subscription } from 'rxjs';
+import {config, Subscription} from 'rxjs';
 import { FiltersService } from '../../../services/filters.service';
 
 @Component({
@@ -22,19 +22,23 @@ export class LineComponent implements OnInit {
 
   @Input() data: GameData;
   @Input() feedbackLearnerId: number;
+  @Input() colorScheme: string[];
   @Input() size: {width: number; height: number};
 
   players: ProgressPlayer[] = [];
 
-  private d3: D3;
-  private svg;
   public svgConfig: SvgConfig;
   public svgMarginConfig: SvgMarginConfig;
+  public playerColorScale: ScaleOrdinal<string, any>;
+  public filters;
+  public filtersArray;
+  private clip;
   private timeAxisScale: ScaleTime<number, number>;
+  private d3: D3;
+  private svg;
   private timeScale: ScaleLinear<number, number>;
   private contextTimeScale: ScaleLinear<number, number>;
   private contextScoreScale: ScaleLinear<number, number>;
-  public playerColorScale: ScaleOrdinal<string, any>;
   private scoreScale: ScaleLinear<number, number>;
   private eventsColorScale: ScaleOrdinal<string, any>;
   private lineGenerator: Line<ScoredEvent>;
@@ -46,9 +50,6 @@ export class LineComponent implements OnInit {
   private eventTooltip;
   private lineTooltip;
   private zoomableArea;
-  public filters;
-  public filtersArray;
-  private clip;
 
   private tableRowClicked: Subscription;
   private tableRowMouseover: Subscription;
@@ -56,8 +57,8 @@ export class LineComponent implements OnInit {
   private filterChanged: Subscription;
 
   constructor(
-      d3service: D3Service, 
-      private visualizationService: DataProcessor, 
+      d3service: D3Service,
+      private visualizationService: DataProcessor,
       private tableService: TableService,
       private filtersService: FiltersService
     ) {
@@ -108,7 +109,7 @@ export class LineComponent implements OnInit {
    */
   drawFeedbackLearner() {
     this.checkFeedbackLearner()
-    this.drawPlayer(this.feedbackLearnerId);
+    this.feedbackLearnerId != null ? this.drawPlayer(this.feedbackLearnerId) : null;
   }
 
   /**
@@ -284,7 +285,7 @@ export class LineComponent implements OnInit {
    * Define D3 scales
    */
   initializeScales() {
-    this.playerColorScale = this.d3.scaleOrdinal().range(COLOR_SCHEME);
+    this.playerColorScale = this.d3.scaleOrdinal().range(this.colorScheme || colorScheme);
     this.tableService.sendPlayerColorScale(this.playerColorScale);
 
     const scaleDomainStart = new Date(0, 0, 0, 0, 0, 0, 0);
@@ -312,7 +313,7 @@ export class LineComponent implements OnInit {
       .domain([0, this.getMaximumScore()]);
 
     this.eventsColorScale = this.d3.scaleOrdinal()
-      .range(COLOR_SCHEME);
+      .range(this.colorScheme  || colorScheme);
   }
 
   /**
@@ -327,7 +328,7 @@ export class LineComponent implements OnInit {
     }
 
     const colorScale = this.d3.scaleOrdinal()
-      .range(COLOR_SCHEME);
+      .range(this.colorScheme  || colorScheme);
 
     const barsGroup = this.svg.append('g')
       .attr('class', 'score-progress-bars')
@@ -417,7 +418,7 @@ export class LineComponent implements OnInit {
       .html((d, i) => `Level ${i + 1}`);
 
     const colorScale = this.d3.scaleOrdinal()
-      .range(COLOR_SCHEME);
+      .range(this.colorScheme || colorScheme);
 
     labelsGroup.selectAll('rect')
       .data(coordinates)
@@ -489,7 +490,7 @@ export class LineComponent implements OnInit {
   }
 
   /**
-   * Appends SVG group for holding players 
+   * Appends SVG group for holding players
    */
   buildPlayersGroup() {
     this.playersGroup = this.svg.append('g')
@@ -682,7 +683,7 @@ export class LineComponent implements OnInit {
   }
 
   /**
-   * Draws main line, events, 
+   * Draws main line, events,
    * @param playerId of player to be drawn
    */
   drawPlayer(playerId: number) {
@@ -748,7 +749,7 @@ export class LineComponent implements OnInit {
 
   /**
    * Highlights the line, show tooltip and crosshair
-   * @param player 
+   * @param player
    */
   onLineMouseover(player: ProgressPlayer) {
     this.highlightLine(player.id);
@@ -775,7 +776,7 @@ export class LineComponent implements OnInit {
 
   /**
    * Add player's name/id to tooltip and updates its position
-   * @param player 
+   * @param player
    */
   updateLineTooltip(player) {
     const x: number = this.d3.event.pageX;
@@ -793,7 +794,7 @@ export class LineComponent implements OnInit {
 
   /**
    * Unhighlights the line, hides tooltip and crosshair
-   * @param player 
+   * @param player
    */
   onLineMouseout(player: ProgressPlayer) {
     this.unhighlightLine(player.id);
@@ -831,7 +832,7 @@ export class LineComponent implements OnInit {
 
   /**
    * Draws events onto main line
-   * @param player 
+   * @param player
    */
   drawPlayersEvents(player: ProgressPlayer) {
     const colorScale = this.eventsColorScale;

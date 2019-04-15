@@ -4,7 +4,8 @@ import { SvgMarginConfig } from '../../../shared/interfaces/configurations/svg-m
 import { AxesConfig } from '../../../shared/interfaces/configurations/axes-config';
 import { ContextConfig } from './interfaces/context-config';
 
-export const COLOR_SCHEME: ColorScheme = ['#fbb4ae', '#b3cde3', '#ccebc5', '#decbe4', '#fed9a6', '#ffffcc', '#e5d8bd', '#fddaec', '#f2f2f2'];
+export const colorScheme: string[] = ['#307bc1', '#41ae43', '#ff9d3c', '#fc5248', '#f2d64f', '#8035c6'];
+
 export const SVG_CONFIG: SvgConfig = {
     width: 1000,
     height: 600

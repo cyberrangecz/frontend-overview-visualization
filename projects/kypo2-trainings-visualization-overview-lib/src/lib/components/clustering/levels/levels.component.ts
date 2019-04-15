@@ -17,9 +17,8 @@ import {
   AXES_CONFIG,
   BARS_CONFIG,
   CROSSHAIR_CONFIG,
-  COLOR_SCHEME,
   PLAYER_POINT_CONFIG,
-  LEVEL_LABELS_CONFIG
+  LEVEL_LABELS_CONFIG, colorScheme
 } from './config';
 import {
   ScaleLinear,
@@ -40,6 +39,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   @Input() feedbackLearnerId: number;
   @Input() eventService: ClusteringLevelsEventService;
   @Input() size: SvgConfig;
+  @Input() colorScheme: string[];
   @Output() outputSelectedPlayerId = new EventEmitter<number>();
 
   private d3: D3;
@@ -145,7 +145,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    * @param data holding necessary values for bar visualization
    */
   drawMaximumBars(barsGroup, data: BarVisualizationData[]) {
-    const colorScale = this.d3.scaleOrdinal().range(COLOR_SCHEME);
+    const colorScale = this.d3.scaleOrdinal().range((this.colorScheme || colorScheme));
     barsGroup
       .selectAll('.score-level-bar-max')
       .data(data)
@@ -174,7 +174,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    * @param data holding necessary values for bar visualization
    */
   drawAverageBars(barsGroup, data: BarVisualizationData[]) {
-    const colorScale = this.d3.scaleOrdinal().range(COLOR_SCHEME);
+    const colorScale = this.d3.scaleOrdinal().range(this.colorScheme || colorScheme);
     barsGroup
       .selectAll('.score-level-bar-avg')
       .data(data)
@@ -284,9 +284,7 @@ export class LevelsComponent implements OnInit, OnChanges {
         `translate(${this.barWidth - 50}, ${this.svgHeight + 0.3 * 0.3 +
           26})`
       )
-      .style('fill', '#4c4a4a')
-      .style('font-weight', 'bold')
-      .text('time');
+      .style('fill', '#4c4a4a');
   }
 
   /**
@@ -374,7 +372,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    */
   drawPlayers() {
     const yScaleBand = this.yScaleBandBars;
-    const colorScale = this.d3.scaleOrdinal().range(COLOR_SCHEME);
+    const colorScale = this.d3.scaleOrdinal().range(this.colorScheme || colorScheme);
     const playersGroupedByLevel = this.getPlayersData();
     playersGroupedByLevel.forEach((playersInCurrentLevel, i) => {
       this.drawPlayersOnSingleBar(playersInCurrentLevel, i, colorScale);
