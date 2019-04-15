@@ -85,7 +85,6 @@ export class DataProcessor {
   }
 
   getScoreFinalMaxTime(gameData: GameData, includeTimeGaps: boolean = false): number {
-    console.log(includeTimeGaps);
     return this.timeService.getFinalMaxTime(gameData.events, includeTimeGaps);
   }
 
@@ -221,12 +220,6 @@ export class DataProcessor {
       levelsData.push(currentLevelData);
       currentLevelData = {};
     });
-
-    console.log({
-      playerIds: playerIds,
-      levels: levelsData,
-      finalScores: scores}
-    );
 
     return {
       playerIds: playerIds,

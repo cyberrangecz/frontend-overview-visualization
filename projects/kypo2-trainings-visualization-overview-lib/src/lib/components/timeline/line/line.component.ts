@@ -1017,29 +1017,43 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    * @returns any
    */
   getEventMessage(event) {
-    const split = event.event.toUpperCase().split(' ');
-    switch (split[0]) {
-      case 'CORRECT':
+    const cropped: string = event.event.split(this.typePrefix).pop();
+    const croppedSpace = cropped.replace(/([A-Z])/g, ' $1').trim();
+    switch (event.event) {
+      case this.typePrefix + 'LevelCompleted':
         return `Level ${event.level} completed`;
-      case 'WRONG':
-        return 'Wrong flag submitted';
-      case 'HINT':
-        return 'Hint taken';
-      case 'HELP':
-        return 'Help level accessed';
-      case 'SKIP':
-        return 'Level skipped';
-      case 'GAME':
-        if (split[1] === 'STARTED') {
-          return 'Game started';
-        } else if (split[1] === 'EXITED') {
-          return 'Exited prematurely';
-        } else {
-          return 'Game finished';
-        }
+      case this.typePrefix + 'LevelStarted':
+        return `Level ${event.level} started`;
+      case (this.typePrefix + cropped):
+        return croppedSpace;
       default:
-        return event.event;
+        return this.oldTypes(event, event.event.toUpperCase().split(' '));
     }
+  }
+
+  oldTypes(event, split) {
+      switch (split[0]) {
+        case 'CORRECT':
+          return `Level ${event.level} completed`;
+        case 'WRONG':
+          return 'Wrong flag submitted';
+        case 'HINT':
+          return 'Hint taken';
+        case 'HELP':
+          return 'Help level accessed';
+        case 'SKIP': // deprecated?
+          return 'Level skipped';
+        case 'GAME':
+          if (split[1] === 'STARTED') {
+            return 'Game started';
+          } else if (split[1] === 'EXITED') {
+            return 'Exited prematurely';
+          } else {
+            return 'Game finished';
+          }
+        default:
+          return event.event;
+      }
   }
 
   /**
@@ -1110,9 +1124,6 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    * @returns number longest game time.
    */
   getMaximumTime(includeTimeGaps: boolean = true) {
-    console.log('t');
-    console.log(includeTimeGaps);
-    console.log(this.data);
     return this.visualizationService.getScoreFinalMaxTime(this.data, includeTimeGaps);
   }
 
@@ -1141,7 +1152,6 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
     const p = this.players.find((el) => el.id === player.id);
     p.checked = !p.checked;
     if (p.checked) {
-      console.log(p.id);
       this.drawPlayer(p.id);
     } else {
       this.removePlayer(p.id);
