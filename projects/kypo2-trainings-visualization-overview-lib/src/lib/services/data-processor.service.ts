@@ -17,6 +17,7 @@ import { LevelEvents } from '../shared/interfaces/level-events';
 export class DataProcessor {
 
   private d3: D3;
+  private typePrefix = 'cz.muni.csirt.kypo.events.trainings.';
 
   constructor(private timeService: TimeService, private scoreService: ScoreService, d3service: D3Service) {
     this.d3 = d3service.getD3();
@@ -99,7 +100,6 @@ export class DataProcessor {
     playersWithEvents.forEach(player => {
       const playerId: string = player.key;
       const playerEvents: Event[] = player.values;
-      console.log(playerEvents);
       const playerEventsGroupedByLevel = this.d3.nest().key((event: Event) => event.level.toString()).entries(playerEvents);
       const playerScoredEvents: ScoredEvent[] = this.getScoredEvents(playerEventsGroupedByLevel, gameData);
       progressPlayers.push({id: playerId, events: playerScoredEvents, checked: false});
@@ -119,7 +119,7 @@ export class DataProcessor {
       let currentLevelScore = gameData.information.levels[levelNumber - 1].points;
       if (i !== 0) {
         playerScoredEvents.push({time: time,
-          score: currentScore + currentLevelScore,
+          score: /*currentScore +*/ currentLevelScore,
           event: 'Correct flag submited',
           show: false,
           level: levelNumber
@@ -131,12 +131,12 @@ export class DataProcessor {
         const level = gameData.information.levels[event['level'] - 1];
         const beforeChangeLevelScore = currentLevelScore;
 
-        currentLevelScore = this.updateLevelScore(event, level, currentLevelScore);
+        currentLevelScore = event.actualScore; //this.updateLevelScore(event, level, currentLevelScore);
 
         if (beforeChangeLevelScore !== currentLevelScore) {
           const scoredEvent: ScoredEvent = {
             time: time,
-            score: currentScore + beforeChangeLevelScore,
+            score: /*currentScore +*/ beforeChangeLevelScore,
             event: event.event,
             show: false,
             level: levelNumber
@@ -144,13 +144,13 @@ export class DataProcessor {
           playerScoredEvents.push(scoredEvent);
         }
 
-        const scoreChange = (event.event.toUpperCase().split(' ')[0] === 'CORRECT') ?
+        const scoreChange = (event.event === this.typePrefix + 'CorrectFlagSubmitted') ?
           gameData.information.levels[levelNumber % gameData.information.levels.length].points :
           currentLevelScore - beforeChangeLevelScore;
 
         const scoredEvent: ScoredEvent = {
           time: time,
-          score: currentScore + currentLevelScore,
+          score: /*currentScore +*/ currentLevelScore,
           event: event.event,
           show: true,
           level: levelNumber,

@@ -14,7 +14,7 @@ import {Hint} from '../shared/interfaces/hint';
  * Fetches the data from the REST API.
  */
 export class DataService {
-  token = 'eyJqa3UiOiJodHRwczpcL1wvb2lkYy5pY3MubXVuaS5jelwvb2lkY1wvandrIiwia2lkIjoicnNhMSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIzOTYyOTZAbXVuaS5jeiIsImF6cCI6IjU5M2JiZjQ5LWE4MmItNGY2ZS05YmFmLWM0ZWQ0ODhkNTA2NiIsImlzcyI6Imh0dHBzOlwvXC9vaWRjLmljcy5tdW5pLmN6XC9vaWRjXC8iLCJleHAiOjE1NTU0MDk4ODUsImlhdCI6MTU1NTQwNjI4NSwianRpIjoiNTU4Y2QyYTMtZjQ2YS00MGNiLWFjZDEtYjNlMjNhYzA5Zjk0In0.LhRlxNDLOGU-t3FOoX_01nlvmTomqu72aRay4h4KoGuu-9NJBoJh06s0oUzT8W6rsJR8YuYQ1CaUOxowF53QpYgQBRTopUig-l04vIpg28-9kh7RMYFQt_AhVR-ZO1SI0AWNKqhmxnu1V09DSgde0bKTdX3Ksr0DuD1J5ZDdEmSytA25c9JGlluPKgk5VjM-wOZW12h7UFraujoLEfHV-jUqMrxscv2pEXntWAVRW0kDYTXjLhGO0ORtKMT_p7tlS3X0nt-KlTUm3k-KkRgjyt_CX2togv19zFUDv5kjl5KcOG4THwOjPcKKlOKH-fB_To6oPOZV14mM1k_MEhua0A';
+  token = 'eyJqa3UiOiJodHRwczpcL1wvb2lkYy5pY3MubXVuaS5jelwvb2lkY1wvandrIiwia2lkIjoicnNhMSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIzOTYyOTZAbXVuaS5jeiIsImF6cCI6IjU5M2JiZjQ5LWE4MmItNGY2ZS05YmFmLWM0ZWQ0ODhkNTA2NiIsImlzcyI6Imh0dHBzOlwvXC9vaWRjLmljcy5tdW5pLmN6XC9vaWRjXC8iLCJleHAiOjE1NTU0MTM0OTgsImlhdCI6MTU1NTQwOTg5OCwianRpIjoiNjE3MDUzNjgtYTcxZi00ZTA1LTg3ZmYtNmU5NWE4YzU3M2QzIn0.Sr09xdojHIeqSi0L9I1jyXcqlR58_mPikusx8kwc-BFHkogdTi3GIJHIlxfG_aen-pg5fySbBPtPW1D7dOeuR1JUjvbD3jeNkk9Ge0VhQcjWbwLX9rU3CdLN70lAUaTMr6kT4ShnZQ9sHGvYm_hUWFkRVWANCYpPi3K37_cAmZ7Z0jcun27O5_fKopz-jcoTKSyYsP055BED4__7hEMzwj7PbdGcEwu6PoI5qzbV4DDgMKwx-L-jIGDZ-2N9ZOAZ83w0b3h89DAwdrx8rv_jT3T5NY4kRKjjqkJ9xguEDmYHYa57LTF_zxOtZHp2wkBOpWYH1-3a5kbIBjeKCraXmA';
   baseUrl = 'http://147.251.21.216:8083/kypo2-rest-training/api/v1';
   constructor(private http: HttpClient) { }
 
@@ -113,6 +113,8 @@ export class DataService {
         });
       }
     });
+
+    console.log(levels);
     return levels;
   }
 

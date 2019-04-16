@@ -888,6 +888,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
     this.removeFilteredEvents(events);
     // console.log(events);
 
+    console.log(events);
     events = this.addNewEventsAndReturnThem(events);
     events
       .attr('r', 7)
