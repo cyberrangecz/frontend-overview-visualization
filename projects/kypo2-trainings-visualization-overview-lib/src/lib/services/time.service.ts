@@ -58,16 +58,15 @@ export class TimeService {
 
     eventsGroupedByPlayer.forEach(player => {
       let time: any;
-      // console.log(includeTimeGaps);
-      if (!includeTimeGaps) {
+      //if (!player.values[player.values.length - 1].gametime === undefined) {
         time = new Date(player.values[player.values.length - 1].gametime).getTime();
         playersMaxTimes[player.key] = time;
-      } else {
+      /*} else {
         const startTimestamp: any = this.d3.min(player.values, (event: Event) => event.timestamp);
         const endTimestamp: any =  this.d3.max(player.values, (event: Event) => event.timestamp);
         time = new Date(endTimestamp).getTime() - new Date(startTimestamp).getTime();
         playersMaxTimes[player.key] = time / 1000;
-      }
+      }*/
     });
     return playersMaxTimes;
   }
@@ -81,8 +80,8 @@ export class TimeService {
   }
 
   getEachLevelPlayerTime(events: GameEvents) {
-    if (events.levels === null ) {
-      return null;
+    if (events === null || events.levels === null ) {
+      return [];
     }
     const result = [];
     const lastEvents = {};

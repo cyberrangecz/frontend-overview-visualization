@@ -23,6 +23,7 @@ export class ScoreService {
   }
 
   getEachLevelScores(information: GameInformation, events: GameEvents): {}[] {
+    if(events == null || events.levels === null || information === null || information.levels === null) return [];
     const eachLevelScores = [];
     let levelGroup = {};
     events.levels.forEach(level => {
@@ -60,7 +61,7 @@ export class ScoreService {
     /**
    * Count wrong flags submitted in each level and return an array of objects {playerId : wrong flags submitted}
    * @param information
-   * @param events 
+   * @param events
    */
   getEachLevelWrongFlags(information: GameInformation, events: GameEvents): {}[] {
     return this.getEachLevelEventCountByType("wrong", information, events);
@@ -140,6 +141,7 @@ export class ScoreService {
   }
 
   getGameMaxScore(information: GameInformation): number {
+    if (information === null || information.levels === null) return 0;
     let maxScore = 0;
     information.levels.forEach((level: Level) => {
       maxScore += level.points;

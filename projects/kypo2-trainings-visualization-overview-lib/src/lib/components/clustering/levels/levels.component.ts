@@ -41,8 +41,7 @@ import {throwError} from 'rxjs';
   styleUrls: ['./levels.component.css']
 })
 export class LevelsComponent implements OnInit, OnChanges {
-  // @Input() data: GameData;
-  private data: GameData = {information: GAME_INFORMATION, events: EVENTS};
+  @Input() data: GameData;
   @Input() inputSelectedPlayerId: string;
   @Input() feedbackLearnerId: string;
   @Input() eventService: ClusteringLevelsEventService;
@@ -218,6 +217,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    * Draw bar labels (Level number and name) next to the maximum bars
    */
   drawBarLabels() {
+    if (this.data.information === null) return;
     this.data.information.levels.forEach(level => {
       const bar = this.d3.select('#score-level-bar-max-' + level.number);
       const barWidth = bar.attr('width');

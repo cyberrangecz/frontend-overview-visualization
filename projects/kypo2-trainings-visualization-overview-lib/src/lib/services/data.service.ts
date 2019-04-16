@@ -14,7 +14,7 @@ import {Hint} from '../shared/interfaces/hint';
  * Fetches the data from the REST API.
  */
 export class DataService {
-  token = 'eyJqa3UiOiJodHRwczpcL1wvb2lkYy5pY3MubXVuaS5jelwvb2lkY1wvandrIiwia2lkIjoicnNhMSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIzOTYyOTZAbXVuaS5jeiIsImF6cCI6IjU5M2JiZjQ5LWE4MmItNGY2ZS05YmFmLWM0ZWQ0ODhkNTA2NiIsImlzcyI6Imh0dHBzOlwvXC9vaWRjLmljcy5tdW5pLmN6XC9vaWRjXC8iLCJleHAiOjE1NTUzNTc2NjIsImlhdCI6MTU1NTM1NDA2MiwianRpIjoiYjAyNGRkNGItNzNmZS00NjA3LWJjNjItMWI4NDI0ZDRjZTY2In0.bKqTSvRGRc7DN_UHHTphISdwXR43eDbZNVyr0OPHiMpZxvVBep55VDEKF1AvecieTStP5ZfaKAIxVvyFlil_WU1-l98NzcAdwCulVVynPKeHsaxHbNmrqSfUIze9s5GNFLcELZ6kK53vXilC1_mAamaXko0U1EMM2ZnQ0HWcqF9Vl6wxo1oUryNsQsbyc1ek4aDxa-DiyEnZaMJeIgoFQiDJTnxvFnVFesQLgx5e5oa9HAGeuetN5BePYKpA1KBFovL65z6Ij4EaH-aQCryrlolXTi1GS3_uVWyaj42mZwkntrdq82OmGuDRSIMYIKKK_8G_X3MZsITfRM46P4LJtQ';
+  token = 'eyJqa3UiOiJodHRwczpcL1wvb2lkYy5pY3MubXVuaS5jelwvb2lkY1wvandrIiwia2lkIjoicnNhMSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIzOTYyOTZAbXVuaS5jeiIsImF6cCI6IjU5M2JiZjQ5LWE4MmItNGY2ZS05YmFmLWM0ZWQ0ODhkNTA2NiIsImlzcyI6Imh0dHBzOlwvXC9vaWRjLmljcy5tdW5pLmN6XC9vaWRjXC8iLCJleHAiOjE1NTU0MDk4ODUsImlhdCI6MTU1NTQwNjI4NSwianRpIjoiNTU4Y2QyYTMtZjQ2YS00MGNiLWFjZDEtYjNlMjNhYzA5Zjk0In0.LhRlxNDLOGU-t3FOoX_01nlvmTomqu72aRay4h4KoGuu-9NJBoJh06s0oUzT8W6rsJR8YuYQ1CaUOxowF53QpYgQBRTopUig-l04vIpg28-9kh7RMYFQt_AhVR-ZO1SI0AWNKqhmxnu1V09DSgde0bKTdX3Ksr0DuD1J5ZDdEmSytA25c9JGlluPKgk5VjM-wOZW12h7UFraujoLEfHV-jUqMrxscv2pEXntWAVRW0kDYTXjLhGO0ORtKMT_p7tlS3X0nt-KlTUm3k-KkRgjyt_CX2togv19zFUDv5kjl5KcOG4THwOjPcKKlOKH-fB_To6oPOZV14mM1k_MEhua0A';
   baseUrl = 'http://147.251.21.216:8083/kypo2-rest-training/api/v1';
   constructor(private http: HttpClient) { }
 
@@ -56,7 +56,7 @@ export class DataService {
     return [gameInfo, gameEvents];
   }
 
-  loadLevels(levels): Level[] {
+  private loadLevels(levels): Level[] {
     const newLevels: Level[] = [];
     let levelNum = 1;
     levels.forEach((level) => {
@@ -83,7 +83,7 @@ export class DataService {
     return newLevels;
   }
 
-  initializeLevels(allLevels: any[]): LevelEvents[] {
+  private initializeLevels(allLevels: any[]): LevelEvents[] {
     const levels: LevelEvents[] = [];
     let levelNum = 1;
     for (let i = 0; i < allLevels.length; i++) {

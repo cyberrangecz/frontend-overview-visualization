@@ -33,8 +33,7 @@ import {DataService} from '../../../services/data.service';
   styleUrls: ['./final.component.css']
 })
 export class FinalComponent implements OnInit, OnChanges {
-  // @Input() data: GameData;
-  private data: GameData = {information: GAME_INFORMATION, events: EVENTS};
+  @Input() data: GameData;
   @Input() inputSelectedPlayerId: string;
   @Input() feedbackLearnerId: string;
   @Input() colorScheme: string[];
@@ -70,7 +69,7 @@ export class FinalComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    this.updateCanvas();
+    // this.updateCanvas();
   }
 
   updateCanvas() {

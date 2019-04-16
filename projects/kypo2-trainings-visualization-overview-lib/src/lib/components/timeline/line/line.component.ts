@@ -26,7 +26,7 @@ import {GameEvents} from '../../../shared/interfaces/game-events';
 })
 export class LineComponent implements OnInit, OnDestroy, OnChanges {
 
-  // @Input() data: GameData;
+  @Input() data: GameData;
   @Input() feedbackLearnerId: string;
   @Input() colorScheme: string[];
   @Input() size: {width: number; height: number};
@@ -38,7 +38,6 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   public playerColorScale: ScaleOrdinal<string, any>;
   public filters;
   public filtersArray;
-  private data: GameData = {information: GAME_INFORMATION, events: EVENTS};
   private clip;
   private timeAxisScale: ScaleTime<number, number>;
   private d3: D3;
@@ -105,7 +104,24 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnChanges() {
     this.players = this.getPlayersWithEvents();
+    this.redraw();
+  }
+
+  load() {
+    this.dataService.getAllData().subscribe((res: [GameInformation, GameEvents]) => {
+      this.data.information = res[0];
+      this.data.events = res[1];
+
+      this.players = this.getPlayersWithEvents();
+      this.redraw();
+    });
+  }
+
+  redraw() {
     this.setup();
+    this.initializeFilters();
+    this.drawFeedbackLearner();
+    this.initializeScales();
     this.drawEstimatedTimesBars();
     this.drawAxes();
     this.drawLevelThresholds();
@@ -116,18 +132,6 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
     this.addZoomAndBrush();
     this.buildCrosshair();
     this.drawLegend();
-  }
-
-  load() {
-    this.dataService.getAllData().subscribe((res: [GameInformation, GameEvents]) => {
-      this.data.information = res[0];
-      this.data.events = res[1];
-
-      this.players = this.getPlayersWithEvents();
-      this.initializeFilters();
-      this.drawFeedbackLearner();
-      this.initializeScales();
-    });
   }
 
   /**
@@ -338,6 +342,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    * Draw color hatched time bars indicating estimated game time
    */
   drawEstimatedTimesBars() {
+    if (this.data.information === null) return;
     const estimatedTimes = this.data.information.levels.map(level => {
       return { number: level.number, time: level.estimatedTime, offset: 0 };
     });
@@ -396,6 +401,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    * Draw score y axis, ticks accumulated/summed maximum gainable score for each levels completed
    */
   drawScoreAxis() {
+    if (this.data.information === null) return;
     const axesConfig = AXES_CONFIG;
     const tickValues = this.data.information.levels
       .map(level => [level.points])
@@ -707,7 +713,6 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    * @param playerId of player to be drawn
    */
   drawPlayer(playerId: string) {
-    console.log(playerId);
     const player: ProgressPlayer = this.players.filter(p => p.id === playerId)[0];
     const playerGroup = this.playersGroup.append('g')
       .attr('id', 'score-progress-player-' + player.id)
@@ -728,8 +733,11 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
       .append('g')
       .attr('clip-path', 'url(#lineClip)');
 
+    // const newEvents = this.adjustTimes(player.events);
+
+    console.log(player.events);
     const line = lineGroup.append('path')
-      .attr('d', this.lineGenerator(player.events))
+      .attr('d', this.lineGenerator(player.events)) //todo
       .attr('class', 'score-progress-player')
       .classed('score-progress-player-highlight', player.id === this.feedbackLearnerId)
       .classed('visible-line', true)
@@ -757,6 +765,18 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
 
     return line;
   }
+/*
+  adjustTimes(events: ScoredEvent[]) {
+    console.log(events);
+    let delay = 0;
+    events.forEach((event,i) => {
+      if (event === this.typePrefix + 'TrainingRunResumed') {
+        delay = event.time - events[i - 1].time;
+      }
+      events[i].time -= delay;
+    });
+    return events;
+  }*/
 
   /**
    * @ignore
@@ -866,12 +886,13 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
     let events = eventsGroup.selectAll('.event')
       .data(filteredEvents, (event) => event.time);
     this.removeFilteredEvents(events);
+    // console.log(events);
 
     events = this.addNewEventsAndReturnThem(events);
     events
       .attr('r', 7)
-      .attr('cx', event => this.timeScale(event.time))
-      .attr('cy', event => this.scoreScale(event.score))
+      .attr('cx', event => this.timeScale(event.time))  ///!!!
+      .attr('cy', event => this.scoreScale(event.score)) //!!!
       .style('opacity', '0')
       .style('fill', event => this.d3.hsl(colorScale(event.level.toString()).toString()).darker(0.9))
       .datum(event => { event.playerId = player.id; return event; })
@@ -890,12 +911,21 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    */
   filterEvents(unfilteredEvents: ScoredEvent[]) {
     let result: ScoredEvent[] = unfilteredEvents.filter(event => event.show); // Get rid of duplicates
+    let delay = 0;
     Object.keys(this.filters).forEach(key => {
       const filter = this.filters[key];
       if (!filter.checked) {
         result = result.filter(filter.filterFunction);
       }
     });
+/*
+    result.forEach( (item,i) => {
+      if (item.event === this.typePrefix + 'TrainingRunResumed') {
+        delay = item.time - result[i - 1].time;
+      }
+      item.time -= delay;
+    });*/
+
     return result;
   }
 
@@ -1123,7 +1153,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    *
    * @returns number longest game time.
    */
-  getMaximumTime(includeTimeGaps: boolean = true) {
+  getMaximumTime(includeTimeGaps: boolean = false) {
     return this.visualizationService.getScoreFinalMaxTime(this.data, includeTimeGaps);
   }
 

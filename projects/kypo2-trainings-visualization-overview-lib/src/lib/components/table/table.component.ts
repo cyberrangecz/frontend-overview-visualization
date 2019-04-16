@@ -18,7 +18,7 @@ import {DataService} from '../../services/data.service';
 })
 export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
-  // @Input() data: GameData;
+  @Input() data: GameData;
   @Input() feedbackLearnerId: string;
 
   public scoreTableData = {playerIds: [], levels: [], finalScores: {}};
@@ -27,7 +27,6 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public sortedDesc = false;
   public columnHovered = null;
   public filters;
-  private data: GameData = {information: GAME_INFORMATION, events: EVENTS};
   private players: ProgressPlayer[];
   private playerColorScaleSource: Subscription;
   public playerColorScale = (id) => 'black';
@@ -91,7 +90,6 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     const copy = this.players.slice();
     const splice = copy.splice(i);
     this.playersOrdered = splice.concat(copy);
-    console.log(this.playersOrdered);
   }
 
   /**

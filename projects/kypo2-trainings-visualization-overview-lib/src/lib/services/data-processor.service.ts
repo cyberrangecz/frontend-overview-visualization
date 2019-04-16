@@ -99,6 +99,7 @@ export class DataProcessor {
     playersWithEvents.forEach(player => {
       const playerId: string = player.key;
       const playerEvents: Event[] = player.values;
+      console.log(playerEvents);
       const playerEventsGroupedByLevel = this.d3.nest().key((event: Event) => event.level.toString()).entries(playerEvents);
       const playerScoredEvents: ScoredEvent[] = this.getScoredEvents(playerEventsGroupedByLevel, gameData);
       progressPlayers.push({id: playerId, events: playerScoredEvents, checked: false});
@@ -107,6 +108,7 @@ export class DataProcessor {
   }
 
   getScoredEvents(eventsGroupedByLevel, gameData: GameData) {
+    if (gameData.information === null ||  gameData.information.levels === null) return [];
     const startTime = new Date(eventsGroupedByLevel[0].values[0].timestamp).getTime();
     let currentScore = 0;
     let time = 0;
@@ -124,9 +126,7 @@ export class DataProcessor {
         });
       }
       levelEvents.forEach((event: Event) => {
-        const currentTime = new Date(event.timestamp).getTime();
-        time = currentTime - startTime;
-        time /= 1000; // to seconds
+        time = event.gametime; // to seconds
 
         const level = gameData.information.levels[event['level'] - 1];
         const beforeChangeLevelScore = currentLevelScore;
@@ -197,6 +197,7 @@ export class DataProcessor {
     const hintsTakenEachLevel = this.scoreService.getEachLevelHintsTaken(gameData.information, gameData.events);
     const scoresEachLevel = this.scoreService.getEachLevelScores(gameData.information, gameData.events);
     const wrongFlagsSubmittedEachLevel = this.scoreService.getEachLevelWrongFlags(gameData.information, gameData.events);
+    if(scoresEachLevel.length < 1) return {playerIds: [], levels: [], finalScores: []};
     const playerIds = Object.keys(scoresEachLevel[0]);
     const finalScores = this.scoreService.getFinalScores(gameData.events, gameData.information);
     const scores = {};
