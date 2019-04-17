@@ -30,6 +30,8 @@ import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config'
 import {DataService} from '../../../services/data.service';
 import {GameInformation} from '../../../shared/interfaces/game-information';
 import {GameEvents} from '../../../shared/interfaces/game-events';
+import {GAME_INFORMATION} from '../../../../../../../src/app/mocks/information.mock';
+import {EVENTS} from '../../../../../../../src/app/mocks/events.mock';
 
 @Component({
   selector: 'kypo2-viz-overview-levels',
@@ -61,7 +63,8 @@ export class LevelsComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.load();
+    const ret = this.load();
+    console.log(ret);
   }
 
   ngOnChanges() {
@@ -72,6 +75,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     this.dataService.getAllData().subscribe((res: [GameInformation, GameEvents]) => {
     this.data.information = res[0];
     this.data.events = res[1];
+    console.log(JSON.stringify(res[1!]));
     this.updateCanvas();
     });
   }

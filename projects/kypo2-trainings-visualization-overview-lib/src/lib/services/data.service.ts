@@ -9,13 +9,15 @@ import {Level} from '../shared/interfaces/level';
 import {LevelEvents} from '../shared/interfaces/level-events';
 import {Hint} from '../shared/interfaces/hint';
 import {GenericEvent} from '../shared/interfaces/generic-event.enum';
+import {GAME_INFORMATION} from '../../../../../src/app/mocks/information.mock';
+import {EVENTS} from '../../../../../src/app/mocks/events.mock';
 
 @Injectable()
 /**
  * Fetches the data from the REST API.
  */
 export class DataService {
-  token = 'eyJqa3UiOiJodHRwczpcL1wvb2lkYy5pY3MubXVuaS5jelwvb2lkY1wvandrIiwia2lkIjoicnNhMSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIzOTYyOTZAbXVuaS5jeiIsImF6cCI6IjU5M2JiZjQ5LWE4MmItNGY2ZS05YmFmLWM0ZWQ0ODhkNTA2NiIsImlzcyI6Imh0dHBzOlwvXC9vaWRjLmljcy5tdW5pLmN6XC9vaWRjXC8iLCJleHAiOjE1NTU1MjI2OTcsImlhdCI6MTU1NTUxOTA5NywianRpIjoiNDRjZjVkZDUtYzNmMi00MDBlLTgzOTgtNTU0MTI2OWZmNGE0In0.M_ufkD7wfHPaY-g6_aEeri7BCY8BLrvwYsNDQ7ai1SiPCJqFoJ5I22cgVaNpYLM7FuFQhIdN27Gpssw-6U0f40v-VcPGc78DxSJgg-oPQgnOeqX5JtJadqHfTYGMVVSTHH2p-tvETdKcZ6ADvS1lVXvB_tUz8vUPJp-sEEQvmliVVxU_hLZM3vWmngBgy6pgyPVmTwsILInnv-R3JB4K2WBYm59no9vz-eolcq8tgmzR-XIeFn-C5yg9fhqFDoNnACbwRDAv6jxbMmr2cVwLo5BM_vZH_orl069wGHJED8-nzB-2AWKKZJQVQRoqbisHf-5Zku9MLSJB2MBrOlQYgQ';
+  token = 'tokenString';
   baseUrl = 'http://147.251.21.216:8083/kypo2-rest-training/api/v1';
   constructor(private http: HttpClient) { }
 

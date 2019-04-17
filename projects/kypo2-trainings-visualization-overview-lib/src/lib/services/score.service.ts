@@ -107,26 +107,11 @@ export class ScoreService {
       case GenericEvent.TypePrefix + GenericEvent.SolutionDisplayed: // Help level accessed
         return -event.penalty; // -9999;
       case GenericEvent.TypePrefix + GenericEvent.GameSurrendered:
-        return 0; // ???
-      /*case 'LEVEL': // Level skipped
-        return -9999;*/
-      /*case 'GAME': // Exited prematurely
-        const exited: boolean = event.event.toUpperCase().split(' ')[1] === 'EXITED';
-        if (exited) {
-          return -9999;
-        } else {
-          return 0;
-        }
-      default:*/
+        return 0; // no score change?
+      default:
         return 0;
     }
-  }/*
-
-  getHintScore(level: Level, event: Event): number {
-    const hintNumberTaken = +event.event.toLowerCase().split(' ')[1];
-    console.log(level.hints)
-    return -level.hints[hintNumberTaken - 1].points;
-  }*/
+  }
 
   getFinalScores(events: GameEvents, information: GameInformation) {
     const scoresByLevel = this.getEachLevelScores(information, events);

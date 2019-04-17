@@ -1,7 +1,7 @@
 import { ScoredEvent } from '../../components/timeline/interfaces/scored-event';
 
 /**
- * Obsolete skips? Used for non-gema levels instead
+ * Are skips obsolete? Used for filtering of non-game levels instead
  * @param event
  */
 const filterFunction = function(event: ScoredEvent) {

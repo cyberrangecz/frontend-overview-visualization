@@ -5,7 +5,7 @@
 export interface Event {
   levelType: string;
   playerId: string;
-  timestamp: string; // Real time timestmap
+  timestamp: number; // Real time timestmap
   gametime: number; // Time spent on task
   event: string; // Event message / Type
   actualScore?: number; // actual score in level?

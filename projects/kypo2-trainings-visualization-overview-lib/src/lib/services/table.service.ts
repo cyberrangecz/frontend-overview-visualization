@@ -14,7 +14,7 @@ export class TableService {
   private tableRowClicked = new Subject<any>();
   private tableRowMouseover = new Subject<number>();
   private tableRowMouseout = new Subject<number>();
-  private playerColorScale = new BehaviorSubject<any>((playerId: string) => "black");
+  private playerColorScale = new BehaviorSubject<any>((playerId: string) => 'black');
 
   tableRowClicked$ = this.tableRowClicked.asObservable();
   tableRowMouseover$ = this.tableRowMouseover.asObservable();

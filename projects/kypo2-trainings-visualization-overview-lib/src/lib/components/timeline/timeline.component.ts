@@ -2,6 +2,7 @@ import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { LineComponent } from './line/line.component';
 import {EVENTS} from '../../../../../../src/app/mocks/events.mock';
 import {GameData} from '../../shared/interfaces/game-data';
+import {GAME_INFORMATION} from '../../../../../../src/app/mocks/information.mock';
 
 @Component({
   selector: 'kypo2-viz-overview-timeline',
@@ -10,7 +11,7 @@ import {GameData} from '../../shared/interfaces/game-data';
 })
 export class TimelineComponent implements OnInit {
 
-  public gameData: GameData = {information: null, events: null}
+  public gameData: GameData = {information: GAME_INFORMATION, events: EVENTS}
   @Input() feedbackLearnerId: number;
   // @Input() gameData: GameData;
   @Input() colorScheme: string[];

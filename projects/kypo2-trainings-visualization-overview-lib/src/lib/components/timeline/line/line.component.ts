@@ -1063,33 +1063,8 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
       case (GenericEvent.TypePrefix + cropped):
         return croppedSpace;
       default:
-        return this.oldTypes(event, event.event.toUpperCase().split(' '));
+        return event.event;
     }
-  }
-
-  oldTypes(event, split) {
-      switch (split[0]) {
-        case 'CORRECT':
-          return `Level ${event.level} completed`;
-        case 'WRONG':
-          return 'Wrong flag submitted';
-        case 'HINT':
-          return 'Hint taken';
-        case 'HELP':
-          return 'Help level accessed';
-        case 'SKIP': // deprecated?
-          return 'Level skipped';
-        case 'GAME':
-          if (split[1] === 'STARTED') {
-            return 'Game started';
-          } else if (split[1] === 'EXITED') {
-            return 'Exited prematurely';
-          } else {
-            return 'Game finished';
-          }
-        default:
-          return event.event;
-      }
   }
 
   /**
@@ -1134,7 +1109,6 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
       .attr('d', d => this.lineGenerator(d.events));
 
     this.playersGroup.selectAll('circle').attr('cx', d => this.timeScale(d.time));
-
   }
 
   /**

@@ -1,102 +1,116 @@
 export const GAME_INFORMATION = {
-  'name': 'Photo Hunter',
+  'name': 'CTF-1: No Secure Connection',
   'levels': [
     {
-      'id': 1,
+      'type': 'INFO_LEVEL',
+      'name': 'Base info for No Secure Connection',
       'number': 1,
-      'name': 'Basic information',
-      'estimatedTime': 600,
-      'points': 16,
-      'hints': [
-        {
-          'id': 1,
-          'number': 1,
-          'points': 3
-        },
-        {
-          'id': 2,
-          'number': 2,
-          'points': 5
-        }
-      ]
+      'estimatedTime': 200,
+      'points': 0,
+      'id': 32
     },
     {
-      'id': 2,
+      'type': 'INFO_LEVEL',
+      'name': 'Network Error - Info',
       'number': 2,
-      'name': 'Vulnerabilities',
-      'estimatedTime':900,
-      'points': 22,
-      'hints': [
-        {
-          'id': 1,
-          'number': 1,
-          'points': 7
-        },
-        {
-          'id': 2,
-          'number': 2,
-          'points': 5
-        }
-      ]
+      'estimatedTime': 200,
+      'points': 0,
+      'id': 10
     },
     {
-      'id': 3,
+      'type': 'GAME_LEVEL',
+      'name': 'Network Error',
       'number': 3,
-      'name': 'Get wordpress',
-      'estimatedTime': 2400,
-      'points': 27,
+      'estimatedTime': 1000,
+      'points': 20,
+      'id': 11,
       'hints': [
         {
-          'id': 1,
+          'points': 10,
           'number': 1,
-          'points': 5
-        },
-        {
-          'id': 2,
-          'number': 2,
-          'points': 10
-        },
-        {
-          'id': 4,
-          'number': 3,
-          'points': 0
-        },
-        {
-          'id': 4,
-          'number': 4,
-          'points': 0
+          'id': 3
         }
-      ]
+      ],
+      'gameLevelNumber': 1
     },
     {
-      'id': 4,
+      'type': 'INFO_LEVEL',
+      'name': 'New Secure Connection - Info',
       'number': 4,
-      'name': 'Final round',
-      'estimatedTime': 1600,
-      'points': 35,
+      'estimatedTime': 200,
+      'points': 0,
+      'id': 12
+    },
+    {
+      'type': 'GAME_LEVEL',
+      'name': 'New Secure Connection',
+      'number': 5,
+      'estimatedTime': 1000,
+      'points': 20,
+      'id': 13,
       'hints': [
         {
-          'id': 1,
+          'points': 10,
           'number': 1,
-          'points': 5
-        },
-        {
-          'id': 2,
-          'number': 2,
-          'points': 10
-        },
-        {
-          'id': 3,
-          'number': 3,
-          'points': 5
-        },
-        {
-          'id': 4,
-          'number': 4,
-          'points': 5
+          'id': 4
         }
-      ]
+      ],
+      'gameLevelNumber': 2
+    },
+    {
+      'type': 'INFO_LEVEL',
+      'name': 'Unavailable Document - Info',
+      'number': 6,
+      'estimatedTime': 200,
+      'points': 0,
+      'id': 14
+    },
+    {
+      'type': 'GAME_LEVEL',
+      'name': 'Unavailable Document',
+      'number': 7,
+      'estimatedTime': 1000,
+      'points': 35,
+      'id': 15,
+      'hints': [
+        {
+          'points': 15,
+          'number': 1,
+          'id': 5
+        },
+        {
+          'points': 5,
+          'number': 2,
+          'id': 6
+        }
+      ],
+      'gameLevelNumber': 3
+    },
+    {
+      'type': 'INFO_LEVEL',
+      'name': 'Disable Passwords - Info',
+      'number': 8,
+      'estimatedTime': 200,
+      'points': 0,
+      'id': 16
+    },
+    {
+      'type': 'GAME_LEVEL',
+      'name': 'Disable Passwords',
+      'number': 9,
+      'estimatedTime': 1000,
+      'points': 25,
+      'id': 17,
+      'hints': [
+        {
+          'points': 10,
+          'number': 1,
+          'id': 7
+        }
+      ],
+      'gameLevelNumber': 4
     }
   ],
-  'estimatedTime': 3600
+  'estimatedTime': 8100
 };
+
