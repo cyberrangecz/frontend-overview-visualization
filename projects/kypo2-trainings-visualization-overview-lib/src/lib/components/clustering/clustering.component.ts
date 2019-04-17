@@ -3,8 +3,6 @@ import {GameData} from '../../shared/interfaces/game-data';
 import { ClusteringFinalEventService } from './interfaces/clustering-final-event-service';
 import { FinalComponent } from './final/final.component';
 import { LevelsComponent } from './levels/levels.component';
-import {EVENTS} from '../../../../../../src/app/mocks/events.mock';
-import {GAME_INFORMATION} from '../../../../../../src/app/mocks/information.mock';
 
 @Component({
   selector: 'kypo2-viz-overview-clustering',

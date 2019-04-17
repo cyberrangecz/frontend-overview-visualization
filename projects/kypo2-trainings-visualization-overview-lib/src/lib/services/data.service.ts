@@ -15,7 +15,7 @@ import {GenericEvent} from '../shared/interfaces/generic-event.enum';
  * Fetches the data from the REST API.
  */
 export class DataService {
-  token = 'eyJqa3UiOiJodHRwczpcL1wvb2lkYy5pY3MubXVuaS5jelwvb2lkY1wvandrIiwia2lkIjoicnNhMSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIzOTYyOTZAbXVuaS5jeiIsImF6cCI6IjU5M2JiZjQ5LWE4MmItNGY2ZS05YmFmLWM0ZWQ0ODhkNTA2NiIsImlzcyI6Imh0dHBzOlwvXC9vaWRjLmljcy5tdW5pLmN6XC9vaWRjXC8iLCJleHAiOjE1NTU0OTYyMjgsImlhdCI6MTU1NTQ5MjYyOCwianRpIjoiNTg5NjJjM2ItNTA3Ni00Y2QyLWIyZGQtM2E0YjA2ZmIwYmUwIn0.CEYJqnPxM2kDozcxPgR-8ecADqjtSxQ98I5V44Uilbe6b9zn6JjgCowsLtZUSwLek9Izm6SZzXjHVsqwFdysd-ZjnGjngKqY8DV5ls1iWzcr1eWlfxUHSzmq9uf3g4YHc0DjNV0-MfvnMpVXeN2PgQJqLwlZIMVpvuwNbr-vo8wyEpk9PH5Wmb0zpKbspyFsVyiak2jV1l-rK27CrFQ3XMaNmrbXHhDzxeC33x7aJlOK99BUrk9I0chQEpMkWqqIirJ62-fCOFE_sJDoChOH10zQ1hXjVUIJDsMPHzCBTs7A4o_-SnFDBfvvYvSgirkp4cAvVglJEP2p2Aex40ViWw';
+  token = 'eyJqa3UiOiJodHRwczpcL1wvb2lkYy5pY3MubXVuaS5jelwvb2lkY1wvandrIiwia2lkIjoicnNhMSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIzOTYyOTZAbXVuaS5jeiIsImF6cCI6IjU5M2JiZjQ5LWE4MmItNGY2ZS05YmFmLWM0ZWQ0ODhkNTA2NiIsImlzcyI6Imh0dHBzOlwvXC9vaWRjLmljcy5tdW5pLmN6XC9vaWRjXC8iLCJleHAiOjE1NTU1MDEzMjcsImlhdCI6MTU1NTQ5NzcyNywianRpIjoiYmJhOWVkNDAtMDdmYS00YmY2LTkzOGMtOTQ0M2NlNDEzZjlhIn0.H-IRCyL9vamVPt00AinquX3PNg-cwlBWUe-_DF3hHvvYRVF4Qz0uluhn9gryDNxlhb1GNCp2dt4v8F7-PbnHSxrEfV7km_pzVe_azCPIICeuiLq7LRJ7hnuhR3ELyXOUWj6wifwHLr5AhyQm4D643CYtb-CIhZjeLndt0AQ6sWwVXexJuMSg4kBUBHYuDRo0TlR_xyFAlMAGXusvHy0kiG0WyNj6A046vfXfmzbB7aC7I89RJTIdqC3xZGI2pRsJfw-ciX7Amitu6cLidTpxa5q2pQfoQN5dXyXI6Wv3K1xpCNgmoTbFxCs5-_FT41XxVETwPDDB7pTp6xcFC4HB7Q';
   baseUrl = 'http://147.251.21.216:8083/kypo2-rest-training/api/v1';
   constructor(private http: HttpClient) { }
 
@@ -60,26 +60,31 @@ export class DataService {
   private loadLevels(levels): Level[] {
     const newLevels: Level[] = [];
     let levelNum = 1;
+    let gameLevelNum = 1;
     levels.forEach((level) => {
+
+      const l: Level = {
+        type: level.level_type,
+        name: level.title,
+        number: levelNum++,
+        estimatedTime: 1000,
+        points: level.max_score,
+        id: level.id
+      };
+
       if (level.level_type === 'GAME_LEVEL') {
-        // first we get all the hints of a level
         const hints: Hint[] = [];
         level.hints.forEach((hint, i) => {
           const h: Hint = {points: hint.hint_penalty, number: i + 1, id: hint.id};
           hints.push(h);
         });
 
-        // then we can create new level
-        const l: Level = {
-          name: level.title,
-          number: levelNum++,
-          estimatedTime: 1000,
-          points: level.max_score,
-          hints: hints,
-          id: level.id
-        };
-        newLevels.push(l);
+        l.hints = hints;
+        l.gameLevelNumber = gameLevelNum++;
+      } else if (level.level_type === 'ASSESSMENT_LEVEL') {
+        // TODO
       }
+      newLevels.push(l);
     });
     return newLevels;
   }
@@ -87,25 +92,34 @@ export class DataService {
   private initializeLevels(allLevels: any[]): LevelEvents[] {
     const levels: LevelEvents[] = [];
     let levelNum = 1;
+    let gameLevelNum = 1;
     for (let i = 0; i < allLevels.length; i++) {
+      const newLevel: LevelEvents = {
+        type: allLevels[i].level_type,
+        id: allLevels[i].id,
+        number: levelNum++,
+        events: []};
       if (allLevels[i].level_type === 'GAME_LEVEL') {
-        levels.push({id: allLevels[i].id, number: levelNum++, events: []});
+        newLevel.gameLevelNumber = gameLevelNum++;
       }
+      levels.push(newLevel);
     }
     return levels;
   }
 
   sortAllEvents(levels: LevelEvents[], events: any[]): LevelEvents[] {
     events.forEach((event) => {
-      let e: Event;
-      // so far, we dont want any info or assessment levels
-      if (event.level_type === undefined || event.level_type === 'GAME') {
-        e = {
+      const e: Event = {
+          levelType: event.level_type,
           playerId: event.player_login,
           timestamp: event.timestamp,
           gametime: event.game_time / 1000,
           event: event.type,
-          actualScore: event.actual_score_in_level};
+          actualScore: event.actual_score_in_level
+      };
+
+      // so far, we only process info or assessment levels
+      if (event.level_type === undefined || event.level_type === 'GAME') {
 
         if (event.type === GenericEvent.TypePrefix + GenericEvent.HintTaken) {
           e.penalty = event.hint_penalty_points;

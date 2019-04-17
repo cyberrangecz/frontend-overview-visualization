@@ -81,6 +81,10 @@ export class TimeService {
     return flattenedEvents;
   }
 
+  /**
+   * It skips the non-game levels!
+   * @param events
+   */
   getEachLevelPlayerTime(events: GameEvents) {
     if (events === null || events.levels === null ) {
       return [];
@@ -88,16 +92,18 @@ export class TimeService {
     const result = [];
     const lastEvents = {};
     events.levels.forEach(level => {
-      const playersMaxTimes = {};
-      const playerNest = this.d3.nest().key((e: Event) => e.playerId).entries(level.events);
-      playerNest.forEach(player => {
-        const startTimestamp = player.values[0].gametime;
-        const endTimestamp = player.values[player.values.length - 1].gametime;
-        lastEvents[player.key] = endTimestamp;
-        const time = new Date(endTimestamp).getTime() - new Date(startTimestamp).getTime();
-        playersMaxTimes[player.key] = time;
-      });
-      result.push(playersMaxTimes);
+      if (level.type === 'GAME_LEVEL') {
+        const playersMaxTimes = {};
+        const playerNest = this.d3.nest().key((e: Event) => e.playerId).entries(level.events);
+        playerNest.forEach(player => {
+          const startTimestamp = player.values[0].gametime;
+          const endTimestamp = player.values[player.values.length - 1].gametime;
+          lastEvents[player.key] = endTimestamp;
+          const time = new Date(endTimestamp).getTime() - new Date(startTimestamp).getTime();
+          playersMaxTimes[player.key] = time;
+        });
+        result.push(playersMaxTimes);
+      }
     });
     return result;
   }

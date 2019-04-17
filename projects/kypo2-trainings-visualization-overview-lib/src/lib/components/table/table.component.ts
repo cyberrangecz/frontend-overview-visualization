@@ -5,8 +5,6 @@ import { ProgressPlayer } from '../timeline/interfaces/progress-player';
 import { TableService } from '../../services/table.service';
 import { Subscription } from 'rxjs';
 import { FiltersService } from '../../services/filters.service';
-import {GAME_INFORMATION} from '../../../../../../src/app/mocks/information.mock';
-import {EVENTS} from '../../../../../../src/app/mocks/events.mock';
 import {GameInformation} from '../../shared/interfaces/game-information';
 import {GameEvents} from '../../shared/interfaces/game-events';
 import {DataService} from '../../services/data.service';

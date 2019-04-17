@@ -3,6 +3,7 @@
  */
 
 export interface Event {
+  levelType: string;
   playerId: string;
   timestamp: string; // Real time timestmap
   gametime: number; // Time spent on task

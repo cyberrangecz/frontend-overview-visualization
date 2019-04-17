@@ -13,39 +13,45 @@ import {GenericEvent} from '../shared/interfaces/generic-event.enum';
 export class ScoreService {
 
   private d3: D3;
-  private CORRECT = '';
-  private HINT = '';
-  private HELP = '';
-  private LEVEL = '';
-  private GAME = '';
 
   constructor(d3: D3Service) {
     this.d3 = d3.getD3();
   }
 
-  getEachLevelScores(information: GameInformation, events: GameEvents): {}[] {
+  getEachLevelScores(information: GameInformation, events: GameEvents, onlyGameLevels: boolean = true): {}[] {
     if (events == null || events.levels === null || information === null || information.levels === null) { return []; }
     const eachLevelScores = [];
     let levelGroup = {};
-    events.levels.forEach(level => {
-      const levelGroupedEvents = this.d3.nest().key((e: Event) => e.playerId).entries(level.events);
-      const levelInfo = information.levels[ level.number - 1 ];
-      levelGroupedEvents.forEach(player => {
-        const actualScore = player.values[player.values.length - 1].actualScore;
-        // backward compatibility loop:
-        if (actualScore === undefined) {
-          player.values.forEach((event, i) => {
-            // Assign level's max points to player on first assignment to prevent adding up to undefined => NaN
-            const isFirstAssignment: boolean = (i < 1);
-            if (isFirstAssignment) {levelGroup[player.key] = levelInfo.points; }
-            levelGroup[player.key] += this.getScore(levelInfo, event);
-            const isNegative = levelGroup[player.key] < 0;
-            if (isNegative) {levelGroup[player.key] = 0; } // If level skipped, help level accessed or exited prematurely
-          });
-        } else { levelGroup[player.key] = actualScore; }
-      });
-      eachLevelScores.push(levelGroup);
-      levelGroup = {};
+    let levelNumbers = 0;
+    events.levels.forEach((level) => {
+      if (onlyGameLevels && level.type !== 'GAME_LEVEL') {
+        // console.log('skipping level ' + level.number);
+      } else {
+        const levelGroupedEvents = this.d3.nest().key((e: Event) => e.playerId).entries(level.events);
+        const levelInfo = information.levels[levelNumbers++];
+        levelGroupedEvents.forEach(player => {
+          const actualScore = player.values[player.values.length - 1].actualScore;
+          // backward compatibility loop:
+          if (actualScore === undefined) {
+            player.values.forEach((event, i) => {
+              // Assign level's max points to player on first assignment to prevent adding up to undefined => NaN
+              const isFirstAssignment: boolean = (i < 1);
+              if (isFirstAssignment) {
+                levelGroup[player.key] = levelInfo.points;
+              }
+              levelGroup[player.key] += this.getScore(levelInfo, event);
+              const isNegative = levelGroup[player.key] < 0;
+              if (isNegative) {
+                levelGroup[player.key] = 0;
+              } // If level skipped, help level accessed or exited prematurely
+            });
+          } else {
+            levelGroup[player.key] = actualScore;
+          }
+        });
+        eachLevelScores.push(levelGroup);
+        levelGroup = {};
+      }
     });
     return eachLevelScores;
   }

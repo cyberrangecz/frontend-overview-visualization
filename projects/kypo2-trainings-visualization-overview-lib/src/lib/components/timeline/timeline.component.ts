@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { LineComponent } from './line/line.component';
-import {GAME_INFORMATION} from '../../../../../../src/app/mocks/information.mock';
 import {EVENTS} from '../../../../../../src/app/mocks/events.mock';
 import {GameData} from '../../shared/interfaces/game-data';
 

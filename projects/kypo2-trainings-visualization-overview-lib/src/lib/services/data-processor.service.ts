@@ -40,9 +40,8 @@ export class DataProcessor {
     const scores = this.scoreService.getEachLevelScores(gameData.information, gameData.events);
     const times = this.timeService.getEachLevelPlayerTime(gameData.events);
     const result: PlayerVisualizationData[][] = [];
-
-    scores.forEach((currentLevel, i) => {
-
+    console.log(scores);
+    scores.forEach((currentLevel: number, i) => {
       const levelData: PlayerVisualizationData[] = [];
       const playersInCurrentLevel = Object.keys(currentLevel);
 
