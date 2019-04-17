@@ -12,4 +12,5 @@ export interface Event {
   penalty?: number;
   // totalScore?: number; // total achieved score so far
   level?: number; // For visualization purpose
+  gameLevel?: number; // For visualization purpose, game levels only
 }

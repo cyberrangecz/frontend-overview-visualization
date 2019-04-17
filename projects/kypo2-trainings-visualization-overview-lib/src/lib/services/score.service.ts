@@ -75,6 +75,7 @@ export class ScoreService {
   }
 
   getEachLevelEventCountByType(type: string, information: GameInformation, events: GameEvents) {
+    if (events === null) { return []; }
     const result: {}[] = [];
     const levels = events.levels;
     let playerWantedEventsInCurrentLevel = {};

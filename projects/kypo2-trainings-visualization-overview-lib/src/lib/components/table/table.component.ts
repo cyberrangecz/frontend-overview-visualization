@@ -76,7 +76,9 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   orderPlayers() {
-    this.players.sort((player1: ProgressPlayer, player2: ProgressPlayer) => player1.id - player2.id);
+    if (this.players === null) { return []; }
+    // todo correct ordering
+    // this.players.sort((player1: ProgressPlayer, player2: ProgressPlayer) => player1.id - player2.id);
     let i = 0;
     for (let index = 0; index < this.players.length; index++) {
       const element = this.players[index];
@@ -94,6 +96,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
    * Sets checked attribute of feedback learner in players array to true
    */
   checkFeedbackLearner() {
+    if (this.players === null) { return; }
     const feedbackLearner = this.players.find((player) => player.id === this.feedbackLearnerId);
     if (feedbackLearner !== undefined) {
       feedbackLearner.checked = !feedbackLearner.checked;

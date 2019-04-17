@@ -150,6 +150,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    * Sets checked attribute of feedback learner in players array to true
    */
   checkFeedbackLearner() {
+    if (this.players === null) { return null; }
     this.players = this.players.map(player => {
       if (player.id === this.feedbackLearnerId) { player.checked = true; }
       return player;
@@ -341,7 +342,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   drawEstimatedTimesBars() {
     if (this.data.information === null) { return; }
     const estimatedTimes = this.data.information.levels.map(level => {
-      return { number: level.number, time: level.estimatedTime, offset: 0 };
+      return { type: level.type, number: level.number, time: level.estimatedTime, offset: 0 };
     });
 
     for (let i = 1; i < estimatedTimes.length; i++) {
@@ -364,7 +365,12 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
       .attr('y', 0)
       .attr('width', level => this.timeScale(level.time))
       .attr('height', this.size.height)
-      .style('fill', level => colorScale(level.number.toString()))
+      .style('fill', level => {
+        if (level.type !== 'GAME_LEVEL') {
+          return 'lightgray';
+        }
+        return colorScale(level.number.toString());
+      })
       .style('opacity', 1);
   }
 
@@ -401,6 +407,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
     if (this.data.information === null) { return; }
     const axesConfig = AXES_CONFIG;
     const tickValues = this.data.information.levels
+      .filter( level =>  (level.type === 'GAME_LEVEL'))
       .map(level => [level.points])
       .reduce((accumulator, currentValue, i) => accumulator.concat(accumulator[i - 1] + currentValue[0]));
 
@@ -731,7 +738,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
       .attr('clip-path', 'url(#lineClip)');
 
     const line = lineGroup.append('path')
-      .attr('d', this.lineGenerator(player.events)) //todo
+      .attr('d', this.lineGenerator(player.events))
       .attr('class', 'score-progress-player')
       .classed('score-progress-player-highlight', player.id === this.feedbackLearnerId)
       .classed('visible-line', true)
@@ -880,16 +887,17 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
     let events = eventsGroup.selectAll('.event')
       .data(filteredEvents, (event) => event.time);
     this.removeFilteredEvents(events);
-    // console.log(events);
-
 
     events = this.addNewEventsAndReturnThem(events);
     events
       .attr('r', 7)
-      .attr('cx', event => this.timeScale(event.time))  ///!!!
-      .attr('cy', event => this.scoreScale(event.score)) //!!!
+      .attr('cx', event => this.timeScale(event.time))
+      .attr('cy', event => this.scoreScale(event.score))
       .style('opacity', '0')
-      .style('fill', event => this.d3.hsl(colorScale(event.level.toString()).toString()).darker(0.9))
+      .style('fill', event => {
+        if (event.gameLevel === undefined) { return 'lightgray'; }
+        return this.d3.hsl(colorScale(event.gameLevel.toString()).toString()).darker(0.9);
+      })
       .datum(event => { event.playerId = player.id; return event; })
       .style('stroke', 'black')
       .style('stroke-width', '0.5');
@@ -1041,14 +1049,17 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    * @param event
    * @returns any
    */
-  getEventMessage(event) {
+  getEventMessage(event: ScoredEvent) {
     const cropped: string = event.event.split(GenericEvent.TypePrefix).pop();
     const croppedSpace = cropped.replace(/([A-Z])/g, ' $1').trim();
+    console.log(event);
     switch (event.event) {
       case GenericEvent.TypePrefix + GenericEvent.LevelCompleted:
-        return `Level ${event.level} completed`;
+        if (event.gameLevel !== undefined) { return `Game level ${event.gameLevel} completed`; }
+        return ` ${event.type.toLowerCase()} level completed`;
       case GenericEvent.TypePrefix + GenericEvent.LevelStarted:
-        return `Level ${event.level} started`;
+        if (event.gameLevel !== undefined) { return `Game level ${event.gameLevel} started`; }
+        return ` ${event.type.toLowerCase()} level started`;
       case (GenericEvent.TypePrefix + cropped):
         return croppedSpace;
       default:

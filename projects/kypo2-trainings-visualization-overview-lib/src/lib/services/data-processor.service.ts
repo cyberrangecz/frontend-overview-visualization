@@ -9,6 +9,7 @@ import { D3Service, D3 } from 'd3-ng2-service';
 import { Event } from '../shared/interfaces/event';
 import { ScoredEvent } from '../components/timeline/interfaces/scored-event';
 import { LevelEvents } from '../shared/interfaces/level-events';
+import {GenericEvent} from '../shared/interfaces/generic-event.enum';
 
 @Injectable()
 /**
@@ -17,7 +18,7 @@ import { LevelEvents } from '../shared/interfaces/level-events';
 export class DataProcessor {
 
   private d3: D3;
-  private typePrefix = 'cz.muni.csirt.kypo.events.trainings.';
+  // private typePrefix = 'cz.muni.csirt.kypo.events.trainings.';
 
   constructor(private timeService: TimeService, private scoreService: ScoreService, d3service: D3Service) {
     this.d3 = d3service.getD3();
@@ -40,7 +41,6 @@ export class DataProcessor {
     const scores = this.scoreService.getEachLevelScores(gameData.information, gameData.events);
     const times = this.timeService.getEachLevelPlayerTime(gameData.events);
     const result: PlayerVisualizationData[][] = [];
-    console.log(scores);
     scores.forEach((currentLevel: number, i) => {
       const levelData: PlayerVisualizationData[] = [];
       const playersInCurrentLevel = Object.keys(currentLevel);
@@ -93,6 +93,7 @@ export class DataProcessor {
   }
 
   getScoreProgressPlayersWithEvents(gameData: GameData): ProgressPlayer[] {
+    if (gameData.events === null) { return null; }
     const playersWithEvents = this.flattenAndGroupByPlayer(gameData.events.levels);
     const progressPlayers: ProgressPlayer[] = [];
 
@@ -116,15 +117,19 @@ export class DataProcessor {
       const levelNumber: number = +level.key;
       const levelEvents: Event[] = level.values;
       let currentLevelScore = gameData.information.levels[levelNumber - 1].points;
-      if (i !== 0) {
-        playerScoredEvents.push({time: time,
+      if (i !== -1) {
+        const e: ScoredEvent = {
+          time: time,
+          type: level.level_type,
           score: currentScore + currentLevelScore,
           event: 'matching event',
           show: false,
           level: levelNumber
-        });
+        };
+       playerScoredEvents.push(e);
       }
-        levelEvents.forEach((event: Event) => {
+
+      levelEvents.forEach((event: Event) => {
         time = event.gametime; // to seconds
 
         const eventLevel = gameData.information.levels[event['level'] - 1];
@@ -133,27 +138,31 @@ export class DataProcessor {
         currentLevelScore = this.updateLevelScore(event, eventLevel, currentLevelScore);
 
         if (beforeChangeLevelScore !== currentLevelScore) {
-          const se: ScoredEvent = {
+          const s: ScoredEvent = {
             time: time,
+            type: event.levelType,
             score: currentScore + beforeChangeLevelScore,
             event: event.event,
             show: false,
-            level: levelNumber
+            level: levelNumber,
+            gameLevel: event.gameLevel
           };
-          playerScoredEvents.push(se);
+
+          playerScoredEvents.push(s);
         }
 
-        const scoreChange = (event.event === this.typePrefix + 'CorrectFlagSubmitted') ?
+        const scoreChange = (event.event === GenericEvent.TypePrefix + 'CorrectFlagSubmitted') ?
           gameData.information.levels[levelNumber % gameData.information.levels.length].points :
           currentLevelScore - beforeChangeLevelScore;
-
         const scoredEvent: ScoredEvent = {
           time: time,
+          type: event.levelType,
           score: currentScore + currentLevelScore,
           event: event.event,
           show: true,
           level: levelNumber,
-          scoreChange: scoreChange
+          scoreChange: scoreChange,
+          gameLevel: event.gameLevel// level.level_type === 'GAME_LEVEL' ? level.gameLevelNumber : undefined
         };
         playerScoredEvents.push(scoredEvent);
       });
@@ -165,8 +174,8 @@ export class DataProcessor {
   updateLevelScore(event: Event, level, currentLevelScore) {
     // const split = event.event.toUpperCase().split(' ');
     switch (event.event) {
-      case this.typePrefix + 'HintTaken':
-      case this.typePrefix + 'SolutionDisplayed':
+      case GenericEvent.TypePrefix + 'HintTaken':
+      case GenericEvent.TypePrefix + 'SolutionDisplayed':
         currentLevelScore -= event.penalty;
         break;
       /*case 'LEVEL':
@@ -182,6 +191,7 @@ export class DataProcessor {
   }
 
   flattenAndGroupByPlayer(levelEvents: LevelEvents[]) {
+    // if (levelEvents ===)
     const flattenedEvents = levelEvents
       .map(level => level.events
         .map((event: Event) => Object.assign(event, {level: +level.number})));

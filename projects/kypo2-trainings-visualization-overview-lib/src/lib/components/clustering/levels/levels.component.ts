@@ -348,7 +348,7 @@ export class LevelsComponent implements OnInit, OnChanges {
       this.data.information.levels.filter( level =>  (level.type === 'GAME_LEVEL')) : [];
 
     d3.selectAll('.score-level-bar-max').each(bar => {
-      console.log(bar);
+      // console.log(bar);
       const yScale = d3
         .scaleLinear()
         .range([this.yScaleBandBars.bandwidth(), 0])

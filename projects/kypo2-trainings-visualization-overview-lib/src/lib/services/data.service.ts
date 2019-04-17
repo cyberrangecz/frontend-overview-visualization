@@ -15,7 +15,7 @@ import {GenericEvent} from '../shared/interfaces/generic-event.enum';
  * Fetches the data from the REST API.
  */
 export class DataService {
-  token = 'eyJqa3UiOiJodHRwczpcL1wvb2lkYy5pY3MubXVuaS5jelwvb2lkY1wvandrIiwia2lkIjoicnNhMSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIzOTYyOTZAbXVuaS5jeiIsImF6cCI6IjU5M2JiZjQ5LWE4MmItNGY2ZS05YmFmLWM0ZWQ0ODhkNTA2NiIsImlzcyI6Imh0dHBzOlwvXC9vaWRjLmljcy5tdW5pLmN6XC9vaWRjXC8iLCJleHAiOjE1NTU1MDEzMjcsImlhdCI6MTU1NTQ5NzcyNywianRpIjoiYmJhOWVkNDAtMDdmYS00YmY2LTkzOGMtOTQ0M2NlNDEzZjlhIn0.H-IRCyL9vamVPt00AinquX3PNg-cwlBWUe-_DF3hHvvYRVF4Qz0uluhn9gryDNxlhb1GNCp2dt4v8F7-PbnHSxrEfV7km_pzVe_azCPIICeuiLq7LRJ7hnuhR3ELyXOUWj6wifwHLr5AhyQm4D643CYtb-CIhZjeLndt0AQ6sWwVXexJuMSg4kBUBHYuDRo0TlR_xyFAlMAGXusvHy0kiG0WyNj6A046vfXfmzbB7aC7I89RJTIdqC3xZGI2pRsJfw-ciX7Amitu6cLidTpxa5q2pQfoQN5dXyXI6Wv3K1xpCNgmoTbFxCs5-_FT41XxVETwPDDB7pTp6xcFC4HB7Q';
+  token = 'eyJqa3UiOiJodHRwczpcL1wvb2lkYy5pY3MubXVuaS5jelwvb2lkY1wvandrIiwia2lkIjoicnNhMSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIzOTYyOTZAbXVuaS5jeiIsImF6cCI6IjU5M2JiZjQ5LWE4MmItNGY2ZS05YmFmLWM0ZWQ0ODhkNTA2NiIsImlzcyI6Imh0dHBzOlwvXC9vaWRjLmljcy5tdW5pLmN6XC9vaWRjXC8iLCJleHAiOjE1NTU1MTkwNTksImlhdCI6MTU1NTUxNTQ1OSwianRpIjoiMWJjNGNmZmYtNTFmZi00ZjFlLTk4OTEtNGY4OWQyMzJlYjA5In0.Wn0At6epZJNEQa1qcs1FHoFyfPZnwHTiPG3ZC0OXu50v7ZU5aC0kVb68rUMEPHcMRpPyV0MYWX95eg7izEPrKwh8KfUG41d2sA-3_iQFD1GCxesx20-2uS-lE-vUZ9c7AYPlU6z0tHQU0pV88uSURHP9Ou85Z2a6kClt5koHy2-SGZu_lGMawXBgMs3eS26ivJmtghEMiRnLoyWNyl5_SCEJBsESkSyamD6W6Mgqd6mcnVtmIF-yekkZnrmuQx0UbFEZ1RdaH96L-XXIdHvHK5dNuq3_F_HZYBybtt0S-6UTXvi5TF5VOSO9uXXxeHnL5TD1_OtIth7NObXgD65VzQ';
   baseUrl = 'http://147.251.21.216:8083/kypo2-rest-training/api/v1';
   constructor(private http: HttpClient) { }
 
@@ -52,8 +52,6 @@ export class DataService {
       levels: levels,
     };
 
-    // console.log(gameInfo);
-    // console.log(gameEvents);
     return [gameInfo, gameEvents];
   }
 
@@ -62,12 +60,11 @@ export class DataService {
     let levelNum = 1;
     let gameLevelNum = 1;
     levels.forEach((level) => {
-
       const l: Level = {
         type: level.level_type,
         name: level.title,
         number: levelNum++,
-        estimatedTime: 1000,
+        estimatedTime: 500,
         points: level.max_score,
         id: level.id
       };
@@ -81,6 +78,7 @@ export class DataService {
 
         l.hints = hints;
         l.gameLevelNumber = gameLevelNum++;
+        l.estimatedTime = 1000;
       } else if (level.level_type === 'ASSESSMENT_LEVEL') {
         // TODO
       }
@@ -115,11 +113,14 @@ export class DataService {
           timestamp: event.timestamp,
           gametime: event.game_time / 1000,
           event: event.type,
-          actualScore: event.actual_score_in_level
+          actualScore: event.actual_score_in_level,
+          penalty: 0,
       };
 
-      // so far, we only process info or assessment levels
-      if (event.level_type === undefined || event.level_type === 'GAME') {
+      if (event.level_type === undefined) { e.levelType = 'GAME'; }
+
+      // so far, we do not process info or assessment levels
+      if (event.level_type === 'GAME') {
 
         if (event.type === GenericEvent.TypePrefix + GenericEvent.HintTaken) {
           e.penalty = event.hint_penalty_points;
@@ -127,14 +128,14 @@ export class DataService {
         if (event.type === GenericEvent.TypePrefix + GenericEvent.SolutionDisplayed) {
           e.penalty = event.penalty_points;
         }
-
-        levels.forEach((level) => {
-          if (level.id === event.level) {
-            level.events.push(e);
-          }
-        });
       }
 
+      levels.forEach((level) => {
+        if (level.id === event.level) {
+          if (level.gameLevelNumber !== undefined) { e.gameLevel = level.gameLevelNumber; }
+          level.events.push(e);
+        }
+      });
     });
 
     return levels;
