@@ -42,6 +42,7 @@ export class TimeService {
   }
 
   getFinalMaxTime(events: GameEvents, includeTimeGaps: boolean = false): number {
+    if (events === null || events.levels === null) { return 0; }
     return <any>Object.values<number>(this.getFinalPlayersMaxTimes(events, includeTimeGaps)).reduce((a, b) => Math.max(a, b));
   }
 
@@ -52,6 +53,7 @@ export class TimeService {
 
   getFinalPlayersMaxTimes(events: GameEvents, includeTimeGaps: boolean = false) {
     const playersMaxTimes = {};
+    if (events === null || events.levels === null) { return {}; }
     const flattenedEvents = this.flattenEvents(events);
 
     const eventsGroupedByPlayer = this.d3.nest().key((event: Event) => event.playerId).entries(flattenedEvents);

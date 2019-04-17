@@ -168,7 +168,6 @@ export class DataProcessor {
     switch (event.event) {
       case this.typePrefix + 'HintTaken':
       case this.typePrefix + 'SolutionDisplayed':
-        console.log(event);
         currentLevelScore -= event.penalty;
         break;
       /*case 'LEVEL':
@@ -196,7 +195,7 @@ export class DataProcessor {
     const hintsTakenEachLevel = this.scoreService.getEachLevelHintsTaken(gameData.information, gameData.events);
     const scoresEachLevel = this.scoreService.getEachLevelScores(gameData.information, gameData.events);
     const wrongFlagsSubmittedEachLevel = this.scoreService.getEachLevelWrongFlags(gameData.information, gameData.events);
-    if(scoresEachLevel.length < 1) return {playerIds: [], levels: [], finalScores: []};
+    if (scoresEachLevel.length < 1) { return {playerIds: [], levels: [], finalScores: []}; }
     const playerIds = Object.keys(scoresEachLevel[0]);
     const finalScores = this.scoreService.getFinalScores(gameData.events, gameData.information);
     const scores = {};

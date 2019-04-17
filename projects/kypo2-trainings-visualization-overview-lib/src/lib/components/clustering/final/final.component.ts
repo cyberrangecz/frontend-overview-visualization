@@ -69,7 +69,7 @@ export class FinalComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    // this.updateCanvas();
+    this.updateCanvas();
   }
 
   updateCanvas() {

@@ -24,7 +24,7 @@ export class ScoreService {
   }
 
   getEachLevelScores(information: GameInformation, events: GameEvents): {}[] {
-    if(events == null || events.levels === null || information === null || information.levels === null) return [];
+    if (events == null || events.levels === null || information === null || information.levels === null) { return []; }
     const eachLevelScores = [];
     let levelGroup = {};
     events.levels.forEach(level => {
@@ -119,7 +119,7 @@ export class ScoreService {
 
   getFinalScores(events: GameEvents, information: GameInformation) {
     const scoresByLevel = this.getEachLevelScores(information, events);
-
+    if (scoresByLevel.length < 1) { return []; }
     const finalScoresObject = {};
     const playerIds = Object.keys(scoresByLevel[0]);
     playerIds.forEach(id => {

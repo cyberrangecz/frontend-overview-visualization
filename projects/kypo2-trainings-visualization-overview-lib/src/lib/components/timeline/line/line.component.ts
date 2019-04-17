@@ -730,7 +730,6 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
       .append('g')
       .attr('clip-path', 'url(#lineClip)');
 
-    console.log(player.events);
     const line = lineGroup.append('path')
       .attr('d', this.lineGenerator(player.events)) //todo
       .attr('class', 'score-progress-player')
@@ -883,7 +882,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
     this.removeFilteredEvents(events);
     // console.log(events);
 
-    console.log(events);
+
     events = this.addNewEventsAndReturnThem(events);
     events
       .attr('r', 7)

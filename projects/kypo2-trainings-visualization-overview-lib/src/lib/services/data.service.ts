@@ -107,10 +107,10 @@ export class DataService {
           event: event.type,
           actualScore: event.actual_score_in_level};
 
-        if (event.type === GenericEvent.HintTaken) {
+        if (event.type === GenericEvent.TypePrefix + GenericEvent.HintTaken) {
           e.penalty = event.hint_penalty_points;
         }
-        if (event.type === GenericEvent.SolutionDisplayed) {
+        if (event.type === GenericEvent.TypePrefix + GenericEvent.SolutionDisplayed) {
           e.penalty = event.penalty_points;
         }
 
@@ -123,7 +123,6 @@ export class DataService {
 
     });
 
-    console.log(levels);
     return levels;
   }
 
