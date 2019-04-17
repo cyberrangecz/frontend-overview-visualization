@@ -6,20 +6,20 @@ import { skipFilter } from './skip.filter';
 // Add every new filter to this array
 export const FILTERS_ARRAY = [
     correctFlagFilter,
-    hintFilter, 
-    wrongFlagFilter, 
+    hintFilter,
+    wrongFlagFilter,
     skipFilter
 ];
 
 export const FILTERS_OBJECT = getFiltersObject(FILTERS_ARRAY);
 
 function getFiltersObject(filtersArray) {
-    let resultObject = {};
+    const resultObject = {};
     filtersArray.forEach(filter => {
         Object.defineProperty(resultObject, filter.name, {
-            value: filter, 
-            writable: false, 
-            enumerable: true}); //allows using Object.keys on result object (needed in ScoreProgressComponent.filterEvents())
+            value: filter,
+            writable: false,
+            enumerable: true}); // allows using Object.keys on result object (needed in ScoreProgressComponent.filterEvents())
     });
     return resultObject;
 }

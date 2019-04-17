@@ -1052,7 +1052,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   getEventMessage(event: ScoredEvent) {
     const cropped: string = event.event.split(GenericEvent.TypePrefix).pop();
     const croppedSpace = cropped.replace(/([A-Z])/g, ' $1').trim();
-    console.log(event);
+
     switch (event.event) {
       case GenericEvent.TypePrefix + GenericEvent.LevelCompleted:
         if (event.gameLevel !== undefined) { return `Game level ${event.gameLevel} completed`; }

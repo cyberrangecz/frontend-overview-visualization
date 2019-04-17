@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
-import { BarVisualizationData } from '../components/clustering/interfaces/bar-visualization-data';
-import { PlayerVisualizationData } from '../components/clustering/interfaces/player-visualization-data';
-import { ProgressPlayer } from '../components/timeline/interfaces/progress-player';
-import { TimeService } from './time.service';
-import { ScoreService } from './score.service';
-import { GameData } from '../shared/interfaces/game-data';
-import { D3Service, D3 } from 'd3-ng2-service';
-import { Event } from '../shared/interfaces/event';
-import { ScoredEvent } from '../components/timeline/interfaces/scored-event';
-import { LevelEvents } from '../shared/interfaces/level-events';
+import {Injectable} from '@angular/core';
+import {BarVisualizationData} from '../components/clustering/interfaces/bar-visualization-data';
+import {PlayerVisualizationData} from '../components/clustering/interfaces/player-visualization-data';
+import {ProgressPlayer} from '../components/timeline/interfaces/progress-player';
+import {TimeService} from './time.service';
+import {ScoreService} from './score.service';
+import {GameData} from '../shared/interfaces/game-data';
+import {D3, D3Service} from 'd3-ng2-service';
+import {Event} from '../shared/interfaces/event';
+import {ScoredEvent} from '../components/timeline/interfaces/scored-event';
+import {LevelEvents} from '../shared/interfaces/level-events';
 import {GenericEvent} from '../shared/interfaces/generic-event.enum';
 
 @Injectable()
@@ -117,7 +117,7 @@ export class DataProcessor {
       const levelNumber: number = +level.key;
       const levelEvents: Event[] = level.values;
       let currentLevelScore = gameData.information.levels[levelNumber - 1].points;
-      if (i !== -1) {
+      if (i !== 0) {
         const e: ScoredEvent = {
           time: time,
           type: level.level_type,
@@ -159,10 +159,10 @@ export class DataProcessor {
           type: event.levelType,
           score: currentScore + currentLevelScore,
           event: event.event,
-          show: true,
+          show: event.event === GenericEvent.TypePrefix + GenericEvent.GameStarted ? false : true,
           level: levelNumber,
           scoreChange: scoreChange,
-          gameLevel: event.gameLevel// level.level_type === 'GAME_LEVEL' ? level.gameLevelNumber : undefined
+          gameLevel: event.gameLevel
         };
         playerScoredEvents.push(scoredEvent);
       });
@@ -214,8 +214,8 @@ export class DataProcessor {
     const levelsData: {}[] = [];
     let currentLevelData = {};
     scoresEachLevel.forEach((level, i) => {
-      const playerIds = Object.keys(level);
-      playerIds.forEach(id => {
+      const levelPlayerIds = Object.keys(level);
+      levelPlayerIds.forEach(id => {
         const scoreInCurrentLevel = level[id];
         const hintsTakenInCurrentLevel = hintsTakenEachLevel[i][id];
         const wrongFlagsSubmittedInCurrentLevel = wrongFlagsSubmittedEachLevel[i][id];

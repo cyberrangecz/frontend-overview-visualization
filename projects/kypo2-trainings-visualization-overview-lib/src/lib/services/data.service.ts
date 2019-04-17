@@ -15,7 +15,7 @@ import {GenericEvent} from '../shared/interfaces/generic-event.enum';
  * Fetches the data from the REST API.
  */
 export class DataService {
-  token = 'eyJqa3UiOiJodHRwczpcL1wvb2lkYy5pY3MubXVuaS5jelwvb2lkY1wvandrIiwia2lkIjoicnNhMSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIzOTYyOTZAbXVuaS5jeiIsImF6cCI6IjU5M2JiZjQ5LWE4MmItNGY2ZS05YmFmLWM0ZWQ0ODhkNTA2NiIsImlzcyI6Imh0dHBzOlwvXC9vaWRjLmljcy5tdW5pLmN6XC9vaWRjXC8iLCJleHAiOjE1NTU1MTkwNTksImlhdCI6MTU1NTUxNTQ1OSwianRpIjoiMWJjNGNmZmYtNTFmZi00ZjFlLTk4OTEtNGY4OWQyMzJlYjA5In0.Wn0At6epZJNEQa1qcs1FHoFyfPZnwHTiPG3ZC0OXu50v7ZU5aC0kVb68rUMEPHcMRpPyV0MYWX95eg7izEPrKwh8KfUG41d2sA-3_iQFD1GCxesx20-2uS-lE-vUZ9c7AYPlU6z0tHQU0pV88uSURHP9Ou85Z2a6kClt5koHy2-SGZu_lGMawXBgMs3eS26ivJmtghEMiRnLoyWNyl5_SCEJBsESkSyamD6W6Mgqd6mcnVtmIF-yekkZnrmuQx0UbFEZ1RdaH96L-XXIdHvHK5dNuq3_F_HZYBybtt0S-6UTXvi5TF5VOSO9uXXxeHnL5TD1_OtIth7NObXgD65VzQ';
+  token = 'eyJqa3UiOiJodHRwczpcL1wvb2lkYy5pY3MubXVuaS5jelwvb2lkY1wvandrIiwia2lkIjoicnNhMSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIzOTYyOTZAbXVuaS5jeiIsImF6cCI6IjU5M2JiZjQ5LWE4MmItNGY2ZS05YmFmLWM0ZWQ0ODhkNTA2NiIsImlzcyI6Imh0dHBzOlwvXC9vaWRjLmljcy5tdW5pLmN6XC9vaWRjXC8iLCJleHAiOjE1NTU1MjI2OTcsImlhdCI6MTU1NTUxOTA5NywianRpIjoiNDRjZjVkZDUtYzNmMi00MDBlLTgzOTgtNTU0MTI2OWZmNGE0In0.M_ufkD7wfHPaY-g6_aEeri7BCY8BLrvwYsNDQ7ai1SiPCJqFoJ5I22cgVaNpYLM7FuFQhIdN27Gpssw-6U0f40v-VcPGc78DxSJgg-oPQgnOeqX5JtJadqHfTYGMVVSTHH2p-tvETdKcZ6ADvS1lVXvB_tUz8vUPJp-sEEQvmliVVxU_hLZM3vWmngBgy6pgyPVmTwsILInnv-R3JB4K2WBYm59no9vz-eolcq8tgmzR-XIeFn-C5yg9fhqFDoNnACbwRDAv6jxbMmr2cVwLo5BM_vZH_orl069wGHJED8-nzB-2AWKKZJQVQRoqbisHf-5Zku9MLSJB2MBrOlQYgQ';
   baseUrl = 'http://147.251.21.216:8083/kypo2-rest-training/api/v1';
   constructor(private http: HttpClient) { }
 
@@ -64,7 +64,7 @@ export class DataService {
         type: level.level_type,
         name: level.title,
         number: levelNum++,
-        estimatedTime: 500,
+        estimatedTime: 200,
         points: level.max_score,
         id: level.id
       };
@@ -120,8 +120,7 @@ export class DataService {
       if (event.level_type === undefined) { e.levelType = 'GAME'; }
 
       // so far, we do not process info or assessment levels
-      if (event.level_type === 'GAME') {
-
+      if (event.level_type === undefined || event.level_type === 'GAME') {
         if (event.type === GenericEvent.TypePrefix + GenericEvent.HintTaken) {
           e.penalty = event.hint_penalty_points;
         }

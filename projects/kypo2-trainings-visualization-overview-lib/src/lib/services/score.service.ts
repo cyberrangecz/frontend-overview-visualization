@@ -74,23 +74,26 @@ export class ScoreService {
     return this.getEachLevelEventCountByType(GenericEvent.TypePrefix + GenericEvent.WrongFlag, information, events);
   }
 
-  getEachLevelEventCountByType(type: string, information: GameInformation, events: GameEvents) {
+  getEachLevelEventCountByType(type: string, information: GameInformation, events: GameEvents, onlyGameLevels = true) {
+
     if (events === null) { return []; }
     const result: {}[] = [];
     const levels = events.levels;
     let playerWantedEventsInCurrentLevel = {};
     levels.forEach(level => {
-      const playerEvents = this.d3.nest().key((event: Event) => event.playerId).entries(level.events);
-      playerEvents.forEach(player => {
-        const playerId = player.key;
-        const playerValEvents = player.values;
-        const isWantedType = (currentValue: Event) => currentValue.event.toUpperCase().split(' ')[0] === type.toUpperCase();
-        const eventCounterFunction = (accumulator, currentValue: Event) => isWantedType(currentValue) ? accumulator + 1 : accumulator;
-        const eventCount = playerValEvents.reduce(eventCounterFunction, 0);
-        playerWantedEventsInCurrentLevel[playerId] = eventCount;
-      });
-      result.push(playerWantedEventsInCurrentLevel);
-      playerWantedEventsInCurrentLevel = {};
+      if (onlyGameLevels && level.type === 'GAME_LEVEL') {
+        const playerEvents = this.d3.nest().key((event: Event) => event.playerId).entries(level.events);
+        playerEvents.forEach(player => {
+          const playerId = player.key;
+          const playerValEvents = player.values;
+          const isWantedType = (currentValue: Event) => currentValue.event === type;
+          const eventCounterFunction = (accumulator, currentValue: Event) => isWantedType(currentValue) ? accumulator + 1 : accumulator;
+          const eventCount = playerValEvents.reduce(eventCounterFunction, 0);
+          playerWantedEventsInCurrentLevel[playerId] = eventCount;
+        });
+        result.push(playerWantedEventsInCurrentLevel);
+        playerWantedEventsInCurrentLevel = {};
+      }
     });
     return result;
   }
@@ -117,12 +120,13 @@ export class ScoreService {
       default:*/
         return 0;
     }
-  }
+  }/*
 
   getHintScore(level: Level, event: Event): number {
     const hintNumberTaken = +event.event.toLowerCase().split(' ')[1];
+    console.log(level.hints)
     return -level.hints[hintNumberTaken - 1].points;
-  }
+  }*/
 
   getFinalScores(events: GameEvents, information: GameInformation) {
     const scoresByLevel = this.getEachLevelScores(information, events);
