@@ -1,22 +1,20 @@
-import {Component, OnInit, Input, ChangeDetectionStrategy, OnDestroy, OnChanges} from '@angular/core';
-import { GameData } from '../../../shared/interfaces/game-data';
-import { D3Service, D3 } from 'd3-ng2-service';
-import { DataProcessor } from '../../../services/data-processor.service';
-import { ScaleLinear, ScaleOrdinal, Selection, Axis, ScaleTime, ContainerElement,
-  Line, ZoomBehavior, BrushBehavior } from 'd3-ng2-service/src/bundle-d3';
-import { ProgressPlayer } from '../interfaces/progress-player';
-import { ScoredEvent } from '../interfaces/scored-event';
-import {SVG_CONFIG, AXES_CONFIG, CONTEXT_CONFIG, SVG_MARGIN_CONFIG, colorScheme} from './config';
-import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config';
-import { SvgMarginConfig } from '../../../shared/interfaces/configurations/svg-margin-config';
-import { TableService } from '../../../services/table.service';
-import {config, Subscription} from 'rxjs';
-import { FiltersService } from '../../../services/filters.service';
-import {GAME_INFORMATION} from '../../../../../../../src/app/mocks/information.mock';
-import {EVENTS} from '../../../../../../../src/app/mocks/events.mock';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
+import {GameData} from '../../../shared/interfaces/game-data';
+import {D3, D3Service} from 'd3-ng2-service';
+import {DataProcessor} from '../../../services/data-processor.service';
+import {Axis, BrushBehavior, Line, ScaleLinear, ScaleOrdinal, ScaleTime, ZoomBehavior} from 'd3-ng2-service/src/bundle-d3';
+import {ProgressPlayer} from '../interfaces/progress-player';
+import {ScoredEvent} from '../interfaces/scored-event';
+import {AXES_CONFIG, colorScheme, CONTEXT_CONFIG, SVG_MARGIN_CONFIG} from './config';
+import {SvgConfig} from '../../../shared/interfaces/configurations/svg-config';
+import {SvgMarginConfig} from '../../../shared/interfaces/configurations/svg-margin-config';
+import {TableService} from '../../../services/table.service';
+import {Subscription} from 'rxjs';
+import {FiltersService} from '../../../services/filters.service';
 import {DataService} from '../../../services/data.service';
 import {GameInformation} from '../../../shared/interfaces/game-information';
 import {GameEvents} from '../../../shared/interfaces/game-events';
+import {GenericEvent} from '../../../shared/interfaces/generic-event.enum';
 
 @Component({
   selector: 'kypo2-viz-overview-line',
@@ -56,7 +54,6 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   private eventTooltip;
   private lineTooltip;
   private zoomableArea;
-  private typePrefix = 'cz.muni.csirt.kypo.events.trainings.';
 
   private tableRowClicked: Subscription;
   private tableRowMouseover: Subscription;
@@ -342,7 +339,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    * Draw color hatched time bars indicating estimated game time
    */
   drawEstimatedTimesBars() {
-    if (this.data.information === null) return;
+    if (this.data.information === null) { return; }
     const estimatedTimes = this.data.information.levels.map(level => {
       return { number: level.number, time: level.estimatedTime, offset: 0 };
     });
@@ -401,7 +398,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    * Draw score y axis, ticks accumulated/summed maximum gainable score for each levels completed
    */
   drawScoreAxis() {
-    if (this.data.information === null) return;
+    if (this.data.information === null) { return; }
     const axesConfig = AXES_CONFIG;
     const tickValues = this.data.information.levels
       .map(level => [level.points])
@@ -733,8 +730,6 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
       .append('g')
       .attr('clip-path', 'url(#lineClip)');
 
-    // const newEvents = this.adjustTimes(player.events);
-
     console.log(player.events);
     const line = lineGroup.append('path')
       .attr('d', this.lineGenerator(player.events)) //todo
@@ -1048,14 +1043,14 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    * @returns any
    */
   getEventMessage(event) {
-    const cropped: string = event.event.split(this.typePrefix).pop();
+    const cropped: string = event.event.split(GenericEvent.TypePrefix).pop();
     const croppedSpace = cropped.replace(/([A-Z])/g, ' $1').trim();
     switch (event.event) {
-      case this.typePrefix + 'LevelCompleted':
+      case GenericEvent.TypePrefix + GenericEvent.LevelCompleted:
         return `Level ${event.level} completed`;
-      case this.typePrefix + 'LevelStarted':
+      case GenericEvent.TypePrefix + GenericEvent.LevelStarted:
         return `Level ${event.level} started`;
-      case (this.typePrefix + cropped):
+      case (GenericEvent.TypePrefix + cropped):
         return croppedSpace;
       default:
         return this.oldTypes(event, event.event.toUpperCase().split(' '));

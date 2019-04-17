@@ -108,8 +108,8 @@ export class DataProcessor {
   }
 
   getScoredEvents(eventsGroupedByLevel, gameData: GameData) {
-    if (gameData.information === null ||  gameData.information.levels === null) return [];
-    const startTime = new Date(eventsGroupedByLevel[0].values[0].timestamp).getTime();
+    if (gameData.information === null ||  gameData.information.levels === null) { return []; }
+    // const startTime = new Date(eventsGroupedByLevel[0].values[0].timestamp).getTime();
     let currentScore = 0;
     let time = 0;
     const playerScoredEvents: ScoredEvent[] = [];
@@ -119,29 +119,29 @@ export class DataProcessor {
       let currentLevelScore = gameData.information.levels[levelNumber - 1].points;
       if (i !== 0) {
         playerScoredEvents.push({time: time,
-          score: /*currentScore +*/ currentLevelScore,
-          event: 'Correct flag submited',
+          score: currentScore + currentLevelScore,
+          event: 'matching event',
           show: false,
           level: levelNumber
         });
       }
-      levelEvents.forEach((event: Event) => {
+        levelEvents.forEach((event: Event) => {
         time = event.gametime; // to seconds
 
-        const level = gameData.information.levels[event['level'] - 1];
+        const eventLevel = gameData.information.levels[event['level'] - 1];
         const beforeChangeLevelScore = currentLevelScore;
 
-        currentLevelScore = event.actualScore; //this.updateLevelScore(event, level, currentLevelScore);
+        currentLevelScore = this.updateLevelScore(event, eventLevel, currentLevelScore);
 
         if (beforeChangeLevelScore !== currentLevelScore) {
-          const scoredEvent: ScoredEvent = {
+          const se: ScoredEvent = {
             time: time,
-            score: /*currentScore +*/ beforeChangeLevelScore,
+            score: currentScore + beforeChangeLevelScore,
             event: event.event,
             show: false,
             level: levelNumber
           };
-          playerScoredEvents.push(scoredEvent);
+          playerScoredEvents.push(se);
         }
 
         const scoreChange = (event.event === this.typePrefix + 'CorrectFlagSubmitted') ?
@@ -150,7 +150,7 @@ export class DataProcessor {
 
         const scoredEvent: ScoredEvent = {
           time: time,
-          score: /*currentScore +*/ currentLevelScore,
+          score: currentScore + currentLevelScore,
           event: event.event,
           show: true,
           level: levelNumber,
@@ -164,22 +164,21 @@ export class DataProcessor {
   }
 
   updateLevelScore(event: Event, level, currentLevelScore) {
-    const split = event.event.toUpperCase().split(' ');
-    switch (split[0]) {
-      case 'HINT':
-        currentLevelScore += this.scoreService.getHintScore(level, event);
+    // const split = event.event.toUpperCase().split(' ');
+    switch (event.event) {
+      case this.typePrefix + 'HintTaken':
+      case this.typePrefix + 'SolutionDisplayed':
+        console.log(event);
+        currentLevelScore -= event.penalty;
         break;
-      case 'HELP':
+      /*case 'LEVEL':
         currentLevelScore = 0;
-        break;
-      case 'LEVEL':
-        currentLevelScore = 0;
-        break;
-      case 'GAME':
+        break;*/
+      /*case 'GAME':
         if (split[1] === 'EXITED') {
           currentLevelScore = 0;
         }
-        break;
+        break;*/
     }
     return currentLevelScore;
   }

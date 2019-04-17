@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
-import { GameEvents } from '../shared/interfaces/game-events';
-import { D3, D3Service } from 'd3-ng2-service';
-import { Event} from '../shared/interfaces/event';
-import { Level } from '../shared/interfaces/level';
-import { GameInformation } from '../shared/interfaces/game-information';
+import {Injectable} from '@angular/core';
+import {GameEvents} from '../shared/interfaces/game-events';
+import {D3, D3Service} from 'd3-ng2-service';
+import {Event} from '../shared/interfaces/event';
+import {Level} from '../shared/interfaces/level';
+import {GameInformation} from '../shared/interfaces/game-information';
+import {GenericEvent} from '../shared/interfaces/generic-event.enum';
 
 @Injectable()
 /**
@@ -55,7 +56,7 @@ export class ScoreService {
    * @param events
    */
   getEachLevelHintsTaken(information: GameInformation, events: GameEvents): {}[] {
-    return this.getEachLevelEventCountByType("hint", information, events);
+    return this.getEachLevelEventCountByType(GenericEvent.TypePrefix + GenericEvent.HintTaken, information, events);
   }
 
     /**
@@ -64,7 +65,7 @@ export class ScoreService {
    * @param events
    */
   getEachLevelWrongFlags(information: GameInformation, events: GameEvents): {}[] {
-    return this.getEachLevelEventCountByType("wrong", information, events);
+    return this.getEachLevelEventCountByType(GenericEvent.TypePrefix + GenericEvent.WrongFlag, information, events);
   }
 
   getEachLevelEventCountByType(type: string, information: GameInformation, events: GameEvents) {
@@ -75,10 +76,10 @@ export class ScoreService {
       const playerEvents = this.d3.nest().key((event: Event) => event.playerId).entries(level.events);
       playerEvents.forEach(player => {
         const playerId = player.key;
-        const events = player.values;
+        const playerValEvents = player.values;
         const isWantedType = (currentValue: Event) => currentValue.event.toUpperCase().split(' ')[0] === type.toUpperCase();
         const eventCounterFunction = (accumulator, currentValue: Event) => isWantedType(currentValue) ? accumulator + 1 : accumulator;
-        const eventCount = events.reduce(eventCounterFunction, 0);
+        const eventCount = playerValEvents.reduce(eventCounterFunction, 0);
         playerWantedEventsInCurrentLevel[playerId] = eventCount;
       });
       result.push(playerWantedEventsInCurrentLevel);
@@ -88,23 +89,25 @@ export class ScoreService {
   }
 
   getScore(level: Level, event: Event): number {
-    switch (event.event.toUpperCase().split(' ')[0]) {
-      case 'CORRECT': // Correct flag submited
+    switch (event.event) {
+      case GenericEvent.TypePrefix + GenericEvent.CorrectFlag: // Correct flag submited
         return 0;
-      case 'HINT': // Hint # taken
-        return this.getHintScore(level, event);
-      case 'HELP': // Help level accessed
-        return -9999;
-      case 'LEVEL': // Level skipped
-        return -9999;
-      case 'GAME': // Exited prematurely
+      case GenericEvent.TypePrefix + GenericEvent.HintTaken: // Hint # taken
+        return -event.penalty; // this.getHintScore(level, event);
+      case GenericEvent.TypePrefix + GenericEvent.SolutionDisplayed: // Help level accessed
+        return -event.penalty; // -9999;
+      case GenericEvent.TypePrefix + GenericEvent.GameSurrendered:
+        return 0; // ???
+      /*case 'LEVEL': // Level skipped
+        return -9999;*/
+      /*case 'GAME': // Exited prematurely
         const exited: boolean = event.event.toUpperCase().split(' ')[1] === 'EXITED';
         if (exited) {
           return -9999;
         } else {
           return 0;
         }
-      default:
+      default:*/
         return 0;
     }
   }

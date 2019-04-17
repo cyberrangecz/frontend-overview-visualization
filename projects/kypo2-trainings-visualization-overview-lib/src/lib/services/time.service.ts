@@ -58,7 +58,7 @@ export class TimeService {
 
     eventsGroupedByPlayer.forEach(player => {
       let time: any;
-      //if (!player.values[player.values.length - 1].gametime === undefined) {
+      // if (!player.values[player.values.length - 1].gametime === undefined) {
         time = new Date(player.values[player.values.length - 1].gametime).getTime();
         playersMaxTimes[player.key] = time;
       /*} else {

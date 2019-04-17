@@ -20,7 +20,6 @@ export class TableService {
   tableRowMouseover$ = this.tableRowMouseover.asObservable();
   tableRowMouseout$ = this.tableRowMouseout.asObservable();
   playerColorScale$ = this.playerColorScale.asObservable();
-  
 
   constructor() { }
 
@@ -39,5 +38,4 @@ export class TableService {
   sendPlayerColorScale(scale: any) {
     this.playerColorScale.next(scale);
   }
-  
 }
