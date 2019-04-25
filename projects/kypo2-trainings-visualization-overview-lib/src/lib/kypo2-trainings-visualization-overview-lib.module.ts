@@ -14,6 +14,8 @@ import { ScoreService } from './services/score.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FiltersComponent } from './components/filters/filters.component';
+import { UserAndGroupManagementConfig } from './config/user-and-group-management-config';
+import {ConfigService} from './config/config.service';
 
 @NgModule({
   imports: [CommonModule, FormsModule],
@@ -35,8 +37,8 @@ import { FiltersComponent } from './components/filters/filters.component';
     FiltersComponent,
     FinalComponent,
     LevelsComponent,
-    LineComponent
+    LineComponent,
   ],
-  providers: [D3Service, DataProcessor, DataService, ScoreService, TimeService]
+  providers: [D3Service, DataProcessor, DataService, ScoreService, TimeService, ConfigService]
 })
 export class Kypo2TrainingsVisualizationOverviewLibModule {}
