@@ -1,4 +1,4 @@
-export class UserAndGroupManagementConfig {
-  userAndGroupRestBasePath: string;
+export class Kypo2TrainingsVisualizationOverviewLibConfig {
+  kypo2TrainingsVisualizationRestBasePath: string;
   defaultPaginationSize: number;
 }
