@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {ModuleWithProviders, NgModule, Optional, SkipSelf} from '@angular/core';
 import { Kypo2TrainingsVisualizationOverviewLibComponent } from './kypo2-trainings-visualization-overview-lib.component';
 import { D3Service } from 'd3-ng2-service';
 import { TimelineComponent } from './components/timeline/timeline.component';
@@ -14,7 +14,7 @@ import { ScoreService } from './services/score.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FiltersComponent } from './components/filters/filters.component';
-import { UserAndGroupManagementConfig } from './config/user-and-group-management-config';
+import { Kypo2TrainingsVisualizationOverviewLibConfig } from './config/kypo2-trainings-visualization-overview-lib';
 import {ConfigService} from './config/config.service';
 
 @NgModule({
@@ -41,4 +41,20 @@ import {ConfigService} from './config/config.service';
   ],
   providers: [D3Service, DataProcessor, DataService, ScoreService, TimeService, ConfigService]
 })
-export class Kypo2TrainingsVisualizationOverviewLibModule {}
+export class Kypo2TrainingsVisualizationOverviewLibModule {
+  constructor(@Optional() @SkipSelf() parentModule: Kypo2TrainingsVisualizationOverviewLibModule) {
+    if (parentModule) {
+      throw new Error(
+        'Kypo2TrainingsVisualizationOverviewLibModule is already loaded. Import it in the main module only');
+    }
+  }
+
+  static forRoot(config: Kypo2TrainingsVisualizationOverviewLibConfig): ModuleWithProviders {
+    return {
+      ngModule: Kypo2TrainingsVisualizationOverviewLibModule,
+      providers: [
+        {provide: Kypo2TrainingsVisualizationOverviewLibConfig, useValue: config}
+      ]
+    };
+  }
+}
