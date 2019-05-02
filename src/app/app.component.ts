@@ -5,7 +5,7 @@ import {DataService} from '../../projects/kypo2-trainings-visualization-overview
 import {Router} from '@angular/router';
 import {AuthService} from './auth/auth.service';
 import {authConfig} from './auth/auth.config';
-import {JwksValidationHandler, OAuthService} from 'angular-oauth2-oidc';
+import {OAuthService, JwksValidationHandler} from 'angular-oauth2-oidc';
 
 @Component({
   selector: 'app-root',
