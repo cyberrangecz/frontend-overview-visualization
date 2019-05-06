@@ -17,7 +17,6 @@ import {EVENTS} from '../../../../../src/app/mocks/events.mock';
  * Fetches the data from the REST API.
  */
 export class DataService {
-  token = 'tokenString';
   baseUrl = 'http://147.251.21.216:8083/kypo2-rest-training/api/v1';
   constructor(private http: HttpClient) { }
 
@@ -146,15 +145,13 @@ export class DataService {
    * Fetches static game information data
    */
   getInformation(): Observable<any> {
-    const headers = new HttpHeaders().set('authorization', 'Bearer ' + this.token);
-    return this.http.get<GameInformation>(`${this.baseUrl}/training-definitions/4`, {headers});
+    return this.http.get<GameInformation>(`${this.baseUrl}/training-definitions/4`);
   }
 
   /**
    * Fetches game events data
    */
   getEvents(): Observable<any> {
-    const headers = new HttpHeaders().set('authorization', 'Bearer ' + this.token);
-    return this.http.get(`${this.baseUrl}/training-events/training-definitions/4/training-instances/5`, {headers});
+    return this.http.get(`${this.baseUrl}/training-events/training-definitions/4/training-instances/5`);
   }
 }
