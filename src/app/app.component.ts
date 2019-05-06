@@ -20,7 +20,6 @@ export class AppComponent implements OnInit{
 
   constructor(
     private dataService: DataService,
-    private router: Router,
     private oAuthService: OAuthService,
     private authService: AuthService) {}
 
