@@ -3,17 +3,17 @@ import {NgModule} from '@angular/core';
 
 const routes: Routes = [
   {
-    path: 'admin',
-    loadChildren: 'app/admin/admin.module#AdminModule',
+    path: 'visualization',
+    loadChildren: 'visualization/visualization.module.ts#VisualizationModule',
   },
   {
     path: '',
-    redirectTo: 'admin',
+    redirectTo: 'visualization',
     pathMatch: 'full'
   },
   {
     path: '**',
-    redirectTo: 'admin'
+    redirectTo: 'visualization'
   }
 ];
 
