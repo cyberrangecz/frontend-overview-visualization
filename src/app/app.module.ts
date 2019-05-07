@@ -1,8 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppComponent } from './app.component';
-import { Kypo2TrainingsVisualizationOverviewLibModule } from 'projects/kypo2-trainings-visualization-overview-lib/src/public_api';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {AuthService} from './auth/auth.service';
 import {OAuthModule, OAuthStorage} from 'angular-oauth2-oidc';
@@ -16,7 +14,6 @@ import {AppRoutingModule} from './app-routing.module';
   imports: [
     BrowserModule,
     HttpClientModule,
-    //Kypo2TrainingsVisualizationOverviewLibModule,
     AppRoutingModule,
     OAuthModule.forRoot(
       {
