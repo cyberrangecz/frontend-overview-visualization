@@ -1,8 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import { GAME_INFORMATION } from './mocks/information.mock';
 import { EVENTS } from './mocks/events.mock';
-import {DataService} from '../../projects/kypo2-trainings-visualization-overview-lib/src/lib/services/data.service';
-import {Router} from '@angular/router';
 import {AuthService} from './auth/auth.service';
 import {authConfig} from './auth/auth.config';
 import {OAuthService, JwksValidationHandler} from 'angular-oauth2-oidc';
@@ -19,7 +17,6 @@ export class AppComponent implements OnInit{
   mockGameData = {information: GAME_INFORMATION, events: EVENTS};
 
   constructor(
-    private dataService: DataService,
     private oAuthService: OAuthService,
     private authService: AuthService) {}
 
