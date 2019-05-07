@@ -11,14 +11,15 @@ import {Hint} from '../shared/interfaces/hint';
 import {GenericEvent} from '../shared/interfaces/generic-event.enum';
 import {GAME_INFORMATION} from '../../../../../src/app/mocks/information.mock';
 import {EVENTS} from '../../../../../src/app/mocks/events.mock';
+import {ConfigService} from '../config/config.service';
 
 @Injectable()
 /**
  * Fetches the data from the REST API.
  */
 export class DataService {
-  baseUrl = 'http://147.251.21.216:8083/kypo2-rest-training/api/v1';
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+              private configService: ConfigService) { }
 
   public getAllData() {
     return forkJoin([
@@ -145,13 +146,13 @@ export class DataService {
    * Fetches static game information data
    */
   getInformation(): Observable<any> {
-    return this.http.get<GameInformation>(`${this.baseUrl}/training-definitions/4`);
+    return this.http.get<GameInformation>(this.configService.config.trainingInformationUrl);
   }
 
   /**
    * Fetches game events data
    */
   getEvents(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/training-events/training-definitions/4/training-instances/5`);
+    return this.http.get(this.configService.config.trainingEventsUrl);
   }
 }
