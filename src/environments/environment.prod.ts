@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   kypo2TrainingsVisualizationRestBasePath: 'http://147.251.21.216:8085/kypo2-rest-trainings-visualization-overview/api/v1/',
-  defaultPaginationSize: 10,
+  baseUrl: 'http://147.251.21.216:8083/kypo2-rest-training/api/v1',
 
   // OIDC SETTINGS
   // Url of the Identity Provider
