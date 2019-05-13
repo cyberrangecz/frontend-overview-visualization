@@ -117,7 +117,6 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   redraw() {
     this.setup();
     this.initializeFilters();
-    this.drawFeedbackLearner();
     this.initializeScales();
     this.drawEstimatedTimesBars();
     this.drawAxes();
@@ -129,6 +128,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
     this.addZoomAndBrush();
     this.buildCrosshair();
     this.drawLegend();
+    this.drawFeedbackLearner();
   }
 
   /**
@@ -713,11 +713,14 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   /**
-   * Draws main line, events,
+   * Draws main line, events. Returns without any drawing if the players are not defined or the
+   * current playerId is not among the participants -> e.g., supervisor
    * @param playerId of player to be drawn
    */
   drawPlayer(playerId: string) {
+    if (this.players === null) return;
     const player: ProgressPlayer = this.players.filter(p => p.id === playerId)[0];
+    if (player === undefined) return;
     const playerGroup = this.playersGroup.append('g')
       .attr('id', 'score-progress-player-' + player.id)
       .style('mix-blend-mode', 'multiply');

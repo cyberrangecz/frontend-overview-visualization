@@ -9,8 +9,6 @@ import {Level} from '../shared/interfaces/level';
 import {LevelEvents} from '../shared/interfaces/level-events';
 import {Hint} from '../shared/interfaces/hint';
 import {GenericEvent} from '../shared/interfaces/generic-event.enum';
-import {GAME_INFORMATION} from '../../../../../src/app/mocks/information.mock';
-import {EVENTS} from '../../../../../src/app/mocks/events.mock';
 import {ConfigService} from '../config/config.service';
 
 @Injectable()
@@ -66,7 +64,7 @@ export class DataService {
         type: level.level_type,
         name: level.title,
         number: levelNum++,
-        estimatedTime: 200,
+        estimatedTime: level.estimated_duration > 0 ? level.estimated_duration * 60 : 120,
         points: level.max_score,
         id: level.id
       };
@@ -80,7 +78,6 @@ export class DataService {
 
         l.hints = hints;
         l.gameLevelNumber = gameLevelNum++;
-        l.estimatedTime = 1000;
       } else if (level.level_type === 'ASSESSMENT_LEVEL') {
         // TODO
       }

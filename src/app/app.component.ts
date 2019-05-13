@@ -14,7 +14,7 @@ export class AppComponent implements OnInit{
 
   mockFeedbackLearnerId = null;
   colorScheme = ['#307bc1', '#41ae43', '#ff9d3c', '#fc5248', '#f2d64f', '#8035c6'];
-  mockGameData = {information: GAME_INFORMATION, events: EVENTS};
+  //mockGameData = {information: GAME_INFORMATION, events: EVENTS};
 
   constructor(
     private oAuthService: OAuthService,

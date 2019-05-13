@@ -21,8 +21,6 @@ import { BarVisualizationData } from '../interfaces/bar-visualization-data';
 import { PlayerVisualizationData } from '../interfaces/player-visualization-data';
 import { ClusteringFinalEventService } from '../interfaces/clustering-final-event-service';
 import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config';
-import {GAME_INFORMATION} from '../../../../../../../src/app/mocks/information.mock';
-import {EVENTS} from '../../../../../../../src/app/mocks/events.mock';
 import {GameInformation} from '../../../shared/interfaces/game-information';
 import {GameEvents} from '../../../shared/interfaces/game-events';
 import {DataService} from '../../../services/data.service';
