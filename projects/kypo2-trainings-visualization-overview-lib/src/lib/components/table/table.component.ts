@@ -8,6 +8,7 @@ import { FiltersService } from '../../services/filters.service';
 import {GameInformation} from '../../shared/interfaces/game-information';
 import {GameEvents} from '../../shared/interfaces/game-events';
 import {DataService} from '../../services/data.service';
+import {ConfigService} from '../../config/config.service';
 
 @Component({
   selector: 'kypo2-viz-overview-table',
@@ -18,6 +19,8 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() data: GameData;
   @Input() feedbackLearnerId: string;
+  @Input() trainingDefinitionId: number;
+  @Input() trainingInstanceId: number;
 
   public scoreTableData = {playerIds: [], levels: [], finalScores: {}};
   public playersOrdered = [];
@@ -33,7 +36,8 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
       private visualizationService: DataProcessor,
       private tableService: TableService,
       private filtersService: FiltersService,
-      private dataService: DataService
+      private dataService: DataService,
+      private configService: ConfigService
     ) {
     this.playerColorScaleSource = this.tableService.playerColorScale$.subscribe(
       (scale) => {
@@ -47,10 +51,12 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit() {
-   this.load();
+    this.load();
   }
 
   ngOnChanges() {
+    this.configService.trainingDefinitionId = this.trainingDefinitionId;
+    this.configService.trainingInstanceId = this.trainingInstanceId;
     this.filters = this.filtersService.getFiltersObject();
     this.scoreTableData = this.getLevelScores();
     this.players = this.visualizationService.getScoreProgressPlayersWithEvents(this.data);

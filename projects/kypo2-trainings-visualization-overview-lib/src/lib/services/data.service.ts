@@ -143,13 +143,13 @@ export class DataService {
    * Fetches static game information data
    */
   getInformation(): Observable<any> {
-    return this.http.get<GameInformation>(this.configService.config.trainingInformationUrl);
+    return this.http.get<GameInformation>(`${this.configService.config.kypo2TrainingsVisualizationRestBasePath}training-definitions/${this.configService.trainingDefinitionId}`);
   }
 
   /**
    * Fetches game events data
    */
   getEvents(): Observable<any> {
-    return this.http.get(this.configService.config.trainingEventsUrl);
+    return this.http.get(`${this.configService.config.kypo2TrainingsVisualizationRestBasePath}training-events/training-definitions/${this.configService.trainingDefinitionId}/training-instances/${this.configService.trainingInstanceId}`);
   }
 }
