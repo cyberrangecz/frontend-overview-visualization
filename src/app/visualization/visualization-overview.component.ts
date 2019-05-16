@@ -8,8 +8,6 @@ import {CustomConfig} from '../custom-config';
 })
 export class VisualizationOverviewComponent implements OnInit {
 
-  public feedbackLearnerId: string = null; //for testing purposes we can define the current player login
-
   constructor() { }
 
   ngOnInit() {

@@ -1,15 +1,16 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, ViewChild } from '@angular/core';
 import {GameData} from '../../shared/interfaces/game-data';
 import { ClusteringFinalEventService } from './interfaces/clustering-final-event-service';
 import { FinalComponent } from './final/final.component';
 import { LevelsComponent } from './levels/levels.component';
+import {ConfigService} from '../../config/config.service';
 
 @Component({
   selector: 'kypo2-viz-overview-clustering',
   templateUrl: './clustering.component.html',
   styleUrls: ['./clustering.component.css']
 })
-export class ClusteringComponent implements OnInit {
+export class ClusteringComponent implements OnInit, OnChanges {
 
   @ViewChild(FinalComponent) finalComponent;
   @ViewChild(LevelsComponent) levelsComponent;
@@ -20,11 +21,18 @@ export class ClusteringComponent implements OnInit {
   @Input() colorScheme: string[];
   @Input() eventService: ClusteringFinalEventService;
   @Input() size: {width: number; height: number};
+  @Input() trainingDefinitionId: number;
+  @Input() trainingInstanceId: number;
 
-  constructor() { }
+  constructor(private configService: ConfigService) { }
 
   ngOnInit() {}
 
+
+  ngOnChanges() {
+    this.configService.trainingDefinitionId = this.trainingDefinitionId;
+    this.configService.trainingInstanceId = this.trainingInstanceId;
+  }
   get levelsCount() {
     return this.gameData.information.levels.length;
   }

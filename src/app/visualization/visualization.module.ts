@@ -12,7 +12,8 @@ import {Kypo2TrainingsVisualizationOverviewLibModule} from '../../../projects/ky
   imports: [
     CommonModule,
     VisualizationRoutingModule,
-    Kypo2TrainingsVisualizationOverviewLibModule.forRoot(CustomConfig)
+    Kypo2TrainingsVisualizationOverviewLibModule.forRoot(CustomConfig),
+    Kypo2TrainingsVisualizationOverviewLibModule
   ],
   exports: [
     VisualizationOverviewComponent
