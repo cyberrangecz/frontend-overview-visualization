@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {CustomConfig} from '../custom-config';
 
 @Component({
   selector: 'app-visualization-overview',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./visualization-overview.component.css']
 })
 export class VisualizationOverviewComponent implements OnInit {
+
+  public feedbackLearnerId: string = null; //for testing purposes we can define the current player login
 
   constructor() { }
 

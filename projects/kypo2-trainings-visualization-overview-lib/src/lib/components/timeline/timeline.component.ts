@@ -10,7 +10,7 @@ import {GameData} from '../../shared/interfaces/game-data';
 export class TimelineComponent implements OnInit {
 
   public gameData: GameData = {information: null, events: null}
-  @Input() feedbackLearnerId: number;
+  @Input() feedbackLearnerId: string;
   @Input() colorScheme: string[];
   @Input() size: {width: number; height: number};
 

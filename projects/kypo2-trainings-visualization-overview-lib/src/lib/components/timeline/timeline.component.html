@@ -1,7 +1,7 @@
 <div class="overview-visualization-container">
     <kypo2-viz-overview-line
         [data]="gameData"
-        [feedbackLearnerId]="'0'"
+        [feedbackLearnerId]="feedbackLearnerId"
         [colorScheme]="colorScheme"
         [size]="size"
     ></kypo2-viz-overview-line>
@@ -9,7 +9,7 @@
     <div class="second-column">
         <kypo2-viz-overview-table
             [data]="gameData"
-            [feedbackLearnerId]="'0'">
+            [feedbackLearnerId]="feedbackLearnerId">
         </kypo2-viz-overview-table>
 
         <kypo2-viz-overview-filters></kypo2-viz-overview-filters>

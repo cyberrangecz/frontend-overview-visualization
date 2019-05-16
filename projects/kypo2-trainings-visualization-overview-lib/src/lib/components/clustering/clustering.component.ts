@@ -16,7 +16,7 @@ export class ClusteringComponent implements OnInit {
 
   public selectedPlayerId: number;
   public gameData: GameData = {information: null, events: null};
-  @Input() feedbackLearnerId: number;
+  @Input() feedbackLearnerId: string;
   @Input() colorScheme: string[];
   @Input() eventService: ClusteringFinalEventService;
   @Input() size: {width: number; height: number};
