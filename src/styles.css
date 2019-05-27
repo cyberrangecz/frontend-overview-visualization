@@ -1,12 +1,7 @@
-body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
 .player-tooltip {
   position: absolute;
   text-align: center;
   padding: 2px;
-  font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
   background: lightsteelblue;
   border: 0px;
   border-radius: 8px;
@@ -23,15 +18,9 @@ body {
   stroke-width: 1px;
 }
 
-.focus-label {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
 .x-axis {
   stroke-width: 2px;
   stroke-linecap: butt;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 15px;
 }
 
 .x-axis text {
@@ -41,8 +30,6 @@ body {
 .y-axis {
   stroke-width: 5px;
   stroke-linecap: round;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 18px;
 }
 
 path, line {
@@ -77,10 +64,6 @@ path, line {
   cursor: pointer;
 }
 
-.score-progress-axis-labels {
-  font-size: 22px;
-}
-
 .y-axis .tick text{
   opacity: 0.65;
 }
@@ -108,7 +91,6 @@ path, line {
   position: absolute;
   text-align: center;
   padding: 8px;
-  font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
   background-color: rgba(176, 196, 222, 0.9);
   border: 0px;
   border-radius: 8px;
@@ -187,7 +169,6 @@ input[type="checkbox"] {
   position: absolute;
   text-align: center;
   padding: 8px;
-  font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
   background-color: rgba(176, 196, 222, 0.9);
   border: 0px;
   border-radius: 8px;
