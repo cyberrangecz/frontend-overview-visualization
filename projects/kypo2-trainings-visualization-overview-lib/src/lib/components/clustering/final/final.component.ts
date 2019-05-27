@@ -384,8 +384,7 @@ export class FinalComponent implements OnInit, OnChanges {
       )
       .text('score')
       .attr('text-anchor', 'middle')
-      .style('fill', '#4c4a4a')
-      .style('font-weight', 'bold');
+      .style('fill', '#4c4a4a');
   }
 
   /**

@@ -444,7 +444,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
       .enter()
       .append('text')
       .attr('class', 'score-progress-axis-label')
-      .attr('transform', d => `translate(${-SVG_MARGIN_CONFIG.left * 0.8}, ${d})`)
+      .attr('transform', d => `translate(${-SVG_MARGIN_CONFIG.left * 0.7}, ${d})`)
       .html((d, i) => `Level ${i + 1}`);
 
     const colorScale = this.d3.scaleOrdinal()
@@ -454,7 +454,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
       .data(coordinates)
       .enter()
       .append('rect')
-      .attr('transform', d => `translate(${-SVG_MARGIN_CONFIG.left * 0.8 - 20}, ${d - 15})`)
+      .attr('transform', d => `translate(${-SVG_MARGIN_CONFIG.left * 0.7 - 20}, ${d - 15})`)
       .attr('width', 15)
       .attr('height', 15)
       .style('fill', (d, i) => colorScale(i.toString()));

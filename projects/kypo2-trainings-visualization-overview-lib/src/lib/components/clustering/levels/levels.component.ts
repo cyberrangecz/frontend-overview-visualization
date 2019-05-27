@@ -388,7 +388,6 @@ export class LevelsComponent implements OnInit, OnChanges {
       )
       .attr('text-anchor', 'middle')
       .style('fill', '#4c4a4a')
-      .style('font-size', 24)
       .text('score');
   }
 
