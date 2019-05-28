@@ -1,11 +1,9 @@
 label {
     display: block;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     position: relative;
-    padding-left: 35px;
-    margin-bottom: 12px;
+    padding-left: 30px;
+    margin-bottom: 5px;
     cursor: pointer;
-    font-size: 20px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -21,8 +19,8 @@ input {
     position: absolute;
     top: 0;
     left: 0;
-    height: 22px;
-    width: 22px;
+    height: 18px;
+    width: 18px;
     background-color: #eae2e2;
 }
 
@@ -48,8 +46,8 @@ input:checked + .custom-checkbox:after {
 
 /* Style the checkmark/indicator */
 .custom-checkbox:after {
-    left: 7px;
-    top: 3px;
+    left: 5px;
+    top: 0px;
     width: 5px;
     height: 10px;
     border: solid white;

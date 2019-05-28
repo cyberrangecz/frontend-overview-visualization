@@ -1,16 +1,20 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
-import { GameData } from '../../../shared/interfaces/game-data';
-import { D3Service, D3 } from 'd3-ng2-service';
-import { DataProcessor } from '../../../services/data-processor.service';
-import { ScaleLinear, ScaleOrdinal, Selection, Axis, ScaleTime, ContainerElement, Line, ZoomBehavior, BrushBehavior } from 'd3-ng2-service/src/bundle-d3';
-import { ProgressPlayer } from '../interfaces/progress-player';
-import { ScoredEvent } from '../interfaces/scored-event';
-import {SVG_CONFIG, AXES_CONFIG, CONTEXT_CONFIG, SVG_MARGIN_CONFIG, colorScheme} from './config';
-import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config';
-import { SvgMarginConfig } from '../../../shared/interfaces/configurations/svg-margin-config';
-import { TableService } from '../../../services/table.service';
-import {config, Subscription} from 'rxjs';
-import { FiltersService } from '../../../services/filters.service';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
+import {GameData} from '../../../shared/interfaces/game-data';
+import {D3, D3Service} from 'd3-ng2-service';
+import {DataProcessor} from '../../../services/data-processor.service';
+import {Axis, BrushBehavior, Line, ScaleLinear, ScaleOrdinal, ScaleTime, ZoomBehavior} from 'd3-ng2-service/src/bundle-d3';
+import {ProgressPlayer} from '../interfaces/progress-player';
+import {ScoredEvent} from '../interfaces/scored-event';
+import {AXES_CONFIG, colorScheme, CONTEXT_CONFIG, SVG_MARGIN_CONFIG} from './config';
+import {SvgConfig} from '../../../shared/interfaces/configurations/svg-config';
+import {SvgMarginConfig} from '../../../shared/interfaces/configurations/svg-margin-config';
+import {TableService} from '../../../services/table.service';
+import {Subscription} from 'rxjs';
+import {FiltersService} from '../../../services/filters.service';
+import {DataService} from '../../../services/data.service';
+import {GameInformation} from '../../../shared/interfaces/game-information';
+import {GameEvents} from '../../../shared/interfaces/game-events';
+import {GenericEvent} from '../../../shared/interfaces/generic-event.enum';
 
 @Component({
   selector: 'kypo2-viz-overview-line',
@@ -18,10 +22,10 @@ import { FiltersService } from '../../../services/filters.service';
   styleUrls: ['./line.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LineComponent implements OnInit {
+export class LineComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() data: GameData;
-  @Input() feedbackLearnerId: number;
+  @Input() feedbackLearnerId: string;
   @Input() colorScheme: string[];
   @Input() size: {width: number; height: number};
 
@@ -60,7 +64,8 @@ export class LineComponent implements OnInit {
       d3service: D3Service,
       private visualizationService: DataProcessor,
       private tableService: TableService,
-      private filtersService: FiltersService
+      private filtersService: FiltersService,
+      private dataService: DataService
     ) {
     this.d3 = d3service.getD3();
     this.tableRowClicked = this.tableService.tableRowClicked$.subscribe(
@@ -68,12 +73,12 @@ export class LineComponent implements OnInit {
         this.onRowClicked(player);
     });
     this.tableRowMouseover = this.tableService.tableRowMouseover$.subscribe(
-      (id: number) => {
+      (id: any) => {
         this.highlightLine(id);
       }
     );
     this.tableRowMouseout = this.tableService.tableRowMouseout$.subscribe(
-      (id: number) => {
+      (id: any) => {
         this.unhighlightLine(id);
       }
     );
@@ -81,7 +86,7 @@ export class LineComponent implements OnInit {
       () => {
         this.onFilterChange();
       }
-    )
+    );
   }
 
   ngOnDestroy() {
@@ -91,8 +96,38 @@ export class LineComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.load();
+  }
+
+  ngOnChanges() {
     this.players = this.getPlayersWithEvents();
+    this.redraw();
+  }
+
+  load() {
+    this.dataService.getAllData().subscribe((res: [GameInformation, GameEvents]) => {
+      this.data.information = res[0];
+      this.data.events = res[1];
+
+      this.players = this.getPlayersWithEvents();
+      this.redraw();
+    });
+  }
+
+  redraw() {
+    this.setup();
     this.initializeFilters();
+    this.initializeScales();
+    this.drawEstimatedTimesBars();
+    this.drawAxes();
+    this.drawLevelThresholds();
+    this.addZoomableArea();
+    this.buildSvgDefs();
+    this.buildPlayersGroup();
+    this.buildTooltips();
+    this.addZoomAndBrush();
+    this.buildCrosshair();
+    this.drawLegend();
     this.drawFeedbackLearner();
   }
 
@@ -107,34 +142,19 @@ export class LineComponent implements OnInit {
   /**
    * Draws feedback learner on default
    */
-  drawFeedbackLearner() {
-    this.checkFeedbackLearner()
-    this.feedbackLearnerId != null ? this.drawPlayer(this.feedbackLearnerId) : null;
+  drawFeedbackLearner(): void {
+    this.checkFeedbackLearner();
+    if (this.feedbackLearnerId !== null) {this.drawPlayer(this.feedbackLearnerId); }
   }
-
   /**
    * Sets checked attribute of feedback learner in players array to true
    */
   checkFeedbackLearner() {
+    if (this.players === null) { return null; }
     this.players = this.players.map(player => {
-      if (player.id === this.feedbackLearnerId) player.checked = true;
+      if (player.id === this.feedbackLearnerId) { player.checked = true; }
       return player;
     });
-  }
-
-  ngOnChanges() {
-    this.players = this.getPlayersWithEvents();
-    this.setup();
-    this.drawEstimatedTimesBars();
-    this.drawAxes();
-    this.drawLevelThresholds();
-    this.addZoomableArea();
-    this.buildSvgDefs();
-    this.buildPlayersGroup();
-    this.buildTooltips();
-    this.addZoomAndBrush();
-    this.buildCrosshair();
-    this.drawLegend();
   }
 
   /**
@@ -201,17 +221,17 @@ export class LineComponent implements OnInit {
     if (this.d3.event.sourceEvent && this.d3.event.sourceEvent.type === 'mousedown') { // Panning start
       this.zoomableArea.classed('grabbed', true);
       this.clip.attr('x', 3);
-    };
+    }
   }
 
   /**
    * Main zoom and pan behavior
    */
   onZoom() {
-    if (this.d3.event.sourceEvent && this.d3.event.sourceEvent.type === "brush") return; // ignore brush-by-zoom (causes stack overflow)
+    if (this.d3.event.sourceEvent && this.d3.event.sourceEvent.type === 'brush') { return; } // ignore brush-by-zoom (causes stack overflow)
     const events = this.playersGroup.selectAll('circle') // Hide if out of area
       .style('opacity', function () {
-        return (this.cx.animVal.value < 0) ? 0 : 1
+        return (this.cx.animVal.value < 0) ? 0 : 1;
       });
     const transform = this.d3.event.transform;
     const newDomain = transform.rescaleX(this.contextTimeScale).domain();
@@ -223,7 +243,7 @@ export class LineComponent implements OnInit {
     this.redrawAxes(transform.k);
     this.redrawPlayers();
     this.redrawBars(transform);
-    if (this.d3.event.sourceEvent && this.d3.event.sourceEvent.type !== "dbclick") {
+    if (this.d3.event.sourceEvent && this.d3.event.sourceEvent.type !== 'dbclick') {
       this.updateCrosshair();
     }
     this.svg.select('.brush')
@@ -237,7 +257,7 @@ export class LineComponent implements OnInit {
     if (this.d3.event.sourceEvent && this.d3.event.sourceEvent.type === 'mouseup') { // Panning end
       this.zoomableArea.classed('grabbed', false);
       this.clip.attr('x', -7);
-    };
+    }
   }
 
   /**
@@ -253,7 +273,7 @@ export class LineComponent implements OnInit {
    * Main brush behavior.
    */
   onBrush() {
-    if (this.d3.event.sourceEvent && this.d3.event.sourceEvent.type === "zoom") return; // ignore zoom-by-brush (causes stack overflow)
+    if (this.d3.event.sourceEvent && this.d3.event.sourceEvent.type === 'zoom') { return; } // ignore zoom-by-brush (causes stack overflow)
     const selection = this.d3.event.selection || this.contextTimeScale;
     const newDomain = selection.map(this.contextTimeScale.invert, this.contextTimeScale);
     this.timeScale.domain(newDomain);
@@ -289,7 +309,7 @@ export class LineComponent implements OnInit {
     this.tableService.sendPlayerColorScale(this.playerColorScale);
 
     const scaleDomainStart = new Date(0, 0, 0, 0, 0, 0, 0);
-    const scaleDomainEnd = new Date(0, 0, 0, 0, 0, this.getMaximumTime(), 0);
+    const scaleDomainEnd = new Date(0, 0, 0, 0, 0, this.getMaximumTime(true), 0);
     this.timeAxisScale = this.d3.scaleTime()
       .range([0, this.size.width])
       .domain([scaleDomainStart, scaleDomainEnd]);
@@ -302,11 +322,11 @@ export class LineComponent implements OnInit {
 
     this.timeScale = this.d3.scaleLinear()
       .range([0, this.size.width])
-      .domain([0, this.getMaximumTime()]);
+      .domain([0, this.getMaximumTime(true)]);
 
     this.contextTimeScale = this.d3.scaleLinear()
       .range([0, this.size.width])
-      .domain([0, this.getMaximumTime()]);
+      .domain([0, this.getMaximumTime(true)]);
 
     this.contextScoreScale = this.d3.scaleLinear()
       .range([CONTEXT_CONFIG.height, 0])
@@ -320,7 +340,10 @@ export class LineComponent implements OnInit {
    * Draw color hatched time bars indicating estimated game time
    */
   drawEstimatedTimesBars() {
-    const estimatedTimes = this.data.information.levels.map(level => { return { number: level.number, time: level.estimatedTime, offset: 0 } });
+    if (this.data.information === null) { return; }
+    const estimatedTimes = this.data.information.levels.map(level => {
+      return { type: level.type, number: level.number, time: level.estimatedTime, offset: 0 };
+    });
 
     for (let i = 1; i < estimatedTimes.length; i++) {
       const level = estimatedTimes[i];
@@ -332,7 +355,7 @@ export class LineComponent implements OnInit {
 
     const barsGroup = this.svg.append('g')
       .attr('class', 'score-progress-bars')
-      .style('mask', 'url(#mask)')
+      .style('mask', 'url(#mask)');
 
     barsGroup.selectAll('rect')
       .data(estimatedTimes)
@@ -342,7 +365,12 @@ export class LineComponent implements OnInit {
       .attr('y', 0)
       .attr('width', level => this.timeScale(level.time))
       .attr('height', this.size.height)
-      .style('fill', level => colorScale(level.number.toString()))
+      .style('fill', level => {
+        if (level.type !== 'GAME_LEVEL') {
+          return 'lightgray';
+        }
+        return colorScale(level.number.toString());
+      })
       .style('opacity', 1);
   }
 
@@ -376,8 +404,10 @@ export class LineComponent implements OnInit {
    * Draw score y axis, ticks accumulated/summed maximum gainable score for each levels completed
    */
   drawScoreAxis() {
+    if (this.data.information === null) { return; }
     const axesConfig = AXES_CONFIG;
     const tickValues = this.data.information.levels
+      .filter( level =>  (level.type === 'GAME_LEVEL'))
       .map(level => [level.points])
       .reduce((accumulator, currentValue, i) => accumulator.concat(accumulator[i - 1] + currentValue[0]));
 
@@ -402,7 +432,7 @@ export class LineComponent implements OnInit {
     const scoresWithZero = [0].concat(scores);
     const coordinates = [];
     for (let i = 0; i < scoresWithZero.length - 1; i++) {
-      const midScore = (scoresWithZero[i + 1] + scoresWithZero[i]) / 2
+      const midScore = (scoresWithZero[i + 1] + scoresWithZero[i]) / 2;
       const coordinate = this.scoreScale(midScore);
       coordinates.push(coordinate);
     }
@@ -414,7 +444,7 @@ export class LineComponent implements OnInit {
       .enter()
       .append('text')
       .attr('class', 'score-progress-axis-label')
-      .attr('transform', d => `translate(${-SVG_MARGIN_CONFIG.left * 0.8}, ${d})`)
+      .attr('transform', d => `translate(${-SVG_MARGIN_CONFIG.left * 0.7}, ${d})`)
       .html((d, i) => `Level ${i + 1}`);
 
     const colorScale = this.d3.scaleOrdinal()
@@ -424,7 +454,7 @@ export class LineComponent implements OnInit {
       .data(coordinates)
       .enter()
       .append('rect')
-      .attr('transform', d => `translate(${-SVG_MARGIN_CONFIG.left * 0.8 - 20}, ${d - 15})`)
+      .attr('transform', d => `translate(${-SVG_MARGIN_CONFIG.left * 0.7 - 20}, ${d - 15})`)
       .attr('width', 15)
       .attr('height', 15)
       .style('fill', (d, i) => colorScale(i.toString()));
@@ -470,23 +500,23 @@ export class LineComponent implements OnInit {
    * Defines clip defs
    */
   buildSvgDefs() {
-    this.clip = this.svg.append("defs")
-      .append("svg:clipPath")
-      .attr("id", "clip")
-      .append("svg:rect")
-      .attr("width", this.size.width + 20)
-      .attr("height", this.size.height + 20)
-      .attr("x", -7)
-      .attr("y", -7);
+    this.clip = this.svg.append('defs')
+      .append('svg:clipPath')
+      .attr('id', 'clip')
+      .append('svg:rect')
+      .attr('width', this.size.width + 20)
+      .attr('height', this.size.height + 20)
+      .attr('x', -7)
+      .attr('y', -7);
 
-    const lineClip = this.svg.append("defs")
-      .append("svg:clipPath")
-      .attr("id", "lineClip")
-      .append("svg:rect")
-      .attr("width", this.size.width + 5)
-      .attr("height", this.size.height)
-      .attr("x", 3)
-      .attr("y", 0);
+    const lineClip = this.svg.append('defs')
+      .append('svg:clipPath')
+      .attr('id', 'lineClip')
+      .append('svg:rect')
+      .attr('width', this.size.width + 5)
+      .attr('height', this.size.height)
+      .attr('x', 3)
+      .attr('y', 0);
   }
 
   /**
@@ -679,15 +709,18 @@ export class LineComponent implements OnInit {
 
     legendGroup.append('text')
       .attr('transform', `translate(${x + rectWidth + 10}, ${y + rectHeight / 1.5 + 1})`)
-      .html('Estimated time')
+      .html('Estimated time');
   }
 
   /**
-   * Draws main line, events,
+   * Draws main line, events. Returns without any drawing if the players are not defined or the
+   * current playerId is not among the participants -> e.g., supervisor
    * @param playerId of player to be drawn
    */
-  drawPlayer(playerId: number) {
-    const player: ProgressPlayer = this.players.filter(player => +player.id === +playerId)[0];
+  drawPlayer(playerId: string) {
+    if (this.players === null) return;
+    const player: ProgressPlayer = this.players.filter(p => p.id === playerId)[0];
+    if (player === undefined) return;
     const playerGroup = this.playersGroup.append('g')
       .attr('id', 'score-progress-player-' + player.id)
       .style('mix-blend-mode', 'multiply');
@@ -736,6 +769,18 @@ export class LineComponent implements OnInit {
 
     return line;
   }
+/*
+  adjustTimes(events: ScoredEvent[]) {
+    console.log(events);
+    let delay = 0;
+    events.forEach((event,i) => {
+      if (event === this.typePrefix + 'TrainingRunResumed') {
+        delay = event.time - events[i - 1].time;
+      }
+      events[i].time -= delay;
+    });
+    return events;
+  }*/
 
   /**
    * @ignore
@@ -744,7 +789,7 @@ export class LineComponent implements OnInit {
     line.on('mouseover', this.onLineMouseover.bind(this))
       .on('mousemove', this.onLineMousemove.bind(this))
       .on('mouseout', this.onLineMouseout.bind(this))
-      .on("wheel", this.disableScrolling.bind(this));
+      .on('wheel', this.disableScrolling.bind(this));
   }
 
   /**
@@ -760,9 +805,9 @@ export class LineComponent implements OnInit {
   /**
    * @ignore
    */
-  highlightLine(playerId: number) {
+  highlightLine(playerId: string) {
     const playerGroup = this.d3.select('#score-progress-player-' + playerId);
-    const path = playerGroup.select('.visible-line')
+    const path = playerGroup.select('.visible-line');
     path.classed('score-progress-player-highlight', true);
   }
 
@@ -781,14 +826,14 @@ export class LineComponent implements OnInit {
   updateLineTooltip(player) {
     const x: number = this.d3.event.pageX;
     const y: number = this.d3.event.pageY;
-    const topMargin: number = -50;
+    const topMargin = -50;
     const top: number = y + topMargin;
 
-    const content: string = `Player ID: <br> ${player.id.toString()}`;
+    const content = `Player ID: <br> ${player.id.toString()}`;
     this.lineTooltip.attr('class', 'score-progress-line-tooltip')
       .style('left', (x - 5) + 'px')
       .style('top', top + 'px')
-      .style('margin-left', -content.length / 4 + "em")
+      .style('margin-left', -content.length / 4 + 'em');
     this.lineTooltip.html(content);
   }
 
@@ -805,10 +850,10 @@ export class LineComponent implements OnInit {
   /**
    * @ignore
    */
-  unhighlightLine(playerId: number) {
-    if (playerId === this.feedbackLearnerId) return;
+  unhighlightLine(playerId: string) {
+    if (playerId === this.feedbackLearnerId) { return; }
     const playerGroup = this.d3.select('#score-progress-player-' + playerId);
-    const path = playerGroup.select('path')
+    const path = playerGroup.select('path');
     path.classed('score-progress-player-highlight', false);
   }
 
@@ -852,7 +897,10 @@ export class LineComponent implements OnInit {
       .attr('cx', event => this.timeScale(event.time))
       .attr('cy', event => this.scoreScale(event.score))
       .style('opacity', '0')
-      .style('fill', event => this.d3.hsl(colorScale(event.level.toString()).toString()).darker(0.9))
+      .style('fill', event => {
+        if (event.gameLevel === undefined) { return 'lightgray'; }
+        return this.d3.hsl(colorScale(event.gameLevel.toString()).toString()).darker(0.9);
+      })
       .datum(event => { event.playerId = player.id; return event; })
       .style('stroke', 'black')
       .style('stroke-width', '0.5');
@@ -869,12 +917,21 @@ export class LineComponent implements OnInit {
    */
   filterEvents(unfilteredEvents: ScoredEvent[]) {
     let result: ScoredEvent[] = unfilteredEvents.filter(event => event.show); // Get rid of duplicates
+    let delay = 0;
     Object.keys(this.filters).forEach(key => {
       const filter = this.filters[key];
       if (!filter.checked) {
         result = result.filter(filter.filterFunction);
       }
     });
+/*
+    result.forEach( (item,i) => {
+      if (item.event === this.typePrefix + 'TrainingRunResumed') {
+        delay = item.time - result[i - 1].time;
+      }
+      item.time -= delay;
+    });*/
+
     return result;
   }
 
@@ -915,7 +972,7 @@ export class LineComponent implements OnInit {
       .on('mouseover', this.onEventMouseover.bind(this))
       .on('mousemove', this.onEventMousemove.bind(this))
       .on('mouseout', this.onEventMouseout.bind(this))
-      .on("wheel", this.disableScrolling.bind(this));
+      .on('wheel', this.disableScrolling.bind(this));
   }
 
   /**
@@ -972,7 +1029,7 @@ export class LineComponent implements OnInit {
     ${event}
     <br>
     <b>${player.scoreChange > 0 ? '+' : ''}${player.scoreChange !== 0 ? player.scoreChange : ''}</b>
-    <hr style="margin: 5px">
+    <hr style='margin: 5px'>
     Score: ${player.score}`;
     this.eventTooltip.html(content);
   }
@@ -995,27 +1052,19 @@ export class LineComponent implements OnInit {
    * @param event
    * @returns any
    */
-  getEventMessage(event) {
-    const split = event.event.toUpperCase().split(' ');
-    switch (split[0]) {
-      case 'CORRECT':
-        return `Level ${event.level} completed`;
-      case 'WRONG':
-        return 'Wrong flag submitted';
-      case 'HINT':
-        return 'Hint taken';
-      case 'HELP':
-        return 'Help level accessed';
-      case 'SKIP':
-        return 'Level skipped';
-      case 'GAME':
-        if (split[1] === 'STARTED') {
-          return 'Game started';
-        } else if (split[1] === 'EXITED') {
-          return 'Exited prematurely';
-        } else {
-          return 'Game finished';
-        }
+  getEventMessage(event: ScoredEvent) {
+    const cropped: string = event.event.split(GenericEvent.TypePrefix).pop();
+    const croppedSpace = cropped.replace(/([A-Z])/g, ' $1').trim();
+
+    switch (event.event) {
+      case GenericEvent.TypePrefix + GenericEvent.LevelCompleted:
+        if (event.gameLevel !== undefined) { return `Game level ${event.gameLevel} completed`; }
+        return ` ${event.type.toLowerCase()} level completed`;
+      case GenericEvent.TypePrefix + GenericEvent.LevelStarted:
+        if (event.gameLevel !== undefined) { return `Game level ${event.gameLevel} started`; }
+        return ` ${event.type.toLowerCase()} level started`;
+      case (GenericEvent.TypePrefix + cropped):
+        return croppedSpace;
       default:
         return event.event;
     }
@@ -1042,7 +1091,7 @@ export class LineComponent implements OnInit {
    * Removes player's line and events from the plane
    * @param playerId
    */
-  removePlayer(playerId: number) {
+  removePlayer(playerId: string) {
     this.playersGroup.select('#score-progress-player-' + playerId).remove();
     this.svg.select('.context').select('#score-progress-context-player-' + playerId).remove();
   }
@@ -1063,7 +1112,6 @@ export class LineComponent implements OnInit {
       .attr('d', d => this.lineGenerator(d.events));
 
     this.playersGroup.selectAll('circle').attr('cx', d => this.timeScale(d.time));
-
   }
 
   /**
@@ -1088,8 +1136,8 @@ export class LineComponent implements OnInit {
    *
    * @returns number longest game time.
    */
-  getMaximumTime() {
-    return this.visualizationService.getScoreFinalMaxTime(this.data);
+  getMaximumTime(includeTimeGaps: boolean = false) {
+    return this.visualizationService.getScoreFinalMaxTime(this.data, includeTimeGaps);
   }
 
   /**

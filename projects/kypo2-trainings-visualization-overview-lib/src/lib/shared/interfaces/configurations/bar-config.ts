@@ -7,5 +7,5 @@ export interface BarConfig {
     fillColorDark?: string;
     fillColorBright?: string;
     padding?: number;
-    maxBarOpacity?: 0.6
+    maxBarOpacity?: 0.6;
 }

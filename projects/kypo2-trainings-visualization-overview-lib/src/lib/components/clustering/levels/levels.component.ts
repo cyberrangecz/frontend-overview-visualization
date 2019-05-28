@@ -27,6 +27,9 @@ import {
 } from 'd3-ng2-service/src/bundle-d3';
 import { ClusteringLevelsEventService } from '../interfaces/clustering-levels-event-service';
 import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config';
+import {DataService} from '../../../services/data.service';
+import {GameInformation} from '../../../shared/interfaces/game-information';
+import {GameEvents} from '../../../shared/interfaces/game-events';
 
 @Component({
   selector: 'kypo2-viz-overview-levels',
@@ -35,12 +38,12 @@ import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config'
 })
 export class LevelsComponent implements OnInit, OnChanges {
   @Input() data: GameData;
-  @Input() inputSelectedPlayerId: number;
-  @Input() feedbackLearnerId: number;
+  @Input() inputSelectedPlayerId: string;
+  @Input() feedbackLearnerId: string;
   @Input() eventService: ClusteringLevelsEventService;
   @Input() size: SvgConfig;
   @Input() colorScheme: string[];
-  @Output() outputSelectedPlayerId = new EventEmitter<number>();
+  @Output() outputSelectedPlayerId = new EventEmitter<string>();
 
   private d3: D3;
   private xScale: ScaleLinear<number, number>;
@@ -53,13 +56,27 @@ export class LevelsComponent implements OnInit, OnChanges {
 
   private playerClicked = false; // If no player is selected, hover out of player will cancel the highlight
 
-  constructor(d3: D3Service, private visualizationDataService: DataProcessor) {
+  constructor(d3: D3Service, private visualizationDataService: DataProcessor, private dataService: DataService) {
     this.d3 = d3.getD3();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    const ret = this.load();
+  }
 
   ngOnChanges() {
+    this.updateCanvas();
+  }
+
+  load() {
+    this.dataService.getAllData().subscribe((res: [GameInformation, GameEvents]) => {
+    this.data.information = res[0];
+    this.data.events = res[1];
+    this.updateCanvas();
+    });
+  }
+
+  updateCanvas() {
     this.svgHeight = typeof this.size !== 'undefined' && this.size !== null ? this.size.height : SVG_CONFIG.height;
     this.svgWidth = typeof this.size !== 'undefined' && this.size !== null ? this.size.width : SVG_CONFIG.width;
     this.barWidth = 0.7 * this.svgWidth;
@@ -196,31 +213,35 @@ export class LevelsComponent implements OnInit, OnChanges {
    * Draw bar labels (Level number and name) next to the maximum bars
    */
   drawBarLabels() {
+    if (this.data.information === null) { return; }
     this.data.information.levels.forEach(level => {
-      const bar = this.d3.select('#score-level-bar-max-' + level.number);
-      const barWidth = bar.attr('width');
-      const barY = bar.attr('y');
-      const text = this.svg
-        .append('g')
-        .attr(
-          'transform',
-          `translate(
+      // we only show game levels in this visualization
+      if (level.type === 'GAME_LEVEL') {
+        const bar = this.d3.select('#score-level-bar-max-' + level.gameLevelNumber);
+        const barWidth = bar.attr('width');
+        const barY = bar.attr('y');
+        const text = this.svg
+          .append('g')
+          .attr(
+            'transform',
+            `translate(
            ${+barWidth + LEVEL_LABELS_CONFIG.padding.left},
            ${+barY + LEVEL_LABELS_CONFIG.padding.top})`
-        )
-        .append('text');
+          )
+          .append('text');
 
-      text
-        .append('tspan')
-        .attr('dy', '1.3em')
-        .attr('x', 0)
-        .text(`Level ${level.number}`);
+        text
+          .append('tspan')
+          .attr('dy', '1.3em')
+          .attr('x', 0)
+          .text(`Level ${level.gameLevelNumber}`);
 
-      text
-        .append('tspan')
-        .attr('dy', '1.3em')
-        .attr('x', 0)
-        .text(level.name);
+        text
+          .append('tspan')
+          .attr('dy', '1.3em')
+          .attr('x', 0)
+          .text(level.name);
+      }
     });
   }
 
@@ -323,15 +344,19 @@ export class LevelsComponent implements OnInit, OnChanges {
    */
   drawScoreAxes() {
     const d3 = this.d3;
+    const gameLevels = this.data.information !== null ?
+      this.data.information.levels.filter( level =>  (level.type === 'GAME_LEVEL')) : [];
+
     d3.selectAll('.score-level-bar-max').each(bar => {
+      // console.log(bar);
       const yScale = d3
         .scaleLinear()
         .range([this.yScaleBandBars.bandwidth(), 0])
-        .domain([0, this.data.information.levels[bar['number'] - 1].points]);
+        .domain([0, gameLevels[bar['number'] - 1].points]);
       const yAxis = d3
         .axisLeft(yScale)
         .tickSize(AXES_CONFIG.yAxis.tickSize)
-        .tickValues([0, this.data.information.levels[bar['number'] - 1].points])
+        .tickValues([0, gameLevels[bar['number'] - 1].points])
         .tickPadding(AXES_CONFIG.yAxis.tickPadding)
         .tickFormat(d => (d === 0 ? '' : d.toString()));
       const barY = d3.select('#score-level-bar-max-' + bar['number']).attr('y');
@@ -363,7 +388,6 @@ export class LevelsComponent implements OnInit, OnChanges {
       )
       .attr('text-anchor', 'middle')
       .style('fill', '#4c4a4a')
-      .style('font-size', 24)
       .text('score');
   }
 
@@ -394,13 +418,15 @@ export class LevelsComponent implements OnInit, OnChanges {
     const levelNumber = i + 1;
     const barCoordinateY = this.yScaleBandBars(levelNumber.toString());
     const barHeight = barCoordinateY + this.yScaleBandBars.bandwidth();
+    const gameLevels = this.data.information !== null ?
+      this.data.information.levels.filter( level =>  (level.type === 'GAME_LEVEL')) : [];
     const yBarScale = this.d3
       .scaleLinear()
       .range([
         barHeight, // bottom coordinate
         barCoordinateY // top coordinate (y values goes from top to bottom)
       ])
-      .domain([0, this.data.information.levels[i].points]);
+      .domain([0, gameLevels[i].points]);
 
     const playersGroup = this.svg
       .append('g')
@@ -527,6 +553,8 @@ export class LevelsComponent implements OnInit, OnChanges {
     const coordinates = d3.mouse(bar.node());
     const x = coordinates[0];
     const y = coordinates[1];
+    const gameLevels = this.data.information !== null ?
+      this.data.information.levels.filter( level =>  (level.type === 'GAME_LEVEL')) : [];
     const xScale = this.d3
       .scaleLinear()
       .range([0, this.barWidth])
@@ -534,7 +562,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     xScale.clamp(true);
     const yScale = d3
       .scaleLinear()
-      .range([0, this.data.information.levels[barData.number - 1].points])
+      .range([0, gameLevels[barData.number - 1].points])
       .domain([this.yScaleBandBars.bandwidth(), 0]);
     yScale.clamp(true);
 
@@ -647,7 +675,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     this.showTooltip(player);
     this.showCrosshair();
     if (this.playerClicked === false) {
-      this.outputSelectedPlayerId.emit(+player.id);
+      this.outputSelectedPlayerId.emit(player.id);
     }
     const noEventServiceWasPassed =
       typeof this.eventService === 'undefined' || this.eventService === null;
@@ -719,9 +747,11 @@ export class LevelsComponent implements OnInit, OnChanges {
     const playerElementNode = nodeList[index];
     const playersGroup = playerElementNode.parentNode;
     const level = d3.select(playersGroup).datum()['number'];
+    const gameLevels = this.data.information !== null ?
+      this.data.information.levels.filter( gameLevel =>  (gameLevel.type === 'GAME_LEVEL')) : [];
     const yScale = d3
       .scaleLinear()
-      .range([0, this.data.information.levels[level - 1].points])
+      .range([0, gameLevels[level - 1].points])
       .domain([this.yScaleBandBars.bandwidth(), 0]);
     yScale.clamp(true);
     const x = playerElementNode.getAttribute('cx');
@@ -799,7 +829,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    */
   onPlayerPointClick(player: PlayerVisualizationData) {
     this.d3.event.stopPropagation();
-    this.outputSelectedPlayerId.emit(+player.id);
+    this.outputSelectedPlayerId.emit(player.id);
     this.playerClicked = true;
     const noEventServiceWasPassed =
     typeof this.eventService === 'undefined' || this.eventService === null;

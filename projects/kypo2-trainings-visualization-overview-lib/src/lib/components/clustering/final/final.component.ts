@@ -21,6 +21,9 @@ import { BarVisualizationData } from '../interfaces/bar-visualization-data';
 import { PlayerVisualizationData } from '../interfaces/player-visualization-data';
 import { ClusteringFinalEventService } from '../interfaces/clustering-final-event-service';
 import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config';
+import {GameInformation} from '../../../shared/interfaces/game-information';
+import {GameEvents} from '../../../shared/interfaces/game-events';
+import {DataService} from '../../../services/data.service';
 
 @Component({
   selector: 'kypo2-viz-overview-final',
@@ -29,12 +32,12 @@ import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config'
 })
 export class FinalComponent implements OnInit, OnChanges {
   @Input() data: GameData;
-  @Input() inputSelectedPlayerId: number;
-  @Input() feedbackLearnerId: number;
+  @Input() inputSelectedPlayerId: string;
+  @Input() feedbackLearnerId: string;
   @Input() colorScheme: string[];
   @Input() eventService: ClusteringFinalEventService;
   @Input() size: SvgConfig;
-  @Output() outputSelectedPlayerId = new EventEmitter<number>();
+  @Output() outputSelectedPlayerId = new EventEmitter<string>();
 
   private d3: D3;
   private xScale: ScaleLinear<number, number>;
@@ -47,15 +50,27 @@ export class FinalComponent implements OnInit, OnChanges {
 
   private playerClicked = false; // If no player is selected, hover out of player will cancel the highlight
 
-  constructor(d3: D3Service, private visualizationService: DataProcessor) {
+  constructor(d3: D3Service, private visualizationService: DataProcessor, private dataService: DataService) {
     this.d3 = d3.getD3();
-
   }
 
   ngOnInit() {
+    this.load();
+  }
+
+  load() {
+    this.dataService.getAllData().subscribe((res: [GameInformation, GameEvents]) => {
+      this.data.information = res[0];
+      this.data.events = res[1];
+      this.updateCanvas();
+    });
   }
 
   ngOnChanges() {
+    this.updateCanvas();
+  }
+
+  updateCanvas() {
     this.barWidth = typeof this.size !== 'undefined' && this.size !== null ? this.size.width : SVG_CONFIG.width;
     this.barWidth *= 0.7;
     this.svgHeight = typeof this.size !== 'undefined' && this.size !== null ? this.size.height : SVG_CONFIG.height;
@@ -369,8 +384,7 @@ export class FinalComponent implements OnInit, OnChanges {
       )
       .text('score')
       .attr('text-anchor', 'middle')
-      .style('fill', '#4c4a4a')
-      .style('font-weight', 'bold');
+      .style('fill', '#4c4a4a');
   }
 
   /**
@@ -496,7 +510,7 @@ export class FinalComponent implements OnInit, OnChanges {
     this.showTooltip(player);
     this.showCrosshair();
     if (this.playerClicked === false) {
-      this.outputSelectedPlayerId.emit(+player.id);
+      this.outputSelectedPlayerId.emit(player.id);
     }
 
     const noEventServiceWasPassed =
