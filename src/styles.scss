@@ -1,7 +1,9 @@
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,400i,700&subset=latin-ext');
+/*@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,400i,700&subset=latin-ext');*/
+
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 .overview-visualization-container {
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: Roboto, Arial, sans-serif;
   .focus-line {
     fill: none;
     stroke: black;
@@ -13,8 +15,14 @@
     stroke-linecap: butt;
   }
 
+  .basic-container {
+    padding: 30px;
+  }
+
   .x-axis text {
     fill: #4e4e4e;
+    font-family: initial;
+    font-size: initial;
   }
 
   .y-axis {
@@ -56,6 +64,8 @@
 
   .y-axis .tick text{
     opacity: 0.65;
+    font-family: initial;
+    font-size: initial;
   }
 
   .score-progress path, line{
@@ -124,9 +134,17 @@
     cursor: -webkit-grab !important;
   }
 
-  .table th, td {
+  /*.table th, td {
     padding: 5px !important;
     text-align: center;
+  }*/
+
+  /*.table th {
+    border: 0px;
+  }*/
+
+  table {
+    min-width: 300px;
   }
 
   .row-stripe {

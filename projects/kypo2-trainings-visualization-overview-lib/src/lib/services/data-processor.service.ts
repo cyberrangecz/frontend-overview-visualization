@@ -200,6 +200,49 @@ export class DataProcessor {
     return groupedByPlayer;
   }
 
+  getScoreTableData2(gameData: GameData) {
+    const hintsTakenEachLevel = this.scoreService.getEachLevelHintsTaken(gameData.information, gameData.events);
+    const scoresEachLevel = this.scoreService.getEachLevelScores(gameData.information, gameData.events);
+    const wrongFlagsSubmittedEachLevel = this.scoreService.getEachLevelWrongFlags(gameData.information, gameData.events);
+    if (scoresEachLevel.length < 1) { return {playerIds: [], levels: [], finalScores: []}; }
+    const playerIds = Object.keys(scoresEachLevel[0]);
+    const finalScores = this.scoreService.getFinalScores(gameData.events, gameData.information);
+    const scores = {};
+    finalScores.forEach(player => {
+      scores[player.id] = player.score;
+    });
+    const levelsData: {}[] = [];
+    let currentLevelData = {};
+    scoresEachLevel.forEach((level, i) => {
+      const levelPlayerIds = Object.keys(level);
+      levelPlayerIds.forEach(id => {
+        const scoreInCurrentLevel = level[id];
+        const hintsTakenInCurrentLevel = hintsTakenEachLevel[i][id];
+        const wrongFlagsSubmittedInCurrentLevel = wrongFlagsSubmittedEachLevel[i][id];
+        currentLevelData[id] = {
+          score: scoreInCurrentLevel,
+          hints: hintsTakenInCurrentLevel,
+          wrongFlags: wrongFlagsSubmittedInCurrentLevel
+        };
+      });
+      levelsData.push(currentLevelData);
+      currentLevelData = {};
+    });
+
+    const result = [];
+    playerIds.forEach( (id, i) => {
+      let playerData = {
+        Player: id,
+        Final: scores[id]
+      };
+      levelsData.forEach((level, i) => {
+        playerData["Level " + (i+1)] = level[id].score;
+      });
+      result.push(playerData);
+    });
+    return result;
+  }
+
   getScoreTableData(gameData: GameData) {
     const hintsTakenEachLevel = this.scoreService.getEachLevelHintsTaken(gameData.information, gameData.events);
     const scoresEachLevel = this.scoreService.getEachLevelScores(gameData.information, gameData.events);

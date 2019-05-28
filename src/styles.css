@@ -25,6 +25,8 @@
 
 .x-axis text {
   fill: #4e4e4e;
+  font-family: initial;
+  font-size: initial;
 }
 
 .y-axis {
@@ -66,6 +68,8 @@ path, line {
 
 .y-axis .tick text{
   opacity: 0.65;
+  font-family: initial;
+  font-size: initial;
 }
 
 .score-progress path, line{

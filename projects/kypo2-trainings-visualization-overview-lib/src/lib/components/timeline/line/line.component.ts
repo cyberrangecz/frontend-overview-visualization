@@ -829,7 +829,9 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
     const topMargin = -50;
     const top: number = y + topMargin;
 
-    const content = `Player ID: <br> ${player.id.toString()}`;
+    const content = (this.feedbackLearnerId === undefined || this.feedbackLearnerId === null) ? 'Player ID: ' + player.id : (
+      this.feedbackLearnerId === player.id ? 'Your ' : "Other players' "
+    ) + 'game progress';
     this.lineTooltip.attr('class', 'score-progress-line-tooltip')
       .style('left', (x - 5) + 'px')
       .style('top', top + 'px')

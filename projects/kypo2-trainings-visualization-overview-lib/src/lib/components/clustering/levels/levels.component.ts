@@ -731,7 +731,14 @@ export class LevelsComponent implements OnInit, OnChanges {
     const yOffset = groupHeight - coordinates[1] < 60 ? -50 : 10;
 
     playerTooltip
-      .html(`<p><b>Player ID: ${player.id} <br> Score: ${player.score}</b>`)
+      .html(`<p><b>${
+        /* if the feedbackLearnerId is undefined or null, we assume the visualization is in the organizer/designer view mode
+        and therefore we can see (unline the learner) all the Ids.
+         */
+        (this.feedbackLearnerId === undefined || this.feedbackLearnerId === null) ? 'Player ID: ' + player.id : ( 
+          this.feedbackLearnerId === player.id ? 'You' : 'other player'
+        )
+      } <br> Score: ${player.score}</b>`)
       .style('left', this.d3.event.pageX + 10 + 'px')
       .style('top', this.d3.event.pageY + yOffset + 'px');
   }

@@ -22,6 +22,12 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   @Input() trainingDefinitionId: number;
   @Input() trainingInstanceId: number;
 
+  public displayedColumns: string[];
+  public dataSource = [
+    {Player: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
+    {Player: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
+    {Player: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'}
+  ];
   public scoreTableData = {playerIds: [], levels: [], finalScores: {}};
   public playersOrdered = [];
   public sortedColumn = null;
@@ -69,12 +75,26 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
       this.data.information = res[0];
       this.data.events = res[1];
 
+      this.loadTableHeaders();
       this.filters = this.filtersService.getFiltersObject();
       this.scoreTableData = this.getLevelScores();
+      this.dataSource = this.getTableData();
       this.players = this.visualizationService.getScoreProgressPlayersWithEvents(this.data);
       this.orderPlayers();
       this.checkFeedbackLearner();
     });
+  }
+
+  loadTableHeaders() {
+    this.displayedColumns = ['Player'];
+    this.data.information.levels.forEach((level,i) => {
+      if (level.type === 'GAME_LEVEL') this.displayedColumns.push('Level ' + level.gameLevelNumber);
+    });
+    this.displayedColumns.push('Final');
+  }
+
+  getTableData() {
+    return this.visualizationService.getScoreTableData2(this.data);
   }
 
   getLevelScores() {
