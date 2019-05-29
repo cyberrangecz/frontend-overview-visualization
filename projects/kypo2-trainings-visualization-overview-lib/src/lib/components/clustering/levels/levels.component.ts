@@ -121,7 +121,7 @@ export class LevelsComponent implements OnInit, OnChanges {
       )
       .attr(
         'height',
-        this.svgHeight + SVG_MARGIN_CONFIG.top + SVG_MARGIN_CONFIG.bottom
+        this.svgHeight + SVG_MARGIN_CONFIG.top + SVG_MARGIN_CONFIG.bottom + 20
       )
       .append('g')
       .attr(
@@ -303,9 +303,9 @@ export class LevelsComponent implements OnInit, OnChanges {
       .append('text')
       .attr(
         'transform',
-        `translate(${this.barWidth - 50}, ${this.svgHeight + 0.3 * 0.3 +
-          26})`
+        `translate(${this.barWidth / 2 - 50}, ${this.svgHeight  + 60})`
       )
+      .text('time per level')
       .style('fill', '#4c4a4a');
   }
 

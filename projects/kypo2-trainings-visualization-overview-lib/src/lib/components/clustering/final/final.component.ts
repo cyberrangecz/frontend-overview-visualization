@@ -122,7 +122,7 @@ export class FinalComponent implements OnInit, OnChanges {
       )
       .attr(
         'height',
-        this.svgHeight + SVG_MARGIN_CONFIG.top + SVG_MARGIN_CONFIG.bottom
+        this.svgHeight + SVG_MARGIN_CONFIG.top + SVG_MARGIN_CONFIG.bottom + 30
       )
       .append('g')
       .attr(
@@ -326,12 +326,11 @@ export class FinalComponent implements OnInit, OnChanges {
       .append('text')
       .attr(
         'transform',
-        `translate(${this.barWidth - 50}, ${this.svgHeight + 20 +
-          26})`
+        `translate(${this.barWidth / 2 - 50}, ${this.svgHeight + 75})`
       )
-      .style('fill', '#4c4a4a');
-      /*.style('font-weight', 'bold')
-      .text('');*/
+      .style('fill', '#4c4a4a')
+      .text('game time');
+      /*.style('font-weight', 'bold');*/
   }
 
   /**
