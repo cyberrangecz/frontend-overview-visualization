@@ -8,3 +8,45 @@
 
 ## How to use with other visualizations
 - If cross visualization communication is required, see project's [wiki](https://gitlab.ics.muni.cz/kypo2/frontend-new/kypo2-trainings-visualization-overview/wikis/home) for instructions
+
+
+## How to use as a library
+- there are 3 components that can be independent (it depends on their parameters)
+
+### Overview Table
+
+```
+<kypo2-viz-overview-table
+    [useLocalMock]="true"         <--- if set to true, the visualization will use mocked data (available only when run localy!)
+    [trainingDefinitionId]="1"
+    [standalone]="true"           <--- this ensures that the table does not cooperate with the timeline visualization and can be run independently
+    [trainingInstanceId]="1"
+    [feedbackLearnerId]="'player'"> <--- the id should be set *only* for the trainee view - the vis. will provide a limited information 
+</kypo2-viz-overview-table>
+```
+
+### Clustering
+
+```
+<kypo2-viz-overview-clustering
+  [useLocalMock]="true"          <--- if set to true, the visualization will use mocked data (available only when run localy!)
+  [feedbackLearnerId]="'player'" <--- the id should be set *only* for the trainee view - the vis. will provide a limited information 
+  [size]="{width: 800, height: 500}"
+  [trainingInstanceId]="2"
+  [trainingDefinitionId]="3">
+</kypo2-viz-overview-clustering>
+```
+### Timeline
+
+```
+<kypo2-viz-overview-timeline
+  [useLocalMock]="true"          <--- if set to true, the visualization will use mocked data (available only when run localy!)
+  [enableAllPlayers]="true"      <--- when set to false, it will hide the related filtering table and show only the line related to the feedbackLearnerId
+  [feedbackLearnerId]="'player'" <--- the id should be set *only* for the trainee view - the vis. will provide a limited information 
+  [size]="{width: 1300, height: 700}"
+  [trainingInstanceId]="2"
+  [trainingDefinitionId]="3">
+</kypo2-viz-overview-timeline>
+```
+
+
