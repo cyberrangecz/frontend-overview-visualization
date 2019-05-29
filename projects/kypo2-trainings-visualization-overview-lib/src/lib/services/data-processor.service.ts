@@ -18,20 +18,23 @@ import {GenericEvent} from '../shared/interfaces/generic-event.enum';
 export class DataProcessor {
 
   private d3: D3;
+
   // private typePrefix = 'cz.muni.csirt.kypo.events.trainings.';
 
   constructor(private timeService: TimeService, private scoreService: ScoreService, d3service: D3Service) {
     this.d3 = d3service.getD3();
-   }
+  }
 
   getScoreLevelBarsData(gameData: GameData): BarVisualizationData[] {
     const maxTimes = this.timeService.getEachLevelMaxTimes(gameData.events);
     const avgTimes = this.timeService.getEachLevelAvgTimes(gameData.events);
     const result: BarVisualizationData[] = [];
     Object.keys(maxTimes).forEach(levelNumber => {
-      const data: BarVisualizationData = {  number: +levelNumber,
-                                            maxTime: +maxTimes[levelNumber],
-                                            avgTime: +avgTimes[levelNumber] };
+      const data: BarVisualizationData = {
+        number: +levelNumber,
+        maxTime: +maxTimes[levelNumber],
+        avgTime: +avgTimes[levelNumber]
+      };
       result.push(data);
     });
     return result;
@@ -46,9 +49,11 @@ export class DataProcessor {
       const playersInCurrentLevel = Object.keys(currentLevel);
 
       playersInCurrentLevel.forEach(playerId => {
-        const playerData: PlayerVisualizationData = { id: playerId,
-                                                      score: +currentLevel[playerId],
-                                                      time: +times[i][playerId]};
+        const playerData: PlayerVisualizationData = {
+          id: playerId,
+          score: +currentLevel[playerId],
+          time: +times[i][playerId]
+        };
         levelData.push(playerData);
       });
       result.push(levelData);
@@ -75,10 +80,11 @@ export class DataProcessor {
     const times = this.timeService.getFinalPlayersMaxTimes(gameData.events);
     const result = [];
     scores.forEach(player => {
-      const playerData: PlayerVisualizationData = {id: player.id,
-                                                   score: +player.score,
-                                                   time: +times[player.id]
-                                                  };
+      const playerData: PlayerVisualizationData = {
+        id: player.id,
+        score: +player.score,
+        time: +times[player.id]
+      };
       result.push(playerData);
     });
     return result;
@@ -93,7 +99,9 @@ export class DataProcessor {
   }
 
   getScoreProgressPlayersWithEvents(gameData: GameData): ProgressPlayer[] {
-    if (gameData.events === null) { return null; }
+    if (gameData.events === null) {
+      return null;
+    }
     const playersWithEvents = this.flattenAndGroupByPlayer(gameData.events.levels);
     const progressPlayers: ProgressPlayer[] = [];
 
@@ -108,7 +116,9 @@ export class DataProcessor {
   }
 
   getScoredEvents(eventsGroupedByLevel, gameData: GameData) {
-    if (gameData.information === null ||  gameData.information.levels === null) { return []; }
+    if (gameData.information === null || gameData.information.levels === null) {
+      return [];
+    }
     // const startTime = new Date(eventsGroupedByLevel[0].values[0].timestamp).getTime();
     let currentScore = 0;
     let time = 0;
@@ -126,7 +136,7 @@ export class DataProcessor {
           show: false,
           level: levelNumber
         };
-       playerScoredEvents.push(e);
+        playerScoredEvents.push(e);
       }
 
       levelEvents.forEach((event: Event) => {
@@ -178,14 +188,6 @@ export class DataProcessor {
       case GenericEvent.TypePrefix + 'SolutionDisplayed':
         currentLevelScore -= event.penalty;
         break;
-      /*case 'LEVEL':
-        currentLevelScore = 0;
-        break;*/
-      /*case 'GAME':
-        if (split[1] === 'EXITED') {
-          currentLevelScore = 0;
-        }
-        break;*/
     }
     return currentLevelScore;
   }
@@ -200,54 +202,13 @@ export class DataProcessor {
     return groupedByPlayer;
   }
 
-  getScoreTableData2(gameData: GameData) {
-    const hintsTakenEachLevel = this.scoreService.getEachLevelHintsTaken(gameData.information, gameData.events);
-    const scoresEachLevel = this.scoreService.getEachLevelScores(gameData.information, gameData.events);
-    const wrongFlagsSubmittedEachLevel = this.scoreService.getEachLevelWrongFlags(gameData.information, gameData.events);
-    if (scoresEachLevel.length < 1) { return {playerIds: [], levels: [], finalScores: []}; }
-    const playerIds = Object.keys(scoresEachLevel[0]);
-    const finalScores = this.scoreService.getFinalScores(gameData.events, gameData.information);
-    const scores = {};
-    finalScores.forEach(player => {
-      scores[player.id] = player.score;
-    });
-    const levelsData: {}[] = [];
-    let currentLevelData = {};
-    scoresEachLevel.forEach((level, i) => {
-      const levelPlayerIds = Object.keys(level);
-      levelPlayerIds.forEach(id => {
-        const scoreInCurrentLevel = level[id];
-        const hintsTakenInCurrentLevel = hintsTakenEachLevel[i][id];
-        const wrongFlagsSubmittedInCurrentLevel = wrongFlagsSubmittedEachLevel[i][id];
-        currentLevelData[id] = {
-          score: scoreInCurrentLevel,
-          hints: hintsTakenInCurrentLevel,
-          wrongFlags: wrongFlagsSubmittedInCurrentLevel
-        };
-      });
-      levelsData.push(currentLevelData);
-      currentLevelData = {};
-    });
-
-    const result = [];
-    playerIds.forEach( (id, i) => {
-      let playerData = {
-        Player: id,
-        Final: scores[id]
-      };
-      levelsData.forEach((level, i) => {
-        playerData["Level " + (i+1)] = level[id].score;
-      });
-      result.push(playerData);
-    });
-    return result;
-  }
-
   getScoreTableData(gameData: GameData) {
     const hintsTakenEachLevel = this.scoreService.getEachLevelHintsTaken(gameData.information, gameData.events);
     const scoresEachLevel = this.scoreService.getEachLevelScores(gameData.information, gameData.events);
     const wrongFlagsSubmittedEachLevel = this.scoreService.getEachLevelWrongFlags(gameData.information, gameData.events);
-    if (scoresEachLevel.length < 1) { return {playerIds: [], levels: [], finalScores: []}; }
+    if (scoresEachLevel.length < 1) {
+      return {playerIds: [], levels: [], finalScores: []};
+    }
     const playerIds = Object.keys(scoresEachLevel[0]);
     const finalScores = this.scoreService.getFinalScores(gameData.events, gameData.information);
     const scores = {};
@@ -275,6 +236,8 @@ export class DataProcessor {
     return {
       playerIds: playerIds,
       levels: levelsData,
-      finalScores: scores};
+      finalScores: scores
+    };
   }
 }
+

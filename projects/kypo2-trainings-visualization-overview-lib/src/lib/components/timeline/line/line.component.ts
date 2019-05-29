@@ -25,6 +25,7 @@ import {GenericEvent} from '../../../shared/interfaces/generic-event.enum';
 export class LineComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() data: GameData;
+  @Input() useLocalMock = false;
   @Input() feedbackLearnerId: string;
   @Input() colorScheme: string[];
   @Input() size: {width: number; height: number};
@@ -96,7 +97,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnInit() {
-    this.load();
+    if (!this.useLocalMock) { this.load(); }
   }
 
   ngOnChanges() {

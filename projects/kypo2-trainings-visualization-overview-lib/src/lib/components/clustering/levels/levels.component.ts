@@ -38,6 +38,7 @@ import {GameEvents} from '../../../shared/interfaces/game-events';
 })
 export class LevelsComponent implements OnInit, OnChanges {
   @Input() data: GameData;
+  @Input() useLocalMock = false;
   @Input() inputSelectedPlayerId: string;
   @Input() feedbackLearnerId: string;
   @Input() eventService: ClusteringLevelsEventService;
@@ -61,7 +62,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    const ret = this.load();
+    if (!this.useLocalMock) { this.load(); }
   }
 
   ngOnChanges() {

@@ -6,6 +6,7 @@ import {AuthService} from './auth/auth.service';
 import {OAuthModule, OAuthStorage} from 'angular-oauth2-oidc';
 import {AuthHttpInterceptor} from './auth/auth-http-interceptor';
 import {AppRoutingModule} from './app-routing.module';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -13,6 +14,7 @@ import {AppRoutingModule} from './app-routing.module';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
     OAuthModule.forRoot(

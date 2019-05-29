@@ -32,6 +32,7 @@ import {DataService} from '../../../services/data.service';
 })
 export class FinalComponent implements OnInit, OnChanges {
   @Input() data: GameData;
+  @Input() useLocalMock = false;
   @Input() inputSelectedPlayerId: string;
   @Input() feedbackLearnerId: string;
   @Input() colorScheme: string[];
@@ -55,7 +56,7 @@ export class FinalComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.load();
+    if (!this.useLocalMock) { this.load(); }
   }
 
   load() {

@@ -4,6 +4,8 @@ import { ClusteringFinalEventService } from './interfaces/clustering-final-event
 import { FinalComponent } from './final/final.component';
 import { LevelsComponent } from './levels/levels.component';
 import {ConfigService} from '../../config/config.service';
+import {GAME_INFORMATION} from '../../../../../../src/app/mocks/information.mock';
+import {EVENTS} from '../../../../../../src/app/mocks/events.mock';
 
 @Component({
   selector: 'kypo2-viz-overview-clustering',
@@ -17,6 +19,7 @@ export class ClusteringComponent implements OnInit, OnChanges {
 
   public selectedPlayerId: number;
   public gameData: GameData = {information: null, events: null};
+  @Input() useLocalMock = false;
   @Input() feedbackLearnerId: string;
   @Input() colorScheme: string[];
   @Input() eventService: ClusteringFinalEventService;
@@ -26,7 +29,9 @@ export class ClusteringComponent implements OnInit, OnChanges {
 
   constructor(private configService: ConfigService) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.useLocalMock) { this.gameData = {information: GAME_INFORMATION, events: EVENTS}; }
+  }
 
 
   ngOnChanges() {

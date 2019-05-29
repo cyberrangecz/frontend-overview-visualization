@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, OnDestroy, OnChanges} from '@angular/core';
+import {Component, OnInit, Input, OnDestroy, OnChanges, ViewChild} from '@angular/core';
 import { GameData } from '../../shared/interfaces/game-data';
 import { DataProcessor } from '../../services/data-processor.service';
 import { ProgressPlayer } from '../timeline/interfaces/progress-player';
@@ -9,25 +9,26 @@ import {GameInformation} from '../../shared/interfaces/game-information';
 import {GameEvents} from '../../shared/interfaces/game-events';
 import {DataService} from '../../services/data.service';
 import {ConfigService} from '../../config/config.service';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material';
+import {GAME_INFORMATION} from '../../../../../../src/app/mocks/information.mock';
+import {EVENTS} from '../../../../../../src/app/mocks/events.mock';
 
 @Component({
   selector: 'kypo2-viz-overview-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
 })
+
 export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
-  @Input() data: GameData;
+  @Input() data: GameData = {information: null, events: null};
+  @Input() useLocalMock = false;
+  @Input() standalone = false;
   @Input() feedbackLearnerId: string;
   @Input() trainingDefinitionId: number;
   @Input() trainingInstanceId: number;
 
-  public displayedColumns: string[];
-  public dataSource = [
-    {Player: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-    {Player: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-    {Player: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'}
-  ];
   public scoreTableData = {playerIds: [], levels: [], finalScores: {}};
   public playersOrdered = [];
   public sortedColumn = null;
@@ -57,17 +58,18 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit() {
-    this.load();
+    if (this.useLocalMock) {
+      this.data = {information: GAME_INFORMATION, events: EVENTS};
+      this.redraw();
+    } else {
+      this.load();
+    }
   }
 
   ngOnChanges() {
     this.configService.trainingDefinitionId = this.trainingDefinitionId;
     this.configService.trainingInstanceId = this.trainingInstanceId;
-    this.filters = this.filtersService.getFiltersObject();
-    this.scoreTableData = this.getLevelScores();
-    this.players = this.visualizationService.getScoreProgressPlayersWithEvents(this.data);
-    this.orderPlayers();
-    this.checkFeedbackLearner();
+    this.redraw();
   }
 
   load() {
@@ -75,26 +77,16 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
       this.data.information = res[0];
       this.data.events = res[1];
 
-      this.loadTableHeaders();
-      this.filters = this.filtersService.getFiltersObject();
-      this.scoreTableData = this.getLevelScores();
-      this.dataSource = this.getTableData();
-      this.players = this.visualizationService.getScoreProgressPlayersWithEvents(this.data);
-      this.orderPlayers();
-      this.checkFeedbackLearner();
+      this.redraw();
     });
   }
 
-  loadTableHeaders() {
-    this.displayedColumns = ['Player'];
-    this.data.information.levels.forEach((level,i) => {
-      if (level.type === 'GAME_LEVEL') this.displayedColumns.push('Level ' + level.gameLevelNumber);
-    });
-    this.displayedColumns.push('Final');
-  }
-
-  getTableData() {
-    return this.visualizationService.getScoreTableData2(this.data);
+  redraw() {
+    this.filters = this.filtersService.getFiltersObject();
+    this.scoreTableData = this.getLevelScores();
+    this.players = this.visualizationService.getScoreProgressPlayersWithEvents(this.data);
+    this.orderPlayers();
+    this.checkFeedbackLearner();
   }
 
   getLevelScores() {
