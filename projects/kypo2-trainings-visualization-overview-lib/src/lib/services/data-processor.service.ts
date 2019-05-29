@@ -90,7 +90,8 @@ export class DataProcessor {
     return result;
   }
 
-  getScoreFinalMaxTime(gameData: GameData, includeTimeGaps: boolean = false): number {
+  getScoreFinalMaxTime(gameData: GameData, includeTimeGaps = false, enableAllPlayers = true, currentPlayer: string = null): number {
+    if (!enableAllPlayers) { return this.timeService.getPlayerMaxTime(gameData.events, currentPlayer); }
     return this.timeService.getFinalMaxTime(gameData.events, includeTimeGaps);
   }
 
@@ -98,7 +99,7 @@ export class DataProcessor {
     return this.scoreService.getGameMaxScore(gameData.information);
   }
 
-  getScoreProgressPlayersWithEvents(gameData: GameData): ProgressPlayer[] {
+  getScoreProgressPlayersWithEvents(gameData: GameData, enableAllPlayers: boolean = true, currentPlayer: string = null): ProgressPlayer[] {
     if (gameData.events === null) {
       return null;
     }
@@ -107,10 +108,12 @@ export class DataProcessor {
 
     playersWithEvents.forEach(player => {
       const playerId: string = player.key;
-      const playerEvents: Event[] = player.values;
-      const playerEventsGroupedByLevel = this.d3.nest().key((event: Event) => event.level.toString()).entries(playerEvents);
-      const playerScoredEvents: ScoredEvent[] = this.getScoredEvents(playerEventsGroupedByLevel, gameData);
-      progressPlayers.push({id: playerId, events: playerScoredEvents, checked: false});
+      if (enableAllPlayers || currentPlayer === playerId) {
+        const playerEvents: Event[] = player.values;
+        const playerEventsGroupedByLevel = this.d3.nest().key((event: Event) => event.level.toString()).entries(playerEvents);
+        const playerScoredEvents: ScoredEvent[] = this.getScoredEvents(playerEventsGroupedByLevel, gameData);
+        progressPlayers.push({id: playerId, events: playerScoredEvents, checked: false});
+      }
     });
     return progressPlayers;
   }

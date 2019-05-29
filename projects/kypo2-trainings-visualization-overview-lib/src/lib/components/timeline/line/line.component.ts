@@ -26,6 +26,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() data: GameData;
   @Input() useLocalMock = false;
+  @Input() enableAllPlayers = true;
   @Input() feedbackLearnerId: string;
   @Input() colorScheme: string[];
   @Input() size: {width: number; height: number};
@@ -101,7 +102,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges() {
-    this.players = this.getPlayersWithEvents();
+    this.players = this.getPlayersWithEvents(this.enableAllPlayers, this.feedbackLearnerId);
     this.redraw();
   }
 
@@ -110,7 +111,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
       this.data.information = res[0];
       this.data.events = res[1];
 
-      this.players = this.getPlayersWithEvents();
+      this.players = this.getPlayersWithEvents(this.enableAllPlayers, this.feedbackLearnerId);
       this.redraw();
     });
   }
@@ -310,7 +311,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
     this.tableService.sendPlayerColorScale(this.playerColorScale);
 
     const scaleDomainStart = new Date(0, 0, 0, 0, 0, 0, 0);
-    const scaleDomainEnd = new Date(0, 0, 0, 0, 0, this.getMaximumTime(true), 0);
+    const scaleDomainEnd = new Date(0, 0, 0, 0, 0, this.getMaximumTime(true, ), 0);
     this.timeAxisScale = this.d3.scaleTime()
       .range([0, this.size.width])
       .domain([scaleDomainStart, scaleDomainEnd]);
@@ -323,7 +324,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
 
     this.timeScale = this.d3.scaleLinear()
       .range([0, this.size.width])
-      .domain([0, this.getMaximumTime(true)]);
+      .domain([0, this.getMaximumTime(true, )]);
 
     this.contextTimeScale = this.d3.scaleLinear()
       .range([0, this.size.width])
@@ -719,9 +720,9 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    * @param playerId of player to be drawn
    */
   drawPlayer(playerId: string) {
-    if (this.players === null) return;
+    if (this.players === null) { return; }
     const player: ProgressPlayer = this.players.filter(p => p.id === playerId)[0];
-    if (player === undefined) return;
+    if (player === undefined) { return; }
     const playerGroup = this.playersGroup.append('g')
       .attr('id', 'score-progress-player-' + player.id)
       .style('mix-blend-mode', 'multiply');
@@ -1131,8 +1132,8 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    *
    * @returns ProgressPlayer[] players' data for visualization.
    */
-  getPlayersWithEvents(): ProgressPlayer[] {
-    return this.visualizationService.getScoreProgressPlayersWithEvents(this.data);
+  getPlayersWithEvents(enableAllPlayers: boolean, currentPlayer: string): ProgressPlayer[] {
+    return this.visualizationService.getScoreProgressPlayersWithEvents(this.data, enableAllPlayers, currentPlayer);
   }
 
   /**
@@ -1140,7 +1141,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    * @returns number longest game time.
    */
   getMaximumTime(includeTimeGaps: boolean = false) {
-    return this.visualizationService.getScoreFinalMaxTime(this.data, includeTimeGaps);
+    return this.visualizationService.getScoreFinalMaxTime(this.data, includeTimeGaps, this.enableAllPlayers, this.feedbackLearnerId);
   }
 
   /**

@@ -51,6 +51,13 @@ export class TimeService {
     return this.d3.mean(times);
   }
 
+  getPlayerMaxTime(events: GameEvents, currentPlayer: string): number {
+    const flattenedEvents = this.flattenEvents(events);
+    const eventsGroupedByPlayer = this.d3.nest().key((event: Event) => event.playerId).entries(flattenedEvents);
+    const allPlayerEvents = eventsGroupedByPlayer.find(value => value.key === currentPlayer).values;
+    return allPlayerEvents[allPlayerEvents.length - 1].gametime;
+  }
+
   getFinalPlayersMaxTimes(events: GameEvents, includeTimeGaps: boolean = false) {
     const playersMaxTimes = {};
     if (events === null || events.levels === null) { return {}; }

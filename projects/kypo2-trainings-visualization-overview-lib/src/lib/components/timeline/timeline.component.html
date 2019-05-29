@@ -1,13 +1,15 @@
 <div class="overview-visualization-container">
     <kypo2-viz-overview-line
         [data]="gameData"
+        [enableAllPlayers]="enableAllPlayers"
         [useLocalMock]="useLocalMock"
         [feedbackLearnerId]="feedbackLearnerId"
         [colorScheme]="colorScheme"
         [size]="size"
     ></kypo2-viz-overview-line>
 
-    <div class="second-column">
+  <div class="second-column">
+    <ng-container *ngIf="enableAllPlayers">
         <kypo2-viz-overview-table
             [data]="gameData"
             [useLocalMock]="useLocalMock"
@@ -15,7 +17,8 @@
             [trainingInstanceId]="trainingInstanceId"
             [feedbackLearnerId]="feedbackLearnerId">
         </kypo2-viz-overview-table>
+    </ng-container>
 
-        <kypo2-viz-overview-filters></kypo2-viz-overview-filters>
-    </div>
+    <kypo2-viz-overview-filters></kypo2-viz-overview-filters>
+  </div>
 </div>

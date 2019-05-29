@@ -14,6 +14,7 @@ export class TimelineComponent implements OnInit, OnChanges {
 
   public gameData: GameData = {information: null, events: null}
   @Input() useLocalMock = false;
+  @Input() enableAllPlayers = true;
   @Input() feedbackLearnerId: string;
   @Input() colorScheme: string[];
   @Input() size: {width: number; height: number};

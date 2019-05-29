@@ -3,12 +3,12 @@
     [trainingDefinitionId]="3"
     [standalone]="true"
     [trainingInstanceId]="2"
-    [feedbackLearnerId]="'Participant1'">
+    [feedbackLearnerId]="'Participant2'">
 </kypo2-viz-overview-table>
 
 <kypo2-viz-overview-clustering
   [useLocalMock]="true"
-  [feedbackLearnerId]="'Participant1'"
+  [feedbackLearnerId]="'Participant2'"
   [size]="{width: 800, height: 500}"
   [trainingInstanceId]="2"
   [trainingDefinitionId]="3">
@@ -16,8 +16,9 @@
 
 <kypo2-viz-overview-timeline
   [useLocalMock]="true"
-  [feedbackLearnerId]="'Participant1'"
-  [size]="{width: 1000, height: 700}"
+  [enableAllPlayers]="false"
+  [feedbackLearnerId]="'Participant2'"
+  [size]="{width: 1300, height: 700}"
   [trainingInstanceId]="2"
   [trainingDefinitionId]="3">
 </kypo2-viz-overview-timeline>
