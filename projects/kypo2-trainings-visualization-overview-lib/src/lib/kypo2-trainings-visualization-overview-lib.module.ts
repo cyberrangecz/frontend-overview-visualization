@@ -16,9 +16,8 @@ import { FormsModule } from '@angular/forms';
 import { FiltersComponent } from './components/filters/filters.component';
 import { Kypo2TrainingsVisualizationOverviewLibConfig } from './config/kypo2-trainings-visualization-overview-lib';
 import {ConfigService} from './config/config.service';
-import {MatSortHeader, MatSortModule, MatTableModule} from '@angular/material';
-import {CdkColumnDef, CdkHeaderCellDef, CdkHeaderRowDef, CdkRowDef} from '@angular/cdk/table';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatSortModule, MatTableModule} from '@angular/material';
+import {CdkColumnDef, CdkHeaderCellDef} from '@angular/cdk/table';
 
 @NgModule({
   imports: [

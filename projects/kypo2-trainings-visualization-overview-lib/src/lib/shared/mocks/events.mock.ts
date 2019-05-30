@@ -1,4 +1,4 @@
-import {GameEvents} from '../../../projects/kypo2-trainings-visualization-overview-lib/src/lib/shared/interfaces/game-events';
+import {GameEvents} from '../interfaces/game-events';
 
 export const EVENTS: GameEvents = {
   'levels': [

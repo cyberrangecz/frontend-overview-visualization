@@ -9,10 +9,8 @@ import {GameInformation} from '../../shared/interfaces/game-information';
 import {GameEvents} from '../../shared/interfaces/game-events';
 import {DataService} from '../../services/data.service';
 import {ConfigService} from '../../config/config.service';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material';
-import {GAME_INFORMATION} from '../../../../../../src/app/mocks/information.mock';
-import {EVENTS} from '../../../../../../src/app/mocks/events.mock';
+import {GAME_INFORMATION} from '../../shared/mocks/information.mock';
+import {EVENTS} from '../../shared/mocks/events.mock';
 
 @Component({
   selector: 'kypo2-viz-overview-table',

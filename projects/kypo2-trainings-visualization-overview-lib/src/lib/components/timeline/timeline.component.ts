@@ -2,8 +2,8 @@ import { Component, OnInit, OnChanges, Input, ViewChild } from '@angular/core';
 import { LineComponent } from './line/line.component';
 import {GameData} from '../../shared/interfaces/game-data';
 import {ConfigService} from '../../config/config.service';
-import {GAME_INFORMATION} from '../../../../../../src/app/mocks/information.mock';
-import {EVENTS} from '../../../../../../src/app/mocks/events.mock';
+import {GAME_INFORMATION} from '../../shared/mocks/information.mock';
+import {EVENTS} from '../../shared/mocks/events.mock';
 
 @Component({
   selector: 'kypo2-viz-overview-timeline',
