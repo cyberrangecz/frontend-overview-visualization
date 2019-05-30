@@ -39,7 +39,7 @@ export const AXES_CONFIG: AxesConfig = {
             x: 0,
             y: SVG_CONFIG.height + 20
         },
-        tickSize: 15
+        tickSize: 7
     },
     yAxis: {
         position: {

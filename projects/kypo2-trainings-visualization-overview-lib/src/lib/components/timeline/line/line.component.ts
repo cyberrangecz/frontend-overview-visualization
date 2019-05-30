@@ -56,6 +56,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   private eventTooltip;
   private lineTooltip;
   private zoomableArea;
+  private tickLength = 30;
 
   private tableRowClicked: Subscription;
   private tableRowMouseover: Subscription;
@@ -304,6 +305,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   /**
+   * We reserve 0.5 of the score domain to display the edges of the player lines correctly
    * Define D3 scales
    */
   initializeScales() {
@@ -312,13 +314,18 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
 
     const scaleDomainStart = new Date(0, 0, 0, 0, 0, 0, 0);
     const scaleDomainEnd = new Date(0, 0, 0, 0, 0, this.getMaximumTime(true, ), 0);
+/*
+    if (((scaleDomainEnd - scaleDomainStart) / 1000) < 1800) {
+      //this.tickLength = 15;
+    }  // TODO
+*/
     this.timeAxisScale = this.d3.scaleTime()
       .range([0, this.size.width])
       .domain([scaleDomainStart, scaleDomainEnd]);
 
     this.scoreScale = this.d3.scaleLinear()
       .range([this.size.height, 0])
-      .domain([0, this.getMaximumScore()]);
+      .domain([-0.5, this.getMaximumScore()+0.5]);
 
     this.scoreScale.clamp(true);
 
@@ -332,7 +339,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
 
     this.contextScoreScale = this.d3.scaleLinear()
       .range([CONTEXT_CONFIG.height, 0])
-      .domain([0, this.getMaximumScore()]);
+      .domain([-0.5, this.getMaximumScore()+0.5]);
 
     this.eventsColorScale = this.d3.scaleOrdinal()
       .range(this.colorScheme  || colorScheme);
@@ -391,7 +398,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   drawTimeAxis() {
     const d3 = this.d3;
     this.xAxis = d3.axisBottom(this.timeAxisScale)
-      .tickArguments([d3.timeMinute.every(30)])
+      .tickArguments([d3.timeMinute.every(this.tickLength)])
       .tickFormat((d: Date) => d3.timeFormat('%H:%M:%S')(d))
       .tickSize(AXES_CONFIG.xAxis.tickSize)
       .tickSizeOuter(0);
@@ -1104,7 +1111,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    * Calculate new ticks when zooming.
    */
   redrawAxes(k) {
-    this.xAxis.tickArguments([this.d3.timeMinute.every(30 / Math.round(k))]);
+    this.xAxis.tickArguments([this.d3.timeMinute.every(this.tickLength / Math.round(k))]);
     this.svg.select('.score-progress.x-axis').call(this.xAxis);
   }
 
