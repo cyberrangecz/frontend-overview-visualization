@@ -56,7 +56,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   private eventTooltip;
   private lineTooltip;
   private zoomableArea;
-  private tickLength = 30;
+  private tickLength = 1;
 
   private tableRowClicked: Subscription;
   private tableRowMouseover: Subscription;
@@ -314,11 +314,13 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
 
     const scaleDomainStart = new Date(0, 0, 0, 0, 0, 0, 0);
     const scaleDomainEnd = new Date(0, 0, 0, 0, 0, this.getMaximumTime(true, ), 0);
-/*
-    if (((scaleDomainEnd - scaleDomainStart) / 1000) < 1800) {
-      //this.tickLength = 15;
-    }  // TODO
-*/
+
+    const fullTimeAxis = Math.abs(scaleDomainEnd.getTime() - scaleDomainStart.getTime() ) / 1000;
+
+    while ((fullTimeAxis / this.tickLength) > 600 ) {
+      this.tickLength *= (this.tickLength === 1 || this.tickLength > 160) ? 5 : 2;
+    }
+
     this.timeAxisScale = this.d3.scaleTime()
       .range([0, this.size.width])
       .domain([scaleDomainStart, scaleDomainEnd]);

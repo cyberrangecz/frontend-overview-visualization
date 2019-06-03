@@ -54,6 +54,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   private svgWidth;
   private svgHeight;
   private barWidth;
+  private tickLength = 1;
 
   private playerClicked = false; // If no player is selected, hover out of player will cancel the highlight
 
@@ -263,7 +264,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     const timeScale = this.getTimeScale();
     const xAxis = d3
       .axisBottom(timeScale)
-      .tickArguments([d3.timeMinute.every(30)])
+      .tickArguments([d3.timeMinute.every(this.tickLength)])
       .tickFormat((d: Date) => d3.timeFormat('%H:%M:%S')(d))
       .tickSize(AXES_CONFIG.xAxis.tickSize)
       .tickSizeOuter(0);
@@ -288,6 +289,12 @@ export class LevelsComponent implements OnInit, OnChanges {
   getTimeScale(): any {
     const scaleDomainStart = new Date(0, 0, 0, 0, 0, 0, 0);
     const scaleDomainEnd = new Date(0, 0, 0, 0, 0, this.getMaximumTime(), 0);
+    const fullTimeAxis = Math.abs(scaleDomainEnd.getTime() - scaleDomainStart.getTime() ) / 1000;
+
+    while ((fullTimeAxis / this.tickLength) > 600 ) {
+      this.tickLength *= (this.tickLength === 1 || this.tickLength > 160) ? 5 : 2;
+    }
+
     const timeScale = this.d3
       .scaleTime()
       .range([0, this.barWidth])
