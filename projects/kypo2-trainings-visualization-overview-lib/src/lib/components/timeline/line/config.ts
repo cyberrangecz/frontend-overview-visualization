@@ -14,7 +14,7 @@ export const SVG_MARGIN_CONFIG: SvgMarginConfig = {
     top: 70,
     right: 72,
     bottom: 200,
-    left: 90
+    left: 120
 };
 export const AXES_CONFIG: AxesConfig = {
     xAxis: {
@@ -22,7 +22,7 @@ export const AXES_CONFIG: AxesConfig = {
             x: 0,
             y: SVG_CONFIG.height + 20
         },
-        tickSize: 15
+        tickSize: 7
     },
     yAxis: {
         position: {

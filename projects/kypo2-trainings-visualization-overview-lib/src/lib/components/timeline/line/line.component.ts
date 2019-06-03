@@ -437,6 +437,26 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    * Draws axes labels
    */
   drawAxesLabels() {
+    this.svg
+      .append('text')
+      .attr(
+        'transform',
+        `translate(${this.svgConfig.width / 2 - 50}, ${this.svgConfig.height + 65})`
+      )
+      .text('game time')
+      .style('fill', '#4c4a4a');
+
+    this.svg
+      .append('text')
+      .attr(
+        'transform',
+        `translate(${AXES_CONFIG.yAxis.position.x - 100}, ${this.svgConfig.height /
+        2}) rotate(-90)`
+      )
+      .attr('text-anchor', 'middle')
+      .style('fill', '#4c4a4a')
+      .text('score increase'); // score increase per level
+
     const scores = this.svg.select('.y-axis')
       .selectAll('.tick')
       .data();
@@ -455,7 +475,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
       .enter()
       .append('text')
       .attr('class', 'score-progress-axis-label')
-      .attr('transform', d => `translate(${-SVG_MARGIN_CONFIG.left * 0.7}, ${d})`)
+      .attr('transform', d => `translate(${-SVG_MARGIN_CONFIG.left * 0.55}, ${d})`)
       .html((d, i) => `Level ${i + 1}`);
 
     const colorScale = this.d3.scaleOrdinal()
@@ -465,7 +485,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
       .data(coordinates)
       .enter()
       .append('rect')
-      .attr('transform', d => `translate(${-SVG_MARGIN_CONFIG.left * 0.7 - 20}, ${d - 15})`)
+      .attr('transform', d => `translate(${-SVG_MARGIN_CONFIG.left * 0.55 - 20}, ${d - 15})`)
       .attr('width', 15)
       .attr('height', 15)
       .style('fill', (d, i) => colorScale(i.toString()));
@@ -569,6 +589,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
     const context = this.buildContextAndReturn();
     const brush = context.append('g')
       .attr('class', 'brush')
+      .attr('transform', `translate(0,10)`)
       .call(this.brush)
       .call(this.brush.move, this.timeScale.range());
   }
@@ -583,7 +604,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
 
     context.append('g')
       .attr('class', 'score-progress-context-x-axis')
-      .attr('transform', `translate(0, ${CONTEXT_CONFIG.height})`)
+      .attr('transform', `translate(0, ${CONTEXT_CONFIG.height+10})`)
       .call(this.xAxis);
 
     return context;
