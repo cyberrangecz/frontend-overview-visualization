@@ -203,6 +203,14 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    */
   initializeZoomAndBrush() {
     this.zoom = this.d3.zoom()
+      .filter(() => {
+        if (this.d3.event.ctrlKey) { this.d3.event.preventDefault(); }
+        if (this.d3.event.type === 'wheel') {
+          // don't allow zooming without pressing [ctrl] key
+          return this.d3.event.ctrlKey;
+        }
+        return true;
+      })
       .scaleExtent([1, Infinity])
       .translateExtent([[0, 0], [this.size.width, this.size.height]])
       .extent([[0, 0], [this.size.width, this.size.height]])
@@ -716,8 +724,8 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    * Draw legends to the right of the graph
    */
   drawLegend() {
-    const x = 0;
-    const y = -50;
+    const x = -7; // 0;
+    const y = -40;
     const legendGroup = this.svg
       .append('g')
       .attr('transform', 'translate(10, 0)');
