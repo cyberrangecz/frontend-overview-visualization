@@ -744,7 +744,7 @@ export class LevelsComponent implements OnInit, OnChanges {
         and therefore we can see (unline the learner) all the Ids.
          */
         (this.feedbackLearnerId === undefined || this.feedbackLearnerId === null) ? 'Player ID: ' + player.id : ( 
-          this.feedbackLearnerId === player.id ? 'You' : 'other player'
+          this.feedbackLearnerId === player.id ? 'you' : 'other player'
         )
       } <br> Score: ${player.score}</b>`)
       .style('left', this.d3.event.pageX + 10 + 'px')

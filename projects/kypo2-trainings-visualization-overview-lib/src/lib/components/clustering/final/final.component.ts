@@ -576,7 +576,7 @@ export class FinalComponent implements OnInit, OnChanges {
     playerTooltip
       .html(`<p><b>${
         (this.feedbackLearnerId === undefined || this.feedbackLearnerId === null) ? 'Player ID: ' + player.id : (
-          this.feedbackLearnerId === player.id ? 'You' : 'other player'
+          this.feedbackLearnerId === player.id ? 'you' : 'other player'
         )
         } <br> Score: ${player.score}</b>`)
       .style('left', x + 'px')
