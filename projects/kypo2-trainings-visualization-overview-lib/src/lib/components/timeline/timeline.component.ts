@@ -20,6 +20,7 @@ export class TimelineComponent implements OnInit, OnChanges {
   @Input() size: {width: number; height: number};
   @Input() trainingDefinitionId: number;
   @Input() trainingInstanceId: number;
+  public fullWidthTable = false;
 
   @ViewChild(LineComponent) lineComponent: LineComponent;
 
@@ -36,6 +37,10 @@ export class TimelineComponent implements OnInit, OnChanges {
 
   getLineComponent(): LineComponent {
     return this.lineComponent;
+  }
+
+  setTableWidth(fullWidth: boolean) {
+    this.fullWidthTable = fullWidth;
   }
 
 }

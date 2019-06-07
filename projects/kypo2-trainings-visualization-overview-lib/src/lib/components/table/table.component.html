@@ -1,5 +1,3 @@
-<div class="overview-visualization-container">
-
   <div>
       <table class="table table-striped table-bordered table-condensed mat-elevation-z8 mat-table {{standalone ? 'full-table': ''}}" >
           <thead>
@@ -18,35 +16,41 @@
                   <span style="cursor:pointer" (click)="onLevelClick(i)" (mouseover)="columnHovered = i" (mouseout)="columnHovered = null">
                     Level {{ i + 1}}
                   </span> <br>
-                  <span style="font-size: 10px; cursor:pointer" (click)="onLevelClick(i)" (mouseover)="columnHovered = i" (mouseout)="columnHovered = null">
-                    Score
+                  <span style="font-size: 10px; cursor:pointer" (click)="onLevelClick(i)"
+                        (mouseover)="columnHovered = i" (mouseout)="columnHovered = null">
+                    <span [matTooltip]="'Achieved score in level ' + (i + 1) ">
+                      {{standalone || (!filters.hintFilter.checked && !filters.wrongFlagFilter.checked) ? 'Score' : 'S'}}
+                    </span>
                     <ng-container *ngIf="sortedColumn === i || columnHovered === i;else hide_sort">
-                        <span *ngIf="sortedDesc"> ▼ </span>
-                        <span *ngIf="!sortedDesc"> ▲ </span>
+                        <span *ngIf="sortedDesc">▼</span>
+                        <span *ngIf="!sortedDesc">▲</span>
                     </ng-container>
                     <ng-template #hide_sort>
-                        <span style="opacity: 0"> ▼ </span>
+                        <span style="opacity: 0">▼</span>
                     </ng-template>
                   </span>
                   <ng-container *ngIf="standalone || filters.hintFilter.checked || filters.wrongFlagFilter.checked">
                     <span style="font-size: 10px; cursor:pointer" *ngIf="standalone || filters.wrongFlagFilter.checked" (click)="onWrongClick(i)"
-                    (mouseover)="columnHovered = 'w'+i" (mouseout)="columnHovered = null"> / <span style="opacity: 0"> ▼ </span> Wrong
+                    (mouseover)="columnHovered = 'w'+i" (mouseout)="columnHovered = null" > / <span style="opacity: 0"> | </span>
+                      <span [matTooltip]="'Wrong flags submitted in level ' + (i + 1) ">{{standalone ? 'Wrong flags' : 'WF'}}</span>
                         <ng-container *ngIf="sortedColumn === 'w'+i  || columnHovered === 'w'+i; else hide_sort">
-                        <span *ngIf="sortedDesc"> ▼ </span>
-                        <span *ngIf="!sortedDesc"> ▲ </span>
+                        <span *ngIf="sortedDesc">▼</span>
+                        <span *ngIf="!sortedDesc">▲</span>
                     </ng-container>
                     <ng-template #hide_sort>
-                        <span style="opacity: 0"> ▼ </span>
+                        <span style="opacity: 0">▼</span>
                     </ng-template>
                     </span>
                     <span style="font-size: 10px; cursor:pointer" *ngIf="standalone || filters.hintFilter.checked" (click)="onHintsClick(i)"
-                    (mouseover)="columnHovered = 'h'+i" (mouseout)="columnHovered = null"> / <span style="opacity: 0"> ▼ </span> Hint
+                    (mouseover)="columnHovered = 'h'+i" (mouseout)="columnHovered = null"
+                    > / <span style="opacity: 0"> | </span>
+                      <span [matTooltip]="'Number of hints taken in level ' + (i + 1) ">{{standalone ? 'Hints taken' : 'H'}}</span>
                         <ng-container *ngIf="sortedColumn === 'h'+i  || columnHovered === 'h'+i; else hide_sort">
-                        <span *ngIf="sortedDesc"> ▼ </span>
-                        <span *ngIf="!sortedDesc"> ▲ </span>
+                        <span *ngIf="sortedDesc">▼</span>
+                        <span *ngIf="!sortedDesc">▲</span>
                     </ng-container>
                     <ng-template #hide_sort>
-                        <span style="opacity: 0"> ▼ </span>
+                        <span style="opacity: 0">▼</span>
                     </ng-template>
                     </span>
                   </ng-container>
@@ -55,11 +59,11 @@
               <th mat-header-cell style="cursor:pointer" (click)="onFinalClick()" (mouseover)="columnHovered = -2" (mouseout)="columnHovered = null">Final<br>
                 <span style="font-size: 10px;"> Score
                     <ng-container *ngIf="sortedColumn === -2  || columnHovered === -2; else hide_sort">
-                        <span *ngIf="sortedDesc"> ▼ </span>
-                        <span *ngIf="!sortedDesc"> ▲ </span>
+                        <span *ngIf="sortedDesc">▼</span>
+                        <span *ngIf="!sortedDesc">▲</span>
                     </ng-container>
                     <ng-template #hide_sort>
-                        <span style="opacity: 0"> ▼ </span>
+                        <span style="opacity: 0">▼</span>
                     </ng-template>
                 </span>
               </th>
@@ -75,9 +79,9 @@
                 [ngClass]="{'checked' : standalone ? false : player.checked}">
                 <td mat-cell>
                   <div *ngIf="player.checked && !standalone" class="row-stripe" [ngStyle]="{'background': playerColorScale(player.id.toString())}"></div>
-                  <span [ngStyle]="{'font-weight': player.id === feedbackLearnerId ? 'bold' : 'normal'}">{{
+                  <span [ngStyle]="{'font-weight': player.id === feedbackLearnerId ? 'bold' : 'normal', 'padding-right': '10px'}">{{
                     (feedbackLearnerId === undefined || feedbackLearnerId === null) ? player.id : (
-                      feedbackLearnerId === player.id ? 'your results' : 'other player'
+                      feedbackLearnerId === player.id ? 'you' : 'other player'
                     )
                   }}</span>
                   <ng-container *ngIf="!standalone">
@@ -117,5 +121,3 @@
     <tr mat-header-row *matHeaderRowDef="[]"></tr>
     <tr mat-row *matRowDef="let row; columns: [];"></tr>
   </table>
-
-</div>

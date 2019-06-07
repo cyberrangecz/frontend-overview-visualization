@@ -1,11 +1,11 @@
-<div class="overview-visualization-container">
-    <kypo2-viz-overview-line
+<div [class]="fullWidthTable ? 'overview-visualization-container full' : 'overview-visualization-container'">
+    <kypo2-viz-overview-line (wideTable)="setTableWidth($event)"
         [data]="gameData"
         [enableAllPlayers]="enableAllPlayers"
         [useLocalMock]="useLocalMock"
         [feedbackLearnerId]="feedbackLearnerId"
         [colorScheme]="colorScheme"
-        [size]="{width: size.width*0.8, height: size.height}"
+        [size]="size"
     ></kypo2-viz-overview-line>
 
   <div class="second-column">

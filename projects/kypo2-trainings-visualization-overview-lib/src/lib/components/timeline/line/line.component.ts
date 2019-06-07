@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output} from '@angular/core';
 import {GameData} from '../../../shared/interfaces/game-data';
 import {D3, D3Service} from 'd3-ng2-service';
 import {DataProcessor} from '../../../services/data-processor.service';
@@ -30,6 +30,8 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   @Input() feedbackLearnerId: string;
   @Input() colorScheme: string[];
   @Input() size: {width: number; height: number};
+
+  @Output() wideTable: EventEmitter<any> = new EventEmitter<any>();
 
   players: ProgressPlayer[] = [];
 
@@ -164,7 +166,15 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    * Builds svg, initializes line generator, zoom & behavior and scales
    */
   setup() {
-    this.svgConfig = {width: this.size.width, height: this.size.height};
+    // first we want the table to fit in
+    if (this.data.information.levels.filter(level => level.gameLevelNumber !== undefined).length <= 4) {
+      this.size.width = (window.innerWidth < 1400 && this.enableAllPlayers) ? this.size.width * 0.55 : this.size.width * 0.70;
+      this.wideTable.emit(false);
+    } else {
+      // we want to notify the timeline, that the table should be placed under the visualization
+      this.wideTable.emit(true);
+    }
+    this.svgConfig = {width: this.size.width > window.innerWidth ? window.innerWidth : this.size.width, height: this.size.height};
     this.svgMarginConfig = SVG_MARGIN_CONFIG;
     this.buildSVG();
     this.initializeLineGenerators();
@@ -181,6 +191,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
       .attr('class', 'score-progress-svg')
       .attr('width', this.size.width + SVG_MARGIN_CONFIG.left + SVG_MARGIN_CONFIG.right)
       .attr('height', this.size.height + SVG_MARGIN_CONFIG.top + SVG_MARGIN_CONFIG.bottom)
+      .style('margin-right', '10px')
       .append('g')
       .attr('transform', 'translate(' + SVG_MARGIN_CONFIG.left + ',' + SVG_MARGIN_CONFIG.top + ')');
   }
@@ -335,7 +346,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
 
     this.scoreScale = this.d3.scaleLinear()
       .range([this.size.height, 0])
-      .domain([-0.5, this.getMaximumScore()+0.5]);
+      .domain([-0.5, this.getMaximumScore() + 0.5]);
 
     this.scoreScale.clamp(true);
 
@@ -349,7 +360,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
 
     this.contextScoreScale = this.d3.scaleLinear()
       .range([CONTEXT_CONFIG.height, 0])
-      .domain([-0.5, this.getMaximumScore()+0.5]);
+      .domain([-0.5, this.getMaximumScore() + 0.5]);
 
     this.eventsColorScale = this.d3.scaleOrdinal()
       .range(this.colorScheme  || colorScheme);

@@ -16,7 +16,7 @@ import { FormsModule } from '@angular/forms';
 import { FiltersComponent } from './components/filters/filters.component';
 import { Kypo2TrainingsVisualizationOverviewLibConfig } from './config/kypo2-trainings-visualization-overview-lib';
 import {ConfigService} from './config/config.service';
-import {MatButtonModule, MatCheckboxModule, MatSortModule, MatTableModule} from '@angular/material';
+import {MatButtonModule, MatCheckboxModule, MatSortModule, MatTableModule, MatTooltipModule} from '@angular/material';
 import {CdkColumnDef, CdkHeaderCellDef} from '@angular/cdk/table';
 
 @NgModule({
@@ -26,7 +26,9 @@ import {CdkColumnDef, CdkHeaderCellDef} from '@angular/cdk/table';
     MatTableModule,
     MatButtonModule,
     MatCheckboxModule,
-    MatSortModule],
+    MatSortModule,
+    MatTooltipModule
+  ],
   declarations: [
     Kypo2TrainingsVisualizationOverviewLibComponent,
     TimelineComponent,
