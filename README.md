@@ -8,3 +8,19 @@
 
 ## How to use with other visualizations
 - If cross visualization communication is required, see project's [wiki](https://gitlab.ics.muni.cz/kypo2/frontend-new/kypo2-trainings-visualization-overview/wikis/home) for instructions
+
+## Input parameters of *kypo2-viz-overview-clustering* component
+
+`useLocalMock: boolean` to use local jsons of a visualization 
+
+`enableAllPlayers: boolean` set true to show all the players of a selected training run, false will only show the learner specified by feedbackLearnerId
+
+`feedbackLearnerId: string` if set, it highlights the given learner dot in the clustering
+
+`colorScheme: string[]` to specify color scheme of individual bars by hexadecimal strings (e.g. '#20d5fa')
+
+`size: {width: number; height: number}` object that specifies the vis size in pixels
+
+`trainingDefinitionId: number` 
+
+`trainingInstanceId: number`
