@@ -1,0 +1,12 @@
+Source: kypo2-trainings-visualization-overview
+Maintainer: Martin Machac <machacm@ics.muni.cz>
+Build-depends: debhelper (>= 8.0.0)
+Section: misc
+Standards-Version: 3.9.8
+
+Package: kypo2-trainings-visualization-overview
+Architecture: any
+Depends: ${misc:Depends}
+Priority: optional
+Description: KYPO training run overview visualizations
+ KYPO training run overview visualizations
