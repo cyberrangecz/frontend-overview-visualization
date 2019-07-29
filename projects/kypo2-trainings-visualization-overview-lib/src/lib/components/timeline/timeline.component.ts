@@ -17,7 +17,7 @@ export class TimelineComponent implements OnInit, OnChanges {
   @Input() trainingDefinitionId: number;
   @Input() trainingInstanceId: number;
 
-  @ViewChild(LineComponent) lineComponent: LineComponent;
+  @ViewChild(LineComponent, { static: true }) lineComponent: LineComponent;
 
   constructor(private configService: ConfigService) { }
 
