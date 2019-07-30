@@ -38,21 +38,28 @@ export class DataService {
 
   processData(info, events): [GameInformation, GameEvents] {
     // we acquire game info first
-    const gameInfo: GameInformation = {
+    const gameInfo: GameInformation = this.processInfo(info);
+    const gameEvents: GameEvents = this.processEvents(info, events);
+
+    return [gameInfo, gameEvents];
+  }
+
+  public processInfo(info): GameInformation {
+    return {
       name: info.title,
       levels: this.loadLevels(info.levels),
       estimatedTime: info.levels.length * 900
     };
+  }
 
-    // then we get level-divided event structure
+  public processEvents(info, events):GameEvents {
+    // first we get level-divided event structure
     let levels: LevelEvents[] = this.initializeLevels(info.levels);
     // and finally we put all events into suitble levels
     levels = this.sortAllEvents(levels, events);
-    const gameEvents: GameEvents = {
+    return {
       levels: levels,
     };
-
-    return [gameInfo, gameEvents];
   }
 
   private loadLevels(levels): Level[] {

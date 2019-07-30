@@ -1,6 +1,7 @@
 <div [class]="fullWidthTable ? 'overview-visualization-container full' : 'overview-visualization-container'">
     <kypo2-viz-overview-line (wideTable)="setTableWidth($event)"
         [data]="gameData"
+        [jsonGameData]="jsonGameData"
         [enableAllPlayers]="enableAllPlayers"
         [useLocalMock]="useLocalMock"
         [feedbackLearnerId]="feedbackLearnerId"
@@ -12,6 +13,7 @@
     <ng-container *ngIf="enableAllPlayers">
         <kypo2-viz-overview-table
             [data]="gameData"
+            [jsonGameData]="jsonGameData"
             [useLocalMock]="useLocalMock"
             [trainingDefinitionId]="trainingDefinitionId"
             [trainingInstanceId]="trainingInstanceId"

@@ -1,5 +1,9 @@
 import {GameEvents} from '../interfaces/game-events';
 
+export const EMPTY_EVENTS: GameEvents = {
+  'levels': []
+}
+
 export const EVENTS: GameEvents = {
   'levels': [
     {

@@ -19,6 +19,7 @@ export class ClusteringComponent implements OnInit, OnChanges {
 
   public selectedPlayerId: number;
   public gameData: GameData = {information: null, events: null};
+  @Input() jsonGameData: GameData;
   @Input() useLocalMock = false;
   @Input() feedbackLearnerId: string;
   @Input() colorScheme: string[];
