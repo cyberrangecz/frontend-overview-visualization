@@ -14,8 +14,8 @@ import {EVENTS} from '../../shared/mocks/events.mock';
 })
 export class ClusteringComponent implements OnInit, OnChanges {
 
-  @ViewChild(FinalComponent) finalComponent;
-  @ViewChild(LevelsComponent) levelsComponent;
+  @ViewChild(FinalComponent, { static: true }) finalComponent;
+  @ViewChild(LevelsComponent, { static: true }) levelsComponent;
 
   public selectedPlayerId: number;
   public gameData: GameData = {information: null, events: null};
