@@ -30,6 +30,7 @@ import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config'
 import {DataService} from '../../../services/data.service';
 import {GameInformation} from '../../../shared/interfaces/game-information';
 import {GameEvents} from '../../../shared/interfaces/game-events';
+import {EVENTS} from '../../../shared/mocks/events.mock';
 
 @Component({
   selector: 'kypo2-viz-overview-levels',
@@ -37,13 +38,15 @@ import {GameEvents} from '../../../shared/interfaces/game-events';
   styleUrls: ['./levels.component.css']
 })
 export class LevelsComponent implements OnInit, OnChanges {
-  @Input() data: GameData;
+  @Input() data: GameData = {information: null, events: null};
+  @Input() jsonGameData: GameData = {information: null, events: null};
   @Input() useLocalMock = false;
   @Input() inputSelectedPlayerId: string;
   @Input() feedbackLearnerId: string;
   @Input() eventService: ClusteringLevelsEventService;
   @Input() size: SvgConfig;
   @Input() colorScheme: string[];
+
   @Output() outputSelectedPlayerId = new EventEmitter<string>();
 
   private d3: D3;
@@ -67,6 +70,18 @@ export class LevelsComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
+    if (this.jsonGameData !== undefined && this.jsonGameData.information !== null) {
+      const events = this.jsonGameData.events == null ? EVENTS : this.jsonGameData.events;
+      const data = this.dataService.processData(events, this.jsonGameData.information);
+      this.data.information = data[0];
+      this.data.events = data[1];
+    }
+    if (this.jsonGameData !== undefined && this.jsonGameData.events !== null) {
+      const info = this.jsonGameData.information == null ? EVENTS : this.jsonGameData.information;
+      const data = this.dataService.processData(this.jsonGameData.events, info);
+      this.data.information = data[0];
+      this.data.events = data[1];
+    }
     this.updateCanvas();
   }
 

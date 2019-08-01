@@ -32,7 +32,7 @@ export class DataService {
         return result;
       }
     ), catchError( (error) => {
-      return throwError('Could not connect to API: ' + error.message);
+      return throwError('sortAllEventsCould not connect to API: ' + error.message);
     }));
   }
 

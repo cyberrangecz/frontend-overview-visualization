@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output} from '@angular/core';
 import {GameData} from '../../../shared/interfaces/game-data';
+import { ConfigService } from '../../../config/config.service';
 import {D3, D3Service} from 'd3-ng2-service';
 import {DataProcessor} from '../../../services/data-processor.service';
 import {Axis, BrushBehavior, Line, ScaleLinear, ScaleOrdinal, ScaleTime, ZoomBehavior} from 'd3-ng2-service/src/bundle-d3';
@@ -15,6 +16,8 @@ import {DataService} from '../../../services/data.service';
 import {GameInformation} from '../../../shared/interfaces/game-information';
 import {GameEvents} from '../../../shared/interfaces/game-events';
 import {GenericEvent} from '../../../shared/interfaces/generic-event.enum';
+import {EVENTS} from '../../../shared/mocks/events.mock';
+import {GAME_INFORMATION} from '../../../shared/mocks/information.mock';
 
 @Component({
   selector: 'kypo2-viz-overview-line',
@@ -24,12 +27,15 @@ import {GenericEvent} from '../../../shared/interfaces/generic-event.enum';
 })
 export class LineComponent implements OnInit, OnDestroy, OnChanges {
 
-  @Input() data: GameData;
+  @Input() data: GameData = {information: null, events: null};
+  @Input() jsonGameData: GameData = {information: null, events: null};
   @Input() useLocalMock = false;
   @Input() enableAllPlayers = true;
   @Input() feedbackLearnerId: string;
   @Input() colorScheme: string[];
   @Input() size: {width: number; height: number};
+  @Input() trainingDefinitionId: number;
+  @Input() trainingInstanceId: number;
 
   @Output() wideTable: EventEmitter<any> = new EventEmitter<any>();
 
@@ -70,7 +76,8 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
       private visualizationService: DataProcessor,
       private tableService: TableService,
       private filtersService: FiltersService,
-      private dataService: DataService
+      private dataService: DataService,
+      private configService: ConfigService
     ) {
     this.d3 = d3service.getD3();
     this.tableRowClicked = this.tableService.tableRowClicked$.subscribe(
@@ -105,6 +112,24 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges() {
+    if (this.jsonGameData !== undefined && this.jsonGameData.information !== null) {
+      const events = this.jsonGameData.events == null ? EVENTS : this.jsonGameData.events;
+      const data = this.dataService.processData(events, this.jsonGameData.information);
+      this.data.information = data[0];
+      this.data.events = data[1];
+    }
+    if (this.jsonGameData !== undefined && this.jsonGameData.events !== null) {
+      const info = this.jsonGameData.information == null ? EVENTS : this.jsonGameData.information;
+      const data = this.dataService.processData(this.jsonGameData.events, info);
+      this.data.information = data[0];
+      this.data.events = data[1];
+    }
+    if (this.useLocalMock) {
+      // const data = this.dataService.processData(EVENTS, GAME_INFORMATION);
+      this.data = {information: GAME_INFORMATION, events: EVENTS};
+    }
+    this.configService.trainingDefinitionId = this.trainingDefinitionId;
+    this.configService.trainingInstanceId = this.trainingInstanceId;
     this.players = this.getPlayersWithEvents(this.enableAllPlayers, this.feedbackLearnerId);
     this.redraw();
   }
@@ -167,8 +192,9 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    */
   setup() {
     // first we want the table to fit in
-    if (this.data.information.levels.filter(level => level.gameLevelNumber !== undefined).length <= 4) {
-      this.size.width = (window.innerWidth < 1400 && this.enableAllPlayers) ? this.size.width * 0.55 : this.size.width * 0.70;
+    if (this.data.information !== null && this.data.information.levels.filter(level => level.gameLevelNumber !== undefined).length <= 4) {
+      this.size.width = (window.innerWidth < 1400 && this.enableAllPlayers) ?
+        this.size.width * 0.55 : this.size.width * 0.70;
       this.wideTable.emit(false);
     } else {
       // we want to notify the timeline, that the table should be placed under the visualization

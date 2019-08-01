@@ -12,7 +12,8 @@ import {EVENTS} from '../../shared/mocks/events.mock';
 })
 export class TimelineComponent implements OnInit, OnChanges {
 
-  public gameData: GameData = {information: null, events: null}
+  public gameData: GameData = {information: null, events: null};
+  @Input() jsonGameData: GameData;
   @Input() useLocalMock = false;
   @Input() enableAllPlayers = true;
   @Input() feedbackLearnerId: string;
