@@ -24,8 +24,8 @@ import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config'
 import {GameInformation} from '../../../shared/interfaces/game-information';
 import {GameEvents} from '../../../shared/interfaces/game-events';
 import {DataService} from '../../../services/data.service';
-import {EMPTY_INFO} from '../../../shared/mocks/information.mock';
 import {EMPTY_EVENTS} from '../../../shared/mocks/events.mock';
+import {EMPTY_INFO} from '../../../shared/mocks/information.mock';
 
 @Component({
   selector: 'kypo2-viz-overview-final',
@@ -33,8 +33,8 @@ import {EMPTY_EVENTS} from '../../../shared/mocks/events.mock';
   styleUrls: ['./final.component.css']
 })
 export class FinalComponent implements OnInit, OnChanges {
-  @Input() data: GameData;
-  @Input() jsonGameData = {information: null, events: null};;
+  @Input() data: GameData = {information: null, events: null};
+  @Input() jsonGameData: GameData = {information: null, events: null};
   @Input() useLocalMock = false;
   @Input() inputSelectedPlayerId: string;
   @Input() feedbackLearnerId: string;

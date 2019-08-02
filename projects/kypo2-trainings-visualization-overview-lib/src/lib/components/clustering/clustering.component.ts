@@ -1,9 +1,9 @@
 import { Component, OnInit, OnChanges, Input, ViewChild } from '@angular/core';
-import {GameData} from '../../shared/interfaces/game-data';
+import { GameData } from '../../shared/interfaces/game-data';
 import { ClusteringFinalEventService } from './interfaces/clustering-final-event-service';
 import { FinalComponent } from './final/final.component';
 import { LevelsComponent } from './levels/levels.component';
-import {ConfigService} from '../../config/config.service';
+import { ConfigService } from '../../config/config.service';
 import {GAME_INFORMATION} from '../../shared/mocks/information.mock';
 import {EVENTS} from '../../shared/mocks/events.mock';
 
@@ -39,6 +39,7 @@ export class ClusteringComponent implements OnInit, OnChanges {
     this.configService.trainingDefinitionId = this.trainingDefinitionId;
     this.configService.trainingInstanceId = this.trainingInstanceId;
   }
+
   get levelsCount() {
     return this.gameData.information.levels.length;
   }
