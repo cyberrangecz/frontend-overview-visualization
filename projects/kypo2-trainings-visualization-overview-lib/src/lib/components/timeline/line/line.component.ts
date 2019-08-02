@@ -34,6 +34,8 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   @Input() feedbackLearnerId: string;
   @Input() colorScheme: string[];
   @Input() size: {width: number; height: number};
+  @Input() trainingDefinitionId: number;
+  @Input() trainingInstanceId: number;
 
   @Output() wideTable: EventEmitter<any> = new EventEmitter<any>();
 
@@ -74,7 +76,8 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
       private visualizationService: DataProcessor,
       private tableService: TableService,
       private filtersService: FiltersService,
-      private dataService: DataService
+      private dataService: DataService,
+      private configService: ConfigService
     ) {
     this.d3 = d3service.getD3();
     this.tableRowClicked = this.tableService.tableRowClicked$.subscribe(
@@ -120,6 +123,10 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
     if (this.useLocalMock) {
       this.data = {information: GAME_INFORMATION, events: EVENTS};
     }
+    this.configService.trainingDefinitionId = this.trainingDefinitionId;
+    this.configService.trainingInstanceId = this.trainingInstanceId;
+
+    console.log(this.trainingInstanceId);
     this.players = this.getPlayersWithEvents(this.enableAllPlayers, this.feedbackLearnerId);
     this.redraw();
   }
