@@ -4,7 +4,7 @@ import {NgModule} from '@angular/core';
 const routes: Routes = [
   {
     path: 'visualization',
-    loadChildren: () => import('src/app/visualization/visualization.module').then(m => m.VisualizationModule),
+    loadChildren: 'src/app/visualization/visualization.module#VisualizationModule',
   },
   {
     path: '',

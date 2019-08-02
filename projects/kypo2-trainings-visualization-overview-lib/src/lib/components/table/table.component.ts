@@ -21,7 +21,7 @@ import {EMPTY_EVENTS, EVENTS} from '../../shared/mocks/events.mock';
 export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() data: GameData = {information: null, events: null};
-  @Input() jsonGameData = {information: null, events: null};
+  @Input() jsonGameData: GameData = {information: null, events: null};
   @Input() useLocalMock = false;
   @Input() standalone = false;
   @Input() feedbackLearnerId: string;
@@ -66,15 +66,14 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges() {
-    if (this.jsonGameData.information !== null) {
+    if (this.jsonGameData !== undefined && this.jsonGameData.information !== null) {
       this.data.information = this.dataService.processInfo(this.jsonGameData.information);
       this.data.events = this.data.events === null ? EMPTY_EVENTS : this.data.events;
     }
-    if (this.jsonGameData.events !== null) {
+    if (this.jsonGameData !== undefined && this.jsonGameData.events !== null) {
       this.data.events = this.dataService.processEvents(this.jsonGameData.information, this.jsonGameData.events);
       this.data.information = this.data.information === null ? EMPTY_INFO : this.data.information;
     }
-
     this.configService.trainingDefinitionId = this.trainingDefinitionId;
     this.configService.trainingInstanceId = this.trainingInstanceId;
     this.redraw();

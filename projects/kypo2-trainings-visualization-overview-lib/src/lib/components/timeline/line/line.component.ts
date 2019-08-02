@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output} from '@angular/core';
 import {GameData} from '../../../shared/interfaces/game-data';
+import { ConfigService } from '../../../config/config.service';
 import {D3, D3Service} from 'd3-ng2-service';
 import {DataProcessor} from '../../../services/data-processor.service';
 import {Axis, BrushBehavior, Line, ScaleLinear, ScaleOrdinal, ScaleTime, ZoomBehavior} from 'd3-ng2-service/src/bundle-d3';
@@ -15,8 +16,8 @@ import {DataService} from '../../../services/data.service';
 import {GameInformation} from '../../../shared/interfaces/game-information';
 import {GameEvents} from '../../../shared/interfaces/game-events';
 import {GenericEvent} from '../../../shared/interfaces/generic-event.enum';
-import {EMPTY_INFO} from '../../../shared/mocks/information.mock';
-import {EMPTY_EVENTS} from '../../../shared/mocks/events.mock';
+import {EMPTY_INFO, GAME_INFORMATION} from '../../../shared/mocks/information.mock';
+import {EMPTY_EVENTS, EVENTS} from '../../../shared/mocks/events.mock';
 
 @Component({
   selector: 'kypo2-viz-overview-line',
@@ -27,7 +28,7 @@ import {EMPTY_EVENTS} from '../../../shared/mocks/events.mock';
 export class LineComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() data: GameData = {information: null, events: null};
-  @Input() jsonGameData = {information: null, events: null};
+  @Input() jsonGameData: GameData = {information: null, events: null};
   @Input() useLocalMock = false;
   @Input() enableAllPlayers = true;
   @Input() feedbackLearnerId: string;
@@ -108,15 +109,17 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges() {
-    if (this.jsonGameData.information !== null) {
+    if (this.jsonGameData !== undefined && this.jsonGameData.information !== null) {
       this.data.information = this.dataService.processInfo(this.jsonGameData.information);
       this.data.events = this.data.events === null ? EMPTY_EVENTS : this.data.events;
     }
-    if (this.jsonGameData.events !== null) {
+    if (this.jsonGameData !== undefined && this.jsonGameData.events !== null) {
       this.data.information = this.data.information === null ? EMPTY_INFO : this.data.information;
       this.data.events = this.dataService.processEvents(this.jsonGameData.information, this.jsonGameData.events);
     }
-
+    if (this.useLocalMock) {
+      this.data = {information: GAME_INFORMATION, events: EVENTS};
+    }
     this.players = this.getPlayersWithEvents(this.enableAllPlayers, this.feedbackLearnerId);
     this.redraw();
   }
@@ -179,8 +182,9 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    */
   setup() {
     // first we want the table to fit in
-    if (this.data.information.levels.filter(level => level.gameLevelNumber !== undefined).length <= 4) {
-      this.size.width = (window.innerWidth < 1400 && this.enableAllPlayers) ? this.size.width * 0.55 : this.size.width * 0.70;
+    if (this.data.information !== null && this.data.information.levels.filter(level => level.gameLevelNumber !== undefined).length <= 4) {
+      this.size.width = (window.innerWidth < 1400 && this.enableAllPlayers) ?
+        this.size.width * 0.55 : this.size.width * 0.70;
       this.wideTable.emit(false);
     } else {
       // we want to notify the timeline, that the table should be placed under the visualization

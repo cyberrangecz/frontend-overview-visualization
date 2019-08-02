@@ -1,7 +1,6 @@
 <div class="overview-visualization-container">
     <kypo2-viz-overview-final
         [data]="gameData"
-        [jsonGameData]="jsonGameData"
         [useLocalMock]="useLocalMock"
         (outputSelectedPlayerId)="selectPlayer($event)"
         [inputSelectedPlayerId]="selectedPlayerId"
@@ -13,7 +12,6 @@
 
     <kypo2-viz-overview-levels
         [data]="gameData"
-        [jsonGameData]="jsonGameData"
         [useLocalMock]="useLocalMock"
         (outputSelectedPlayerId)="selectPlayer($event)"
         [inputSelectedPlayerId]="selectedPlayerId"

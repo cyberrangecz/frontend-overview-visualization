@@ -24,8 +24,7 @@ import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config'
 import {GameInformation} from '../../../shared/interfaces/game-information';
 import {GameEvents} from '../../../shared/interfaces/game-events';
 import {DataService} from '../../../services/data.service';
-import {EMPTY_EVENTS} from '../../../shared/mocks/events.mock';
-import {EMPTY_INFO} from '../../../shared/mocks/information.mock';
+import {EVENTS} from '../../../shared/mocks/events.mock';
 
 @Component({
   selector: 'kypo2-viz-overview-final',
@@ -72,13 +71,17 @@ export class FinalComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    if (this.jsonGameData.information !== null) {
-      this.data.information = this.dataService.processInfo(this.jsonGameData.information);
-      this.data.events = this.data.events === null ? EMPTY_EVENTS : this.data.events;
+    if (this.jsonGameData !== undefined && this.jsonGameData.information !== null) {
+      const events = this.jsonGameData.events == null ? EVENTS : this.jsonGameData.events;
+      const data = this.dataService.processData(events, this.jsonGameData.information);
+      this.data.information = data[0];
+      this.data.events = data[1];
     }
-    if (this.jsonGameData.events !== null) {
-      this.data.events = this.dataService.processEvents(this.jsonGameData.information, this.jsonGameData.events);
-      this.data.information = this.data.information === null ? EMPTY_INFO : this.data.information;
+    if (this.jsonGameData !== undefined && this.jsonGameData.events !== null) {
+      const info = this.jsonGameData.information == null ? EVENTS : this.jsonGameData.information;
+      const data = this.dataService.processData(this.jsonGameData.events, info);
+      this.data.information = data[0];
+      this.data.events = data[1];
     }
     this.updateCanvas();
   }
