@@ -23,7 +23,7 @@ export class TimelineComponent implements OnInit, OnChanges {
   @Input() trainingInstanceId: number;
   public fullWidthTable = false;
 
-  @ViewChild(LineComponent, { static: true }) lineComponent: LineComponent;
+  @ViewChild(LineComponent) lineComponent: LineComponent;
 
   constructor(private configService: ConfigService) { }
 
