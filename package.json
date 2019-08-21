@@ -13,7 +13,8 @@
     "cp": "rm -rf ../kypo2-visualization-dashboard/node_modules/kypo2-trainings-visualization-overview-lib/* && cp -a ./dist/kypo2-trainings-visualization-overview-lib/. ../kypo2-visualization-dashboard/node_modules/kypo2-trainings-visualization-overview-lib",
     "lib-push": "mkdir -p ../kypo2-trainings-visualization-overview-package && cd ../kypo2-trainings-visualization-overview-package && git add . && git commit -m 'Update according to master branch' && git push",
     "lib-build-and-push": "npm run lib-build && npm run lib-copy && npm run lib-push",
-    "push": "git push && npm run lib-build-and-push"
+    "push": "git push && npm run lib-build-and-push",
+    "publish": "npm run lib-build && npm run lib-copy && npm publish --registry=http://kypo-storage.ics.muni.cz:8081/repository/npm-hosted"
   },
   "private": true,
   "dependencies": {
