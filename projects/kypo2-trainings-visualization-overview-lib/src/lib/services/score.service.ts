@@ -30,23 +30,11 @@ export class ScoreService {
         const levelGroupedEvents = this.d3.nest().key((e: Event) => e.playerId).entries(level.events);
         const levelInfo = information.levels[levelNumbers++];
         levelGroupedEvents.forEach(player => {
-          const actualScore = player.values[player.values.length - 1].actualScore;
-          // backward compatibility loop:
-          if (actualScore === undefined) {
-            player.values.forEach((event, i) => {
-              // Assign level's max points to player on first assignment to prevent adding up to undefined => NaN
-              const isFirstAssignment: boolean = (i < 1);
-              if (isFirstAssignment) {
-                levelGroup[player.key] = levelInfo.points;
-              }
-              levelGroup[player.key] += this.getScore(levelInfo, event);
-              const isNegative = levelGroup[player.key] < 0;
-              if (isNegative) {
-                levelGroup[player.key] = 0;
-              } // If level skipped, help level accessed or exited prematurely
-            });
-          } else {
-            levelGroup[player.key] = actualScore;
+          // levelGroup[player.key] = 0;
+          const lastEvent = player.values[player.values.length - 1].event;
+          if (lastEvent === GenericEvent.TypePrefix + GenericEvent.LevelCompleted
+           || lastEvent === GenericEvent.TypePrefix + GenericEvent.SolutionDisplayed) {
+            levelGroup[player.key] = player.values[player.values.length - 1].actualScore;
           }
         });
         eachLevelScores.push(levelGroup);
@@ -98,21 +86,6 @@ export class ScoreService {
     return result;
   }
 
-  getScore(level: Level, event: Event): number {
-    switch (event.event) {
-      case GenericEvent.TypePrefix + GenericEvent.CorrectFlag: // Correct flag submited
-        return 0;
-      case GenericEvent.TypePrefix + GenericEvent.HintTaken: // Hint # taken
-        return -event.penalty; // this.getHintScore(level, event);
-      case GenericEvent.TypePrefix + GenericEvent.SolutionDisplayed: // Help level accessed
-        return -event.penalty; // -9999;
-      case GenericEvent.TypePrefix + GenericEvent.GameSurrendered:
-        return 0; // no score change?
-      default:
-        return 0;
-    }
-  }
-
   getFinalScores(events: GameEvents, information: GameInformation) {
     const scoresByLevel = this.getEachLevelScores(information, events);
     if (scoresByLevel.length < 1) { return []; }
@@ -140,7 +113,7 @@ export class ScoreService {
   }
 
   getGameMaxScore(information: GameInformation): number {
-    if (information === null || information.levels === null) return 0;
+    if (information === null || information.levels === null) { return 0; }
     let maxScore = 0;
     information.levels.forEach((level: Level) => {
       maxScore += level.points;
