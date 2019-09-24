@@ -113,6 +113,7 @@ export class DataService {
           gametime: event.game_time / 1000,
           event: event.type,
           actualScore: event.actual_score_in_level,
+          totalScore: event.total_score,
           penalty: 0,
       };
 
@@ -143,13 +144,16 @@ export class DataService {
    * Fetches static game information data
    */
   getInformation(): Observable<any> {
-    return this.http.get<GameInformation>(`${this.configService.config.kypo2TrainingsVisualizationRestBasePath}training-definitions/${this.configService.trainingDefinitionId}`);
+    return this.http.get<GameInformation>(this.configService.config.kypo2TrainingsVisualizationRestBasePath
+      + 'training-definitions/' + this.configService.trainingDefinitionId);
   }
 
   /**
    * Fetches game events data
    */
   getEvents(): Observable<any> {
-    return this.http.get(`${this.configService.config.kypo2TrainingsVisualizationRestBasePath}training-events/training-definitions/${this.configService.trainingDefinitionId}/training-instances/${this.configService.trainingInstanceId}`);
+    return this.http.get(this.configService.config.kypo2TrainingsVisualizationRestBasePath
+      + 'training-events/training-definitions/' + this.configService.trainingDefinitionId
+      + '/training-instances/' + this.configService.trainingInstanceId);
   }
 }
