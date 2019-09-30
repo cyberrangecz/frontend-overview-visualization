@@ -30,12 +30,7 @@ export class ScoreService {
         const levelGroupedEvents = this.d3.nest().key((e: Event) => e.playerId).entries(level.events);
         const levelInfo = information.levels[levelNumbers++];
         levelGroupedEvents.forEach(player => {
-          // levelGroup[player.key] = 0;
-          const lastEvent = player.values[player.values.length - 1].event;
-          if (lastEvent === GenericEvent.TypePrefix + GenericEvent.LevelCompleted
-           || lastEvent === GenericEvent.TypePrefix + GenericEvent.SolutionDisplayed) {
-            levelGroup[player.key] = player.values[player.values.length - 1].actualScore;
-          }
+          levelGroup[player.key] = player.values[player.values.length - 1].actualScore;
         });
         eachLevelScores.push(levelGroup);
         levelGroup = {};
