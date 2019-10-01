@@ -144,8 +144,7 @@ export class DataService {
    * Fetches static game information data
    */
   getInformation(): Observable<any> {
-    return this.http.get<GameInformation>(this.configService.config.kypo2TrainingsVisualizationRestBasePath
-      + 'training-definitions/' + this.configService.trainingDefinitionId);
+    return this.http.get<GameInformation>(`${this.configService.config.kypo2TrainingsVisualizationRestBasePath}visualizations/training-instances/${this.configService.trainingInstanceId}`);
   }
 
   /**

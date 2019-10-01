@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  kypo2TrainingsVisualizationRestBasePath: 'https://147.251.124.129:8083/kypo2-rest-training/api/v1/',
-  baseUrl: 'https://147.251.124.129:8083/kypo2-rest-training/api/v1/',
+  kypo2TrainingsVisualizationRestBasePath: 'https://kypo-devel.ics.muni.cz:8083/kypo2-rest-training/api/v1/',
+  baseUrl: 'https://kypo-devel.ics.muni.cz:8083/kypo2-rest-training/api/v1/',
 
   // OIDC SETTINGS
   // Url of the Identity Provider
