@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, OnDestroy, OnChanges} from '@angular/core';
+import {Component, OnInit, Input, OnDestroy, OnChanges, ViewChild} from '@angular/core';
 import { GameData } from '../../shared/interfaces/game-data';
 import { DataProcessor } from '../../services/data-processor.service';
 import { ProgressPlayer } from '../timeline/interfaces/progress-player';
@@ -9,15 +9,21 @@ import {GameInformation} from '../../shared/interfaces/game-information';
 import {GameEvents} from '../../shared/interfaces/game-events';
 import {DataService} from '../../services/data.service';
 import {ConfigService} from '../../config/config.service';
+import {EMPTY_INFO, GAME_INFORMATION} from '../../shared/mocks/information.mock';
+import {EMPTY_EVENTS, EVENTS} from '../../shared/mocks/events.mock';
 
 @Component({
   selector: 'kypo2-viz-overview-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
 })
+
 export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
-  @Input() data: GameData;
+  @Input() data: GameData = {information: null, events: null};
+  @Input() jsonGameData: GameData = {information: null, events: null};
+  @Input() useLocalMock = false;
+  @Input() standalone = false;
   @Input() feedbackLearnerId: string;
   @Input() trainingDefinitionId: number;
   @Input() trainingInstanceId: number;
@@ -51,17 +57,26 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit() {
-    this.load();
+    if (this.useLocalMock) {
+      this.data = {information: GAME_INFORMATION, events: EVENTS};
+      this.redraw();
+    } else {
+      this.load();
+    }
   }
 
   ngOnChanges() {
+    if (this.jsonGameData !== undefined && this.jsonGameData.information !== null) {
+      this.data.information = this.dataService.processInfo(this.jsonGameData.information);
+      this.data.events = this.data.events === null ? EMPTY_EVENTS : this.data.events;
+    }
+    if (this.jsonGameData !== undefined && this.jsonGameData.events !== null) {
+      this.data.events = this.dataService.processEvents(this.jsonGameData.information, this.jsonGameData.events);
+      this.data.information = this.data.information === null ? EMPTY_INFO : this.data.information;
+    }
     this.configService.trainingDefinitionId = this.trainingDefinitionId;
     this.configService.trainingInstanceId = this.trainingInstanceId;
-    this.filters = this.filtersService.getFiltersObject();
-    this.scoreTableData = this.getLevelScores();
-    this.players = this.visualizationService.getScoreProgressPlayersWithEvents(this.data);
-    this.orderPlayers();
-    this.checkFeedbackLearner();
+    this.redraw();
   }
 
   load() {
@@ -69,12 +84,16 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
       this.data.information = res[0];
       this.data.events = res[1];
 
-      this.filters = this.filtersService.getFiltersObject();
-      this.scoreTableData = this.getLevelScores();
-      this.players = this.visualizationService.getScoreProgressPlayersWithEvents(this.data);
-      this.orderPlayers();
-      this.checkFeedbackLearner();
+      this.redraw();
     });
+  }
+
+  redraw() {
+    this.filters = this.filtersService.getFiltersObject();
+    this.scoreTableData = this.getLevelScores();
+    this.players = this.visualizationService.getScoreProgressPlayersWithEvents(this.data);
+    this.orderPlayers();
+    this.checkFeedbackLearner();
   }
 
   getLevelScores() {

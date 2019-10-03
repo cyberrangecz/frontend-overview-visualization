@@ -16,9 +16,19 @@ import { FormsModule } from '@angular/forms';
 import { FiltersComponent } from './components/filters/filters.component';
 import { Kypo2TrainingsVisualizationOverviewLibConfig } from './config/kypo2-trainings-visualization-overview-lib';
 import {ConfigService} from './config/config.service';
+import {MatButtonModule, MatCheckboxModule, MatSortModule, MatTableModule, MatTooltipModule} from '@angular/material';
+import {CdkColumnDef, CdkHeaderCellDef} from '@angular/cdk/table';
 
 @NgModule({
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatTableModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatSortModule,
+    MatTooltipModule
+  ],
   declarations: [
     Kypo2TrainingsVisualizationOverviewLibComponent,
     TimelineComponent,
@@ -37,9 +47,18 @@ import {ConfigService} from './config/config.service';
     FiltersComponent,
     FinalComponent,
     LevelsComponent,
-    LineComponent,
+    LineComponent
   ],
-  providers: [D3Service, DataProcessor, DataService, ScoreService, TimeService, ConfigService]
+  providers: [
+    D3Service,
+    DataProcessor,
+    DataService,
+    ScoreService,
+    TimeService,
+    ConfigService,
+    CdkColumnDef,
+    CdkHeaderCellDef
+  ]
 })
 export class Kypo2TrainingsVisualizationOverviewLibModule {
   constructor(@Optional() @SkipSelf() parentModule: Kypo2TrainingsVisualizationOverviewLibModule) {

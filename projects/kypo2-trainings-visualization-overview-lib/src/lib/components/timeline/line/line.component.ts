@@ -1,5 +1,6 @@
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output} from '@angular/core';
 import {GameData} from '../../../shared/interfaces/game-data';
+import { ConfigService } from '../../../config/config.service';
 import {D3, D3Service} from 'd3-ng2-service';
 import {DataProcessor} from '../../../services/data-processor.service';
 import {Axis, BrushBehavior, Line, ScaleLinear, ScaleOrdinal, ScaleTime, ZoomBehavior} from 'd3-ng2-service/src/bundle-d3';
@@ -15,6 +16,8 @@ import {DataService} from '../../../services/data.service';
 import {GameInformation} from '../../../shared/interfaces/game-information';
 import {GameEvents} from '../../../shared/interfaces/game-events';
 import {GenericEvent} from '../../../shared/interfaces/generic-event.enum';
+import {EMPTY_INFO, GAME_INFORMATION} from '../../../shared/mocks/information.mock';
+import {EMPTY_EVENTS, EVENTS} from '../../../shared/mocks/events.mock';
 
 @Component({
   selector: 'kypo2-viz-overview-line',
@@ -24,15 +27,22 @@ import {GenericEvent} from '../../../shared/interfaces/generic-event.enum';
 })
 export class LineComponent implements OnInit, OnDestroy, OnChanges {
 
-  @Input() data: GameData;
+  @Input() data: GameData = {information: null, events: null};
+  @Input() jsonGameData: GameData = {information: null, events: null};
+  @Input() useLocalMock = false;
+  @Input() enableAllPlayers = true;
   @Input() feedbackLearnerId: string;
   @Input() colorScheme: string[];
   @Input() size: {width: number; height: number};
+  @Input() trainingDefinitionId: number;
+  @Input() trainingInstanceId: number;
+
+  @Output() wideTable: EventEmitter<any> = new EventEmitter<any>();
 
   players: ProgressPlayer[] = [];
 
-  public svgConfig: SvgConfig;
-  public svgMarginConfig: SvgMarginConfig;
+  public svgConfig: SvgConfig = {width: 0, height: 0};
+  public svgMarginConfig: SvgMarginConfig = {top: 0, bottom: 0, right: 0, left: 0};
   public playerColorScale: ScaleOrdinal<string, any>;
   public filters;
   public filtersArray;
@@ -54,6 +64,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   private eventTooltip;
   private lineTooltip;
   private zoomableArea;
+  private tickLength = 1;
 
   private tableRowClicked: Subscription;
   private tableRowMouseover: Subscription;
@@ -65,7 +76,8 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
       private visualizationService: DataProcessor,
       private tableService: TableService,
       private filtersService: FiltersService,
-      private dataService: DataService
+      private dataService: DataService,
+      private configService: ConfigService
     ) {
     this.d3 = d3service.getD3();
     this.tableRowClicked = this.tableService.tableRowClicked$.subscribe(
@@ -96,11 +108,25 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnInit() {
-    this.load();
+    if (!this.useLocalMock) { this.load(); }
   }
 
   ngOnChanges() {
-    this.players = this.getPlayersWithEvents();
+    if (this.jsonGameData !== undefined && this.jsonGameData.information !== null) {
+      this.data.information = this.dataService.processInfo(this.jsonGameData.information);
+      this.data.events = this.data.events === null ? EMPTY_EVENTS : this.data.events;
+    }
+    if (this.jsonGameData !== undefined && this.jsonGameData.events !== null) {
+      this.data.information = this.data.information === null ? EMPTY_INFO : this.data.information;
+      this.data.events = this.dataService.processEvents(this.jsonGameData.information, this.jsonGameData.events);
+    }
+    if (this.useLocalMock) {
+      this.data = {information: GAME_INFORMATION, events: EVENTS};
+    }
+    this.configService.trainingDefinitionId = this.trainingDefinitionId;
+    this.configService.trainingInstanceId = this.trainingInstanceId;
+
+    this.players = this.getPlayersWithEvents(this.enableAllPlayers, this.feedbackLearnerId);
     this.redraw();
   }
 
@@ -109,7 +135,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
       this.data.information = res[0];
       this.data.events = res[1];
 
-      this.players = this.getPlayersWithEvents();
+      this.players = this.getPlayersWithEvents(this.enableAllPlayers, this.feedbackLearnerId);
       this.redraw();
     });
   }
@@ -161,7 +187,16 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    * Builds svg, initializes line generator, zoom & behavior and scales
    */
   setup() {
-    this.svgConfig = {width: this.size.width, height: this.size.height};
+    // first we want the table to fit in
+    if (this.data.information !== null && this.data.information.levels.filter(level => level.gameLevelNumber !== undefined).length <= 4) {
+      this.size.width = (window.innerWidth < 1400 && this.enableAllPlayers) ?
+        this.size.width * 0.55 : this.size.width * 0.70;
+      this.wideTable.emit(false);
+    } else {
+      // we want to notify the timeline, that the table should be placed under the visualization
+      this.wideTable.emit(true);
+    }
+    this.svgConfig = {width: this.size.width > window.innerWidth ? window.innerWidth : this.size.width, height: this.size.height};
     this.svgMarginConfig = SVG_MARGIN_CONFIG;
     this.buildSVG();
     this.initializeLineGenerators();
@@ -178,6 +213,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
       .attr('class', 'score-progress-svg')
       .attr('width', this.size.width + SVG_MARGIN_CONFIG.left + SVG_MARGIN_CONFIG.right)
       .attr('height', this.size.height + SVG_MARGIN_CONFIG.top + SVG_MARGIN_CONFIG.bottom)
+      .style('margin-right', '10px')
       .append('g')
       .attr('transform', 'translate(' + SVG_MARGIN_CONFIG.left + ',' + SVG_MARGIN_CONFIG.top + ')');
   }
@@ -200,6 +236,14 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    */
   initializeZoomAndBrush() {
     this.zoom = this.d3.zoom()
+      .filter(() => {
+        if (this.d3.event.ctrlKey) { this.d3.event.preventDefault(); }
+        if (this.d3.event.type === 'wheel') {
+          // don't allow zooming without pressing [ctrl] key
+          return this.d3.event.ctrlKey;
+        }
+        return true;
+      })
       .scaleExtent([1, Infinity])
       .translateExtent([[0, 0], [this.size.width, this.size.height]])
       .extent([[0, 0], [this.size.width, this.size.height]])
@@ -302,6 +346,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   /**
+   * We reserve 0.5 of the score domain to display the edges of the player lines correctly
    * Define D3 scales
    */
   initializeScales() {
@@ -309,20 +354,27 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
     this.tableService.sendPlayerColorScale(this.playerColorScale);
 
     const scaleDomainStart = new Date(0, 0, 0, 0, 0, 0, 0);
-    const scaleDomainEnd = new Date(0, 0, 0, 0, 0, this.getMaximumTime(true), 0);
+    const scaleDomainEnd = new Date(0, 0, 0, 0, 0, this.getMaximumTime(true, ), 0);
+
+    const fullTimeAxis = Math.abs(scaleDomainEnd.getTime() - scaleDomainStart.getTime() ) / 1000;
+
+    while ((fullTimeAxis / this.tickLength) > 600 ) {
+      this.tickLength *= (this.tickLength === 1 || this.tickLength > 160) ? 5 : 2;
+    }
+
     this.timeAxisScale = this.d3.scaleTime()
       .range([0, this.size.width])
       .domain([scaleDomainStart, scaleDomainEnd]);
 
     this.scoreScale = this.d3.scaleLinear()
       .range([this.size.height, 0])
-      .domain([0, this.getMaximumScore()]);
+      .domain([-0.5, this.getMaximumScore() + 0.5]);
 
     this.scoreScale.clamp(true);
 
     this.timeScale = this.d3.scaleLinear()
       .range([0, this.size.width])
-      .domain([0, this.getMaximumTime(true)]);
+      .domain([0, this.getMaximumTime(true, )]);
 
     this.contextTimeScale = this.d3.scaleLinear()
       .range([0, this.size.width])
@@ -330,7 +382,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
 
     this.contextScoreScale = this.d3.scaleLinear()
       .range([CONTEXT_CONFIG.height, 0])
-      .domain([0, this.getMaximumScore()]);
+      .domain([-0.5, this.getMaximumScore() + 0.5]);
 
     this.eventsColorScale = this.d3.scaleOrdinal()
       .range(this.colorScheme  || colorScheme);
@@ -389,7 +441,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   drawTimeAxis() {
     const d3 = this.d3;
     this.xAxis = d3.axisBottom(this.timeAxisScale)
-      .tickArguments([d3.timeMinute.every(30)])
+      .tickArguments([d3.timeMinute.every(this.tickLength)])
       .tickFormat((d: Date) => d3.timeFormat('%H:%M:%S')(d))
       .tickSize(AXES_CONFIG.xAxis.tickSize)
       .tickSizeOuter(0);
@@ -426,6 +478,26 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    * Draws axes labels
    */
   drawAxesLabels() {
+    this.svg
+      .append('text')
+      .attr(
+        'transform',
+        `translate(${this.svgConfig.width / 2 - 50}, ${this.svgConfig.height + 65})`
+      )
+      .text('game time')
+      .style('fill', '#4c4a4a');
+
+    this.svg
+      .append('text')
+      .attr(
+        'transform',
+        `translate(${AXES_CONFIG.yAxis.position.x - 100}, ${this.svgConfig.height /
+        2}) rotate(-90)`
+      )
+      .attr('text-anchor', 'middle')
+      .style('fill', '#4c4a4a')
+      .text('score development'); // score increase per level
+
     const scores = this.svg.select('.y-axis')
       .selectAll('.tick')
       .data();
@@ -444,7 +516,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
       .enter()
       .append('text')
       .attr('class', 'score-progress-axis-label')
-      .attr('transform', d => `translate(${-SVG_MARGIN_CONFIG.left * 0.7}, ${d})`)
+      .attr('transform', d => `translate(${-SVG_MARGIN_CONFIG.left * 0.55}, ${d})`)
       .html((d, i) => `Level ${i + 1}`);
 
     const colorScale = this.d3.scaleOrdinal()
@@ -454,7 +526,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
       .data(coordinates)
       .enter()
       .append('rect')
-      .attr('transform', d => `translate(${-SVG_MARGIN_CONFIG.left * 0.7 - 20}, ${d - 15})`)
+      .attr('transform', d => `translate(${-SVG_MARGIN_CONFIG.left * 0.55 - 20}, ${d - 15})`)
       .attr('width', 15)
       .attr('height', 15)
       .style('fill', (d, i) => colorScale(i.toString()));
@@ -558,6 +630,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
     const context = this.buildContextAndReturn();
     const brush = context.append('g')
       .attr('class', 'brush')
+      .attr('transform', `translate(0,10)`)
       .call(this.brush)
       .call(this.brush.move, this.timeScale.range());
   }
@@ -572,7 +645,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
 
     context.append('g')
       .attr('class', 'score-progress-context-x-axis')
-      .attr('transform', `translate(0, ${CONTEXT_CONFIG.height})`)
+      .attr('transform', `translate(0, ${CONTEXT_CONFIG.height+10})`)
       .call(this.xAxis);
 
     return context;
@@ -684,8 +757,8 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    * Draw legends to the right of the graph
    */
   drawLegend() {
-    const x = 0;
-    const y = -50;
+    const x = -7; // 0;
+    const y = -40;
     const legendGroup = this.svg
       .append('g')
       .attr('transform', 'translate(10, 0)');
@@ -718,9 +791,9 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    * @param playerId of player to be drawn
    */
   drawPlayer(playerId: string) {
-    if (this.players === null) return;
+    if (this.players === null) { return; }
     const player: ProgressPlayer = this.players.filter(p => p.id === playerId)[0];
-    if (player === undefined) return;
+    if (player === undefined) { return; }
     const playerGroup = this.playersGroup.append('g')
       .attr('id', 'score-progress-player-' + player.id)
       .style('mix-blend-mode', 'multiply');
@@ -829,7 +902,9 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
     const topMargin = -50;
     const top: number = y + topMargin;
 
-    const content = `Player ID: <br> ${player.id.toString()}`;
+    const content = (this.feedbackLearnerId === undefined || this.feedbackLearnerId === null) ? 'Player ID: ' + player.id : (
+      this.feedbackLearnerId === player.id ? 'your ' : "other players' "
+    ) + 'game progress';
     this.lineTooltip.attr('class', 'score-progress-line-tooltip')
       .style('left', (x - 5) + 'px')
       .style('top', top + 'px')
@@ -1100,7 +1175,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    * Calculate new ticks when zooming.
    */
   redrawAxes(k) {
-    this.xAxis.tickArguments([this.d3.timeMinute.every(30 / Math.round(k))]);
+    this.xAxis.tickArguments([this.d3.timeMinute.every(this.tickLength / Math.round(k))]);
     this.svg.select('.score-progress.x-axis').call(this.xAxis);
   }
 
@@ -1128,8 +1203,8 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    *
    * @returns ProgressPlayer[] players' data for visualization.
    */
-  getPlayersWithEvents(): ProgressPlayer[] {
-    return this.visualizationService.getScoreProgressPlayersWithEvents(this.data);
+  getPlayersWithEvents(enableAllPlayers: boolean, currentPlayer: string): ProgressPlayer[] {
+    return this.visualizationService.getScoreProgressPlayersWithEvents(this.data, enableAllPlayers, currentPlayer);
   }
 
   /**
@@ -1137,7 +1212,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    * @returns number longest game time.
    */
   getMaximumTime(includeTimeGaps: boolean = false) {
-    return this.visualizationService.getScoreFinalMaxTime(this.data, includeTimeGaps);
+    return this.visualizationService.getScoreFinalMaxTime(this.data, includeTimeGaps, this.enableAllPlayers, this.feedbackLearnerId);
   }
 
   /**

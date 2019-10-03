@@ -1,13 +1,24 @@
+<kypo2-viz-overview-table
+    [useLocalMock]="true"
+    [trainingDefinitionId]="8"
+    [standalone]="true"
+    [trainingInstanceId]="18"
+    [feedbackLearnerId]="'Participant2'">
+</kypo2-viz-overview-table>
+
 <kypo2-viz-overview-clustering
-  [feedbackLearnerId]="'Participant1'"
-  [size]="{width: 800, height: 500}"
+  [useLocalMock]="true"
+  [feedbackLearnerId]="'Participant2'"
+  [size]="{width: 1200, height: 500}"
   [trainingInstanceId]="18"
   [trainingDefinitionId]="8">
 </kypo2-viz-overview-clustering>
 
 <kypo2-viz-overview-timeline
-  [feedbackLearnerId]="'Participant1'"
-  [size]="{width: 1000, height: 700}"
+  [useLocalMock]="true"
+  [enableAllPlayers]="true"
+  [feedbackLearnerId]="'Participant2'"
+  [size]="{width: 1200, height: 500}"
   [trainingInstanceId]="18"
   [trainingDefinitionId]="8">
 </kypo2-viz-overview-timeline>

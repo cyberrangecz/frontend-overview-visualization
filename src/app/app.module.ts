@@ -6,6 +6,7 @@ import { Kypo2AuthInterceptor, Kypo2AuthModule } from 'kypo2-auth';
 import { OAuthModule, OAuthStorage } from 'angular-oauth2-oidc';
 import { AppRoutingModule } from './app-routing.module';
 import { environment } from 'src/environments/environment';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -13,6 +14,7 @@ import { environment } from 'src/environments/environment';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
     OAuthModule.forRoot(

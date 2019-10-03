@@ -30,6 +30,7 @@ import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config'
 import {DataService} from '../../../services/data.service';
 import {GameInformation} from '../../../shared/interfaces/game-information';
 import {GameEvents} from '../../../shared/interfaces/game-events';
+import {EVENTS} from '../../../shared/mocks/events.mock';
 
 @Component({
   selector: 'kypo2-viz-overview-levels',
@@ -37,12 +38,15 @@ import {GameEvents} from '../../../shared/interfaces/game-events';
   styleUrls: ['./levels.component.css']
 })
 export class LevelsComponent implements OnInit, OnChanges {
-  @Input() data: GameData;
+  @Input() data: GameData = {information: null, events: null};
+  @Input() jsonGameData: GameData = {information: null, events: null};
+  @Input() useLocalMock = false;
   @Input() inputSelectedPlayerId: string;
   @Input() feedbackLearnerId: string;
   @Input() eventService: ClusteringLevelsEventService;
   @Input() size: SvgConfig;
   @Input() colorScheme: string[];
+
   @Output() outputSelectedPlayerId = new EventEmitter<string>();
 
   private d3: D3;
@@ -53,6 +57,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   private svgWidth;
   private svgHeight;
   private barWidth;
+  private tickLength = 1;
 
   private playerClicked = false; // If no player is selected, hover out of player will cancel the highlight
 
@@ -61,10 +66,22 @@ export class LevelsComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    const ret = this.load();
+    if (!this.useLocalMock) { this.load(); }
   }
 
   ngOnChanges() {
+    if (this.jsonGameData !== undefined && this.jsonGameData.information !== null) {
+      const events = this.jsonGameData.events == null ? EVENTS : this.jsonGameData.events;
+      const data = this.dataService.processData(events, this.jsonGameData.information);
+      this.data.information = data[0];
+      this.data.events = data[1];
+    }
+    if (this.jsonGameData !== undefined && this.jsonGameData.events !== null) {
+      const info = this.jsonGameData.information == null ? EVENTS : this.jsonGameData.information;
+      const data = this.dataService.processData(this.jsonGameData.events, info);
+      this.data.information = data[0];
+      this.data.events = data[1];
+    }
     this.updateCanvas();
   }
 
@@ -120,7 +137,7 @@ export class LevelsComponent implements OnInit, OnChanges {
       )
       .attr(
         'height',
-        this.svgHeight + SVG_MARGIN_CONFIG.top + SVG_MARGIN_CONFIG.bottom
+        this.svgHeight + SVG_MARGIN_CONFIG.top + SVG_MARGIN_CONFIG.bottom + 20
       )
       .append('g')
       .attr(
@@ -262,7 +279,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     const timeScale = this.getTimeScale();
     const xAxis = d3
       .axisBottom(timeScale)
-      .tickArguments([d3.timeMinute.every(30)])
+      .tickArguments([d3.timeMinute.every(this.tickLength)])
       .tickFormat((d: Date) => d3.timeFormat('%H:%M:%S')(d))
       .tickSize(AXES_CONFIG.xAxis.tickSize)
       .tickSizeOuter(0);
@@ -287,6 +304,12 @@ export class LevelsComponent implements OnInit, OnChanges {
   getTimeScale(): any {
     const scaleDomainStart = new Date(0, 0, 0, 0, 0, 0, 0);
     const scaleDomainEnd = new Date(0, 0, 0, 0, 0, this.getMaximumTime(), 0);
+    const fullTimeAxis = Math.abs(scaleDomainEnd.getTime() - scaleDomainStart.getTime() ) / 1000;
+
+    while ((fullTimeAxis / this.tickLength) > 600 ) {
+      this.tickLength *= (this.tickLength === 1 || this.tickLength > 160) ? 5 : 2;
+    }
+
     const timeScale = this.d3
       .scaleTime()
       .range([0, this.barWidth])
@@ -302,9 +325,9 @@ export class LevelsComponent implements OnInit, OnChanges {
       .append('text')
       .attr(
         'transform',
-        `translate(${this.barWidth - 50}, ${this.svgHeight + 0.3 * 0.3 +
-          26})`
+        `translate(${this.barWidth / 2 - 50}, ${this.svgHeight  + 60})`
       )
+      .text('time per level')
       .style('fill', '#4c4a4a');
   }
 
@@ -731,7 +754,14 @@ export class LevelsComponent implements OnInit, OnChanges {
     const yOffset = groupHeight - coordinates[1] < 60 ? -50 : 10;
 
     playerTooltip
-      .html(`<p><b>Player ID: ${player.id} <br> Score: ${player.score}</b>`)
+      .html(`<p><b>${
+        /* if the feedbackLearnerId is undefined or null, we assume the visualization is in the organizer/designer view mode
+        and therefore we can see (unline the learner) all the Ids.
+         */
+        (this.feedbackLearnerId === undefined || this.feedbackLearnerId === null) ? 'Player ID: ' + player.id : ( 
+          this.feedbackLearnerId === player.id ? 'you' : 'other player'
+        )
+      } <br> Score: ${player.score}</b>`)
       .style('left', this.d3.event.pageX + 10 + 'px')
       .style('top', this.d3.event.pageY + yOffset + 'px');
   }

@@ -41,7 +41,7 @@ export const AXES_CONFIG: AxesConfig = {
             x: -PLAYER_POINT_CONFIG.pointRadius/2,
             y: SVG_CONFIG.height + BARS_CONFIG.padding * BARS_CONFIG.padding
         },
-        tickSize: 15
+        tickSize: 7
     },
     yAxis: {
         position: {

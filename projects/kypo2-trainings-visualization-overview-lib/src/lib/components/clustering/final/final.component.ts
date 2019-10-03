@@ -24,6 +24,7 @@ import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config'
 import {GameInformation} from '../../../shared/interfaces/game-information';
 import {GameEvents} from '../../../shared/interfaces/game-events';
 import {DataService} from '../../../services/data.service';
+import {EVENTS} from '../../../shared/mocks/events.mock';
 
 @Component({
   selector: 'kypo2-viz-overview-final',
@@ -31,7 +32,9 @@ import {DataService} from '../../../services/data.service';
   styleUrls: ['./final.component.css']
 })
 export class FinalComponent implements OnInit, OnChanges {
-  @Input() data: GameData;
+  @Input() data: GameData = {information: null, events: null};
+  @Input() jsonGameData: GameData = {information: null, events: null};
+  @Input() useLocalMock = false;
   @Input() inputSelectedPlayerId: string;
   @Input() feedbackLearnerId: string;
   @Input() colorScheme: string[];
@@ -47,6 +50,7 @@ export class FinalComponent implements OnInit, OnChanges {
   private barWidth;
   private svgHeight;
   private svgWidth;
+  private tickLength = 1;
 
   private playerClicked = false; // If no player is selected, hover out of player will cancel the highlight
 
@@ -55,7 +59,7 @@ export class FinalComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.load();
+    if (!this.useLocalMock) { this.load(); }
   }
 
   load() {
@@ -67,6 +71,18 @@ export class FinalComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
+    if (this.jsonGameData !== undefined && this.jsonGameData.information !== null) {
+      const events = this.jsonGameData.events == null ? EVENTS : this.jsonGameData.events;
+      const data = this.dataService.processData(events, this.jsonGameData.information);
+      this.data.information = data[0];
+      this.data.events = data[1];
+    }
+    if (this.jsonGameData !== undefined && this.jsonGameData.events !== null) {
+      const info = this.jsonGameData.information == null ? EVENTS : this.jsonGameData.information;
+      const data = this.dataService.processData(this.jsonGameData.events, info);
+      this.data.information = data[0];
+      this.data.events = data[1];
+    }
     this.updateCanvas();
   }
 
@@ -121,7 +137,7 @@ export class FinalComponent implements OnInit, OnChanges {
       )
       .attr(
         'height',
-        this.svgHeight + SVG_MARGIN_CONFIG.top + SVG_MARGIN_CONFIG.bottom
+        this.svgHeight + SVG_MARGIN_CONFIG.top + SVG_MARGIN_CONFIG.bottom + 30
       )
       .append('g')
       .attr(
@@ -283,7 +299,7 @@ export class FinalComponent implements OnInit, OnChanges {
     const d3 = this.d3;
     const xAxis = d3
       .axisBottom(timeScale)
-      .tickArguments([d3.timeMinute.every(30)])
+      .tickArguments([d3.timeMinute.every(this.tickLength)])
       .tickFormat((d: Date) => d3.timeFormat('%H:%M:%S')(d))
       .tickSize(AXES_CONFIG.xAxis.tickSize)
       .tickSizeOuter(0);
@@ -310,6 +326,12 @@ export class FinalComponent implements OnInit, OnChanges {
   getTimeScale(): any {
     const scaleDomainStart = new Date(0, 0, 0, 0, 0, 0, 0);
     const scaleDomainEnd = new Date(0, 0, 0, 0, 0, this.getMaximumTime(), 0);
+    const fullTimeAxis = Math.abs(scaleDomainEnd.getTime() - scaleDomainStart.getTime() ) / 1000;
+
+    while ((fullTimeAxis / this.tickLength) > 600 ) {
+      this.tickLength *= (this.tickLength === 1 || this.tickLength > 160) ? 5 : 2;
+    }
+
     const timeScale = this.d3
       .scaleTime()
       .range([0, this.barWidth])
@@ -325,12 +347,11 @@ export class FinalComponent implements OnInit, OnChanges {
       .append('text')
       .attr(
         'transform',
-        `translate(${this.barWidth - 50}, ${this.svgHeight + 20 +
-          26})`
+        `translate(${this.barWidth / 2 - 50}, ${this.svgHeight + 75})`
       )
-      .style('fill', '#4c4a4a');
-      /*.style('font-weight', 'bold')
-      .text('');*/
+      .style('fill', '#4c4a4a')
+      .text('game time');
+      /*.style('font-weight', 'bold');*/
   }
 
   /**
@@ -567,7 +588,11 @@ export class FinalComponent implements OnInit, OnChanges {
     const y = this.d3.event.pageY + yOffset;
 
     playerTooltip
-      .html(`<p><b>Player ID: ${player.id} <br> Score: ${player.score}</b>`)
+      .html(`<p><b>${
+        (this.feedbackLearnerId === undefined || this.feedbackLearnerId === null) ? 'Player ID: ' + player.id : (
+          this.feedbackLearnerId === player.id ? 'you' : 'other player'
+        )
+        } <br> Score: ${player.score}</b>`)
       .style('left', x + 'px')
       .style('top', y + 'px');
   }

@@ -1,7 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { GAME_INFORMATION } from './mocks/information.mock';
-import { EVENTS } from './mocks/events.mock';
-import { OAuthService, JwksValidationHandler } from 'angular-oauth2-oidc';
 
 @Component({
   selector: 'app-root',
