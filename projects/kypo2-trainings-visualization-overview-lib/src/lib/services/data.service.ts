@@ -1,15 +1,18 @@
+import { PlayerService } from './player.service';
 import { Injectable } from '@angular/core';
 import { GameInformation } from '../shared/interfaces/game-information';
 import { GameEvents } from '../shared/interfaces/game-events';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from '@angular/common/http';
 import {catchError, map} from 'rxjs/operators';
 import { Event } from '../shared/interfaces/event';
-import {forkJoin, Observable, throwError} from 'rxjs';
+import {forkJoin, Observable, throwError, of} from 'rxjs';
 import {Level} from '../shared/interfaces/level';
 import {LevelEvents} from '../shared/interfaces/level-events';
 import {Hint} from '../shared/interfaces/hint';
 import {GenericEvent} from '../shared/interfaces/generic-event.enum';
 import {ConfigService} from '../config/config.service';
+import { User, UserDTO } from 'kypo2-auth';
+import { Kypo2TraineeModeInfo } from '../shared/interfaces/kypo2-trainee-mode-info';
 
 @Injectable()
 /**
@@ -17,18 +20,23 @@ import {ConfigService} from '../config/config.service';
  */
 export class DataService {
   constructor(private http: HttpClient,
-              private configService: ConfigService) { }
+              private configService: ConfigService,
+              private playerService: PlayerService) { }
 
-  public getAllData() {
+  public getAllData(traineeModeInfo: Kypo2TraineeModeInfo) {
     return forkJoin([
       this.getInformation(),
-      this.getEvents()
+      this.getEvents(),
+      Kypo2TraineeModeInfo.isTrainee(traineeModeInfo) ? of(null) : this.getParticipants()
     ]).pipe(map(
       (data) => {
         const info = data[0];
         const events = data[1];
+        const participants = data[2] !== null ? data[2] : this.anonymizeParticipants(events, traineeModeInfo.activeTraineeId);
 
+        this.playerService.setPlayers(participants);
         const result = this.processData(info, events);
+        this.populateParticipants(events, participants);
         return result;
       }
     ), catchError( (error) => {
@@ -52,7 +60,7 @@ export class DataService {
     };
   }
 
-  public processEvents(info, events):GameEvents {
+  public processEvents(info, events): GameEvents {
     // first we get level-divided event structure
     let levels: LevelEvents[] = this.initializeLevels(info.levels);
     // and finally we put all events into suitble levels
@@ -112,10 +120,11 @@ export class DataService {
   }
 
   sortAllEvents(levels: LevelEvents[], events: any[]): LevelEvents[] {
-    events.forEach((event) => {
+     events.forEach((event) => {
       const e: Event = {
           levelType: event.level_type,
-          playerId: event.player_login.split('@')[0],
+          player: null,
+          playerId: event.user_ref_id,
           timestamp: event.timestamp,
           gametime: event.game_time / 1000,
           event: event.type,
@@ -147,6 +156,26 @@ export class DataService {
     return levels;
   }
 
+  private anonymizeParticipants(events, activeUserId: number) {
+    const participants = [];
+    // unique ids of participants from events data
+    const participantsId = [...new Set(events.map(event => event.user_ref_id))];
+
+    participantsId.forEach(id => {
+      const trainee = new User([]);
+      trainee.id = id as number;
+      trainee.name = id === activeUserId ? 'you' : 'other player';
+      participants.push(trainee);
+    });
+    return participants;
+  }
+
+  populateParticipants(events, participants) {
+      events.forEach(event => {
+        event.player = participants.find(paricipant => paricipant.id === event.user_ref_id);
+      });
+  }
+
   /**
    * Fetches static game information data
    */
@@ -162,4 +191,15 @@ export class DataService {
       + 'training-events/training-definitions/' + this.configService.trainingDefinitionId
       + '/training-instances/' + this.configService.trainingInstanceId);
   }
+
+  /**
+   * Fetches participants data
+   */
+  getParticipants(): Observable<User[]> {
+    return this.http.get<UserDTO[]>(`${this.configService.config.kypo2TrainingsVisualizationRestBasePath}visualizations/training-instances/${this.configService.trainingInstanceId}/participants`)
+    .pipe(
+      map(userDTOs => userDTOs.map(userDTO => User.fromDTO(userDTO)))
+    );
+  }
+
 }

@@ -2,7 +2,7 @@ export const EMPTY_INFO = {
   'name': 'x',
   'levels': [],
   'estimatedTime': 1
-}
+};
 
 export const GAME_INFORMATION = {
   'name': 'CTF-1: No Secure Connection',

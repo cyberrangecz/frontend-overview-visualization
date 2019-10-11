@@ -3,6 +3,7 @@
  */
 export interface PlayerVisualizationData {
     id: string;
+    name: string;
     score: number;
     time: number;
 }

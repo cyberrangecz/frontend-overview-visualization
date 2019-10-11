@@ -18,6 +18,8 @@ import {GameEvents} from '../../../shared/interfaces/game-events';
 import {GenericEvent} from '../../../shared/interfaces/generic-event.enum';
 import {EMPTY_INFO, GAME_INFORMATION} from '../../../shared/mocks/information.mock';
 import {EMPTY_EVENTS, EVENTS} from '../../../shared/mocks/events.mock';
+import { Kypo2TraineeModeInfo } from '../../../shared/interfaces/kypo2-trainee-mode-info';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'kypo2-viz-overview-line',
@@ -36,6 +38,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   @Input() size: {width: number; height: number};
   @Input() trainingDefinitionId: number;
   @Input() trainingInstanceId: number;
+  @Input() traineeModeInfo: Kypo2TraineeModeInfo;
 
   @Output() wideTable: EventEmitter<any> = new EventEmitter<any>();
 
@@ -131,7 +134,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   load() {
-    this.dataService.getAllData().subscribe((res: [GameInformation, GameEvents]) => {
+    this.dataService.getAllData(this.traineeModeInfo).pipe(take(1)).subscribe((res: [GameInformation, GameEvents]) => {
       this.data.information = res[0];
       this.data.events = res[1];
 
@@ -645,7 +648,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
 
     context.append('g')
       .attr('class', 'score-progress-context-x-axis')
-      .attr('transform', `translate(0, ${CONTEXT_CONFIG.height+10})`)
+      .attr('transform', `translate(0, ${CONTEXT_CONFIG.height + 10})`)
       .call(this.xAxis);
 
     return context;
@@ -902,9 +905,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
     const topMargin = -50;
     const top: number = y + topMargin;
 
-    const content = (this.feedbackLearnerId === undefined || this.feedbackLearnerId === null) ? 'Player ID: ' + player.id : (
-      this.feedbackLearnerId === player.id ? 'your ' : "other players' "
-    ) + 'game progress';
+    const content = `Player: <br> ${player.name.toString()}`;
     this.lineTooltip.attr('class', 'score-progress-line-tooltip')
       .style('left', (x - 5) + 'px')
       .style('top', top + 'px')

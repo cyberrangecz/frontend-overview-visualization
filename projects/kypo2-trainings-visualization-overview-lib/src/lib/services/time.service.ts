@@ -53,7 +53,7 @@ export class TimeService {
 
   getPlayerMaxTime(events: GameEvents, currentPlayer: string): number {
     const flattenedEvents = this.flattenEvents(events);
-    const eventsGroupedByPlayer = this.d3.nest().key((event: Event) => event.playerId).entries(flattenedEvents);
+    const eventsGroupedByPlayer = this.d3.nest().key((event: Event) => event.playerId.toString()).entries(flattenedEvents);
     const allPlayerEvents = eventsGroupedByPlayer.find(value => value.key === currentPlayer).values;
     return allPlayerEvents[allPlayerEvents.length - 1].gametime;
   }
@@ -62,9 +62,7 @@ export class TimeService {
     const playersMaxTimes = {};
     if (events === null || events.levels === null) { return {}; }
     const flattenedEvents = this.flattenEvents(events);
-
-    const eventsGroupedByPlayer = this.d3.nest().key((event: Event) => event.playerId).entries(flattenedEvents);
-
+    const eventsGroupedByPlayer = this.d3.nest().key((event: Event) => event.playerId.toString()).entries(flattenedEvents);
     eventsGroupedByPlayer.forEach(player => {
       let time: any;
       // if (!player.values[player.values.length - 1].gametime === undefined) {
@@ -101,7 +99,7 @@ export class TimeService {
     events.levels.forEach(level => {
       if (level.type === 'GAME_LEVEL') {
         const playersMaxTimes = {};
-        const playerNest = this.d3.nest().key((e: Event) => e.playerId).entries(level.events);
+        const playerNest = this.d3.nest().key((e: Event) => e.playerId.toString()).entries(level.events);
         playerNest.forEach(player => {
           const startTimestamp = player.values[0].gametime;
           const endTimestamp = player.values[player.values.length - 1].gametime;

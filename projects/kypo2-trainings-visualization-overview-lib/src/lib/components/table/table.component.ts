@@ -1,3 +1,5 @@
+import { PLAYERS } from './../../shared/mocks/players.mock';
+import { PlayerService } from './../../services/player.service';
 import {Component, OnInit, Input, OnDestroy, OnChanges, ViewChild} from '@angular/core';
 import { GameData } from '../../shared/interfaces/game-data';
 import { DataProcessor } from '../../services/data-processor.service';
@@ -11,6 +13,8 @@ import {DataService} from '../../services/data.service';
 import {ConfigService} from '../../config/config.service';
 import {EMPTY_INFO, GAME_INFORMATION} from '../../shared/mocks/information.mock';
 import {EMPTY_EVENTS, EVENTS} from '../../shared/mocks/events.mock';
+import { Kypo2TraineeModeInfo } from '../../shared/interfaces/kypo2-trainee-mode-info';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'kypo2-viz-overview-table',
@@ -27,6 +31,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   @Input() feedbackLearnerId: string;
   @Input() trainingDefinitionId: number;
   @Input() trainingInstanceId: number;
+  @Input() traineeModeInfo: Kypo2TraineeModeInfo;
 
   public scoreTableData = {playerIds: [], levels: [], finalScores: {}};
   public playersOrdered = [];
@@ -43,7 +48,8 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
       private tableService: TableService,
       private filtersService: FiltersService,
       private dataService: DataService,
-      private configService: ConfigService
+      private configService: ConfigService,
+      private playerService: PlayerService
     ) {
     this.playerColorScaleSource = this.tableService.playerColorScale$.subscribe(
       (scale) => {
@@ -59,6 +65,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit() {
     if (this.useLocalMock) {
       this.data = {information: GAME_INFORMATION, events: EVENTS};
+      this.playerService.setPlayers(PLAYERS);
       this.redraw();
     } else {
       this.load();
@@ -80,7 +87,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   load() {
-    this.dataService.getAllData().subscribe((res: [GameInformation, GameEvents]) => {
+    this.dataService.getAllData(this.traineeModeInfo).pipe(take(1)).subscribe((res: [GameInformation, GameEvents]) => {
       this.data.information = res[0];
       this.data.events = res[1];
 

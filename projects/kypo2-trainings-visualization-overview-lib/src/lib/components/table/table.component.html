@@ -80,9 +80,7 @@
                 <td mat-cell>
                   <div *ngIf="player.checked && !standalone" class="row-stripe" [ngStyle]="{'background': playerColorScale(player.id.toString())}"></div>
                   <span [ngStyle]="{'font-weight': player.id === feedbackLearnerId ? 'bold' : 'normal', 'padding-right': '10px'}">{{
-                    (feedbackLearnerId === undefined || feedbackLearnerId === null) ? player.id : (
-                      feedbackLearnerId === player.id ? 'you' : 'other player'
-                    )
+                    player.name
                   }}</span>
                   <ng-container *ngIf="!standalone">
                     <input style="display:none;" type="checkbox" name="player" [id]="player.id" [(ngModel)]="player.checked">

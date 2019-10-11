@@ -31,6 +31,8 @@ import {DataService} from '../../../services/data.service';
 import {GameInformation} from '../../../shared/interfaces/game-information';
 import {GameEvents} from '../../../shared/interfaces/game-events';
 import {EVENTS} from '../../../shared/mocks/events.mock';
+import { Kypo2TraineeModeInfo } from '../../../shared/interfaces/kypo2-trainee-mode-info';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'kypo2-viz-overview-levels',
@@ -46,7 +48,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   @Input() eventService: ClusteringLevelsEventService;
   @Input() size: SvgConfig;
   @Input() colorScheme: string[];
-
+  @Input() traineeModeInfo: Kypo2TraineeModeInfo;
   @Output() outputSelectedPlayerId = new EventEmitter<string>();
 
   private d3: D3;
@@ -86,7 +88,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   }
 
   load() {
-    this.dataService.getAllData().subscribe((res: [GameInformation, GameEvents]) => {
+    this.dataService.getAllData(this.traineeModeInfo).pipe(take(1)).subscribe((res: [GameInformation, GameEvents]) => {
     this.data.information = res[0];
     this.data.events = res[1];
     this.updateCanvas();
@@ -754,14 +756,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     const yOffset = groupHeight - coordinates[1] < 60 ? -50 : 10;
 
     playerTooltip
-      .html(`<p><b>${
-        /* if the feedbackLearnerId is undefined or null, we assume the visualization is in the organizer/designer view mode
-        and therefore we can see (unline the learner) all the Ids.
-         */
-        (this.feedbackLearnerId === undefined || this.feedbackLearnerId === null) ? 'Player ID: ' + player.id : ( 
-          this.feedbackLearnerId === player.id ? 'you' : 'other player'
-        )
-      } <br> Score: ${player.score}</b>`)
+      .html(`<p><b>Player: ${player.name} <br> Score: ${player.score}</b>`)
       .style('left', this.d3.event.pageX + 10 + 'px')
       .style('top', this.d3.event.pageY + yOffset + 'px');
   }

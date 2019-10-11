@@ -31,7 +31,7 @@
     "angular-oauth2-oidc": "^5.0.2",
     "core-js": "^2.6.9",
     "d3-ng2-service": "^2.2.0",
-    "kypo2-auth": "^1.4.0",
+    "kypo2-auth": "^1.4.1",
     "rxjs": "^6.5.2",
     "zone.js": "~0.9.1"
   },

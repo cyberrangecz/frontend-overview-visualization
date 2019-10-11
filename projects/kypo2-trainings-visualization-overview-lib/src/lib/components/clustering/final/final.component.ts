@@ -25,6 +25,8 @@ import {GameInformation} from '../../../shared/interfaces/game-information';
 import {GameEvents} from '../../../shared/interfaces/game-events';
 import {DataService} from '../../../services/data.service';
 import {EVENTS} from '../../../shared/mocks/events.mock';
+import { Kypo2TraineeModeInfo } from '../../../shared/interfaces/kypo2-trainee-mode-info';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'kypo2-viz-overview-final',
@@ -40,6 +42,7 @@ export class FinalComponent implements OnInit, OnChanges {
   @Input() colorScheme: string[];
   @Input() eventService: ClusteringFinalEventService;
   @Input() size: SvgConfig;
+  @Input() traineeModeInfo: Kypo2TraineeModeInfo;
   @Output() outputSelectedPlayerId = new EventEmitter<string>();
 
   private d3: D3;
@@ -63,7 +66,7 @@ export class FinalComponent implements OnInit, OnChanges {
   }
 
   load() {
-    this.dataService.getAllData().subscribe((res: [GameInformation, GameEvents]) => {
+    this.dataService.getAllData(this.traineeModeInfo).pipe(take(1)).subscribe((res: [GameInformation, GameEvents]) => {
       this.data.information = res[0];
       this.data.events = res[1];
       this.updateCanvas();
@@ -83,6 +86,7 @@ export class FinalComponent implements OnInit, OnChanges {
       this.data.information = data[0];
       this.data.events = data[1];
     }
+
     this.updateCanvas();
   }
 
@@ -355,7 +359,7 @@ export class FinalComponent implements OnInit, OnChanges {
   }
 
   /**
-   * Removes the line tick and adds circle instead on the first tick of time axis
+   * Removes the line tick and adds circle instead oprocessDatan the first tick of time axis
    */
   styleFirstTickOfTimeAxis() {
     this.svg.select('.x-axis>.tick>line').remove();
@@ -588,11 +592,7 @@ export class FinalComponent implements OnInit, OnChanges {
     const y = this.d3.event.pageY + yOffset;
 
     playerTooltip
-      .html(`<p><b>${
-        (this.feedbackLearnerId === undefined || this.feedbackLearnerId === null) ? 'Player ID: ' + player.id : (
-          this.feedbackLearnerId === player.id ? 'you' : 'other player'
-        )
-        } <br> Score: ${player.score}</b>`)
+      .html(`<p><b>Player: ${player.name} <br> Score: ${player.score}</b>`)
       .style('left', x + 'px')
       .style('top', y + 'px');
   }

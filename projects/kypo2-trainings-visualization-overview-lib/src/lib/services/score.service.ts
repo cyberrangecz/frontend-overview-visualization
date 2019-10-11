@@ -27,7 +27,7 @@ export class ScoreService {
       if (onlyGameLevels && level.type !== 'GAME_LEVEL') {
         // console.log('skipping level ' + level.number);
       } else {
-        const levelGroupedEvents = this.d3.nest().key((e: Event) => e.playerId).entries(level.events);
+        const levelGroupedEvents = this.d3.nest().key((e: Event) => e.playerId.toString()).entries(level.events);
         const levelInfo = information.levels[levelNumbers++];
         levelGroupedEvents.forEach(player => {
           levelGroup[player.key] = player.values[player.values.length - 1].actualScore;
@@ -65,7 +65,7 @@ export class ScoreService {
     let playerWantedEventsInCurrentLevel = {};
     levels.forEach(level => {
       if (onlyGameLevels && level.type === 'GAME_LEVEL') {
-        const playerEvents = this.d3.nest().key((event: Event) => event.playerId).entries(level.events);
+        const playerEvents = this.d3.nest().key((event: Event) => event.playerId.toString()).entries(level.events);
         playerEvents.forEach(player => {
           const playerId = player.key;
           const playerValEvents = player.values;
