@@ -4,6 +4,7 @@ import {GameData} from '../../shared/interfaces/game-data';
 import {ConfigService} from '../../config/config.service';
 import {GAME_INFORMATION} from '../../shared/mocks/information.mock';
 import {EVENTS} from '../../shared/mocks/events.mock';
+import { Kypo2TraineeModeInfo } from '../../shared/interfaces/kypo2-trainee-mode-info';
 
 @Component({
   selector: 'kypo2-viz-overview-timeline',
@@ -22,6 +23,7 @@ export class TimelineComponent implements OnInit, OnChanges {
   @Input() trainingDefinitionId: number;
   @Input() trainingInstanceId: number;
   public fullWidthTable = false;
+  @Input() traineeModeInfo: Kypo2TraineeModeInfo;
 
   @ViewChild(LineComponent, { static: true }) lineComponent: LineComponent;
 

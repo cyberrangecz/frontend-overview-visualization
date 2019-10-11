@@ -1,3 +1,4 @@
+import { PlayerService } from './player.service';
 import {Injectable} from '@angular/core';
 import {BarVisualizationData} from '../components/clustering/interfaces/bar-visualization-data';
 import {PlayerVisualizationData} from '../components/clustering/interfaces/player-visualization-data';
@@ -19,7 +20,7 @@ export class DataProcessor {
 
   private d3: D3;
 
-  constructor(private timeService: TimeService, private scoreService: ScoreService, d3service: D3Service) {
+  constructor(private timeService: TimeService, private scoreService: ScoreService, d3service: D3Service, private playerService: PlayerService) {
     this.d3 = d3service.getD3();
   }
 
@@ -46,7 +47,7 @@ export class DataProcessor {
 
       playersInCurrentLevel.forEach(playerId => {
         const playerData: PlayerVisualizationData = {
-          id: playerId, score: +currentLevel[playerId], time: +times[i][playerId]
+          id: playerId, name: this.playerService.getPlayer(+playerId).name, score: +currentLevel[playerId], time: +times[i][playerId]
         };
         levelData.push(playerData);
       });
@@ -75,7 +76,7 @@ export class DataProcessor {
     const result = [];
     scores.forEach(player => {
       const playerData: PlayerVisualizationData = {
-        id: player.id, score: +player.score, time: +times[player.id]
+        id: player.id, name: this.playerService.getPlayer(+player.id).name, score: +player.score, time: +times[player.id]
       };
       result.push(playerData);
     });
@@ -101,10 +102,11 @@ export class DataProcessor {
     playersWithEvents.forEach(player => {
       const playerId: string = player.key;
       if (enableAllPlayers || currentPlayer === playerId) {
+        const playerName: string = this.playerService.getPlayer(+player.key).name;
         const playerEvents: Event[] = player.values;
         const playerEventsGroupedByLevel = this.d3.nest().key((event: Event) => event.level.toString()).entries(playerEvents);
         const playerScoredEvents: ScoredEvent[] = this.getScoredEvents(playerEventsGroupedByLevel, gameData);
-        progressPlayers.push({id: playerId, events: playerScoredEvents, checked: false});
+        progressPlayers.push({id: playerId, name: playerName, events: playerScoredEvents, checked: false});
       }
     });
     return progressPlayers;
@@ -166,7 +168,7 @@ export class DataProcessor {
       .map(level => level.events
         .map((event: Event) => Object.assign(event, {level: +level.number})));
     const events = flattenedEvents.reduce((acc, curr) => acc.concat(curr));
-    const groupedByPlayer = this.d3.nest().key((event: Event) => event.playerId).entries(events);
+    const groupedByPlayer = this.d3.nest().key((event: Event) => event.playerId.toString()).entries(events);
     return groupedByPlayer;
   }
 

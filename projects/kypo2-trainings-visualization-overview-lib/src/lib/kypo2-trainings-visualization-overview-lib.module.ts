@@ -1,3 +1,4 @@
+import { PlayerService } from './services/player.service';
 import {ModuleWithProviders, NgModule, Optional, SkipSelf} from '@angular/core';
 import { Kypo2TrainingsVisualizationOverviewLibComponent } from './kypo2-trainings-visualization-overview-lib.component';
 import { D3Service } from 'd3-ng2-service';
@@ -57,7 +58,8 @@ import {CdkColumnDef, CdkHeaderCellDef} from '@angular/cdk/table';
     TimeService,
     ConfigService,
     CdkColumnDef,
-    CdkHeaderCellDef
+    CdkHeaderCellDef,
+    PlayerService
   ]
 })
 export class Kypo2TrainingsVisualizationOverviewLibModule {
