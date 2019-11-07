@@ -27,10 +27,10 @@ import {
 } from 'd3-ng2-service/src/bundle-d3';
 import { ClusteringLevelsEventService } from '../interfaces/clustering-levels-event-service';
 import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config';
-import {DataService} from '../../../services/data.service';
-import {GameInformation} from '../../../shared/interfaces/game-information';
-import {GameEvents} from '../../../shared/interfaces/game-events';
-import {EVENTS} from '../../../shared/mocks/events.mock';
+import { DataService } from '../../../services/data.service';
+import { GameInformation } from '../../../shared/interfaces/game-information';
+import { GameEvents } from '../../../shared/interfaces/game-events';
+import { EVENTS } from '../../../shared/mocks/events.mock';
 import { Kypo2TraineeModeInfo } from '../../../shared/interfaces/kypo2-trainee-mode-info';
 import { take } from 'rxjs/operators';
 
@@ -40,15 +40,46 @@ import { take } from 'rxjs/operators';
   styleUrls: ['./levels.component.css']
 })
 export class LevelsComponent implements OnInit, OnChanges {
-  @Input() data: GameData = {information: null, events: null};
-  @Input() jsonGameData: GameData = {information: null, events: null};
+  /**
+   * Game data
+   */
+  @Input() data: GameData = { information: null, events: null };
+  /**
+   * JSON data to use instead of data from API
+   */
+  @Input() jsonGameData: GameData = { information: null, events: null };
+  /**
+   * Flag to use local mock
+   * @deprecated
+   */
   @Input() useLocalMock = false;
+  /**
+   * Player to highlight
+   */
   @Input() inputSelectedPlayerId: string;
+  /**
+   * Id of player
+   */
   @Input() feedbackLearnerId: string;
+  /**
+   * Service containing event handlers which are invoked whenever the visualization's events are fired.
+   */
   @Input() eventService: ClusteringLevelsEventService;
+  /**
+  * Main svg dimensions.
+  */
   @Input() size: SvgConfig;
+  /**
+   * Array of color strings for visualization.
+   */
   @Input() colorScheme: string[];
+  /**
+   * Use if visualization should use anonymized data (without names and credentials of other users) from trainee point of view
+   */
   @Input() traineeModeInfo: Kypo2TraineeModeInfo;
+  /**
+   * Emits id of selected player.
+   */
   @Output() outputSelectedPlayerId = new EventEmitter<string>();
 
   private d3: D3;
@@ -89,9 +120,9 @@ export class LevelsComponent implements OnInit, OnChanges {
 
   load() {
     this.dataService.getAllData(this.traineeModeInfo).pipe(take(1)).subscribe((res: [GameInformation, GameEvents]) => {
-    this.data.information = res[0];
-    this.data.events = res[1];
-    this.updateCanvas();
+      this.data.information = res[0];
+      this.data.events = res[1];
+      this.updateCanvas();
     });
   }
 
@@ -145,10 +176,10 @@ export class LevelsComponent implements OnInit, OnChanges {
       .attr(
         'transform',
         'translate(' +
-          SVG_MARGIN_CONFIG.left +
-          ',' +
-          SVG_MARGIN_CONFIG.top +
-          ')'
+        SVG_MARGIN_CONFIG.left +
+        ',' +
+        SVG_MARGIN_CONFIG.top +
+        ')'
       );
   }
 
@@ -292,7 +323,7 @@ export class LevelsComponent implements OnInit, OnChanges {
       .attr(
         'transform',
         `translate(${AXES_CONFIG.xAxis.position.x}, ${
-          this.svgHeight + 0.3 * 0.3
+        this.svgHeight + 0.3 * 0.3
         })`
       )
       .call(xAxis);
@@ -306,9 +337,9 @@ export class LevelsComponent implements OnInit, OnChanges {
   getTimeScale(): any {
     const scaleDomainStart = new Date(0, 0, 0, 0, 0, 0, 0);
     const scaleDomainEnd = new Date(0, 0, 0, 0, 0, this.getMaximumTime(), 0);
-    const fullTimeAxis = Math.abs(scaleDomainEnd.getTime() - scaleDomainStart.getTime() ) / 1000;
+    const fullTimeAxis = Math.abs(scaleDomainEnd.getTime() - scaleDomainStart.getTime()) / 1000;
 
-    while ((fullTimeAxis / this.tickLength) > 600 ) {
+    while ((fullTimeAxis / this.tickLength) > 600) {
       this.tickLength *= (this.tickLength === 1 || this.tickLength > 160) ? 5 : 2;
     }
 
@@ -327,7 +358,7 @@ export class LevelsComponent implements OnInit, OnChanges {
       .append('text')
       .attr(
         'transform',
-        `translate(${this.barWidth / 2 - 50}, ${this.svgHeight  + 60})`
+        `translate(${this.barWidth / 2 - 50}, ${this.svgHeight + 60})`
       )
       .text('time per level')
       .style('fill', '#4c4a4a');
@@ -354,7 +385,7 @@ export class LevelsComponent implements OnInit, OnChanges {
       .attr(
         'transform',
         `translate(${AXES_CONFIG.yAxis.position.x}, ${
-          AXES_CONFIG.yAxis.position.y
+        AXES_CONFIG.yAxis.position.y
         })`
       )
       .append('path')
@@ -370,7 +401,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   drawScoreAxes() {
     const d3 = this.d3;
     const gameLevels = this.data.information !== null ?
-      this.data.information.levels.filter( level =>  (level.type === 'GAME_LEVEL')) : [];
+      this.data.information.levels.filter(level => (level.type === 'GAME_LEVEL')) : [];
 
     d3.selectAll('.score-level-bar-max').each(bar => {
       // console.log(bar);
@@ -409,7 +440,7 @@ export class LevelsComponent implements OnInit, OnChanges {
       .attr(
         'transform',
         `translate(${AXES_CONFIG.yAxis.position.x - 50}, ${this.svgHeight /
-          2}) rotate(-90)`
+        2}) rotate(-90)`
       )
       .attr('text-anchor', 'middle')
       .style('fill', '#4c4a4a')
@@ -444,7 +475,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     const barCoordinateY = this.yScaleBandBars(levelNumber.toString());
     const barHeight = barCoordinateY + this.yScaleBandBars.bandwidth();
     const gameLevels = this.data.information !== null ?
-      this.data.information.levels.filter( level =>  (level.type === 'GAME_LEVEL')) : [];
+      this.data.information.levels.filter(level => (level.type === 'GAME_LEVEL')) : [];
     const yBarScale = this.d3
       .scaleLinear()
       .range([
@@ -579,7 +610,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     const x = coordinates[0];
     const y = coordinates[1];
     const gameLevels = this.data.information !== null ?
-      this.data.information.levels.filter( level =>  (level.type === 'GAME_LEVEL')) : [];
+      this.data.information.levels.filter(level => (level.type === 'GAME_LEVEL')) : [];
     const xScale = this.d3
       .scaleLinear()
       .range([0, this.barWidth])
@@ -773,7 +804,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     const playersGroup = playerElementNode.parentNode;
     const level = d3.select(playersGroup).datum()['number'];
     const gameLevels = this.data.information !== null ?
-      this.data.information.levels.filter( gameLevel =>  (gameLevel.type === 'GAME_LEVEL')) : [];
+      this.data.information.levels.filter(gameLevel => (gameLevel.type === 'GAME_LEVEL')) : [];
     const yScale = d3
       .scaleLinear()
       .range([0, gameLevels[level - 1].points])
@@ -799,10 +830,10 @@ export class LevelsComponent implements OnInit, OnChanges {
 
     this.updateCrosshair(groups, playersData);
     const noEventServiceWasPassed =
-    typeof this.eventService === 'undefined' || this.eventService === null;
-  if (!noEventServiceWasPassed) {
-    this.eventService.clusteringLevelsOnPlayerMousemove(player);
-  }
+      typeof this.eventService === 'undefined' || this.eventService === null;
+    if (!noEventServiceWasPassed) {
+      this.eventService.clusteringLevelsOnPlayerMousemove(player);
+    }
   }
 
   /**
@@ -817,10 +848,10 @@ export class LevelsComponent implements OnInit, OnChanges {
       this.outputSelectedPlayerId.emit();
     }
     const noEventServiceWasPassed =
-    typeof this.eventService === 'undefined' || this.eventService === null;
-  if (!noEventServiceWasPassed) {
-    this.eventService.clusteringLevelsOnPlayerMouseout(player);
-  }
+      typeof this.eventService === 'undefined' || this.eventService === null;
+    if (!noEventServiceWasPassed) {
+      this.eventService.clusteringLevelsOnPlayerMouseout(player);
+    }
   }
 
   /**
@@ -857,10 +888,10 @@ export class LevelsComponent implements OnInit, OnChanges {
     this.outputSelectedPlayerId.emit(player.id);
     this.playerClicked = true;
     const noEventServiceWasPassed =
-    typeof this.eventService === 'undefined' || this.eventService === null;
-  if (!noEventServiceWasPassed) {
-    this.eventService.clusteringLevelsOnPlayerClick(player);
-  }
+      typeof this.eventService === 'undefined' || this.eventService === null;
+    if (!noEventServiceWasPassed) {
+      this.eventService.clusteringLevelsOnPlayerClick(player);
+    }
   }
 
   /**

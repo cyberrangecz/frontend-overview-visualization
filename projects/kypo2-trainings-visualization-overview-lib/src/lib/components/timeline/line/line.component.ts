@@ -29,17 +29,50 @@ import { take } from 'rxjs/operators';
 })
 export class LineComponent implements OnInit, OnDestroy, OnChanges {
 
+  /**
+   * Game data
+   */
   @Input() data: GameData = {information: null, events: null};
+  /**
+   * JSON data to use instead of data from API
+   */
   @Input() jsonGameData: GameData = {information: null, events: null};
+   /**
+   * Flag to use local mock
+   * @deprecated
+   */
   @Input() useLocalMock = false;
+  /**
+   * Defines if all players should be displayed
+   */
   @Input() enableAllPlayers = true;
+  /**
+   * Id of player
+   */
   @Input() feedbackLearnerId: string;
+  /**
+   * Array of color strings for visualization.
+   */
   @Input() colorScheme: string[];
+  /**
+   * Main svg dimensions.
+   */
   @Input() size: {width: number; height: number};
+  /**
+   * Id of training definition
+   */
   @Input() trainingDefinitionId: number;
+  /**
+   * Id of training instance
+   */
   @Input() trainingInstanceId: number;
+  /**
+   * Use if visualization should use anonymized data (without names and credentials of other users) from trainee point of view
+   */
   @Input() traineeModeInfo: Kypo2TraineeModeInfo;
-
+  /**
+   * Emits boolean that indicates if table should be placed under the visualization
+   */
   @Output() wideTable: EventEmitter<any> = new EventEmitter<any>();
 
   players: ProgressPlayer[] = [];
@@ -993,7 +1026,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
    */
   filterEvents(unfilteredEvents: ScoredEvent[]) {
     let result: ScoredEvent[] = unfilteredEvents.filter(event => event.show); // Get rid of duplicates
-    let delay = 0;
+    const delay = 0;
     Object.keys(this.filters).forEach(key => {
       const filter = this.filters[key];
       if (!filter.checked) {
