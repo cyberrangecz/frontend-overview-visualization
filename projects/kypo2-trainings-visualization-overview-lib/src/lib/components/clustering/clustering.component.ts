@@ -5,9 +5,9 @@ import { ClusteringFinalEventService } from './interfaces/clustering-final-event
 import { FinalComponent } from './final/final.component';
 import { LevelsComponent } from './levels/levels.component';
 import { ConfigService } from '../../config/config.service';
-import {GAME_INFORMATION} from '../../shared/mocks/information.mock';
-import {EVENTS} from '../../shared/mocks/events.mock';
-import {PLAYERS} from '../../shared/mocks/players.mock';
+import { GAME_INFORMATION } from '../../shared/mocks/information.mock';
+import { EVENTS } from '../../shared/mocks/events.mock';
+import { PLAYERS } from '../../shared/mocks/players.mock';
 import { Kypo2TraineeModeInfo } from '../../shared/interfaces/kypo2-trainee-mode-info';
 
 @Component({
@@ -21,23 +21,51 @@ export class ClusteringComponent implements OnInit, OnChanges {
   @ViewChild(LevelsComponent, { static: true }) levelsComponent;
 
   public selectedPlayerId: number;
-  public gameData: GameData = {information: null, events: null};
+  public gameData: GameData = { information: null, events: null };
+  /**
+  * JSON data to use instead of data from API
+  */
   @Input() jsonGameData: GameData;
+  /**
+  * Flag to use local mock
+  * @deprecated
+  */
   @Input() useLocalMock = false;
+  /**
+   * Id of player
+   */
   @Input() feedbackLearnerId: string;
+  /**
+   * Array of color strings for visualization.
+   */
   @Input() colorScheme: string[];
+  /**
+  * Service containing event handlers which are invoked whenever the visualization's events are fired.
+  */
   @Input() eventService: ClusteringFinalEventService;
-  @Input() size: {width: number; height: number};
+  /**
+  * Main svg dimensions.
+  */
+  @Input() size: { width: number; height: number };
+  /**
+   * Id of training definition
+   */
   @Input() trainingDefinitionId: number;
+  /**
+   * Id of training instance
+   */
   @Input() trainingInstanceId: number;
+  /**
+  * Use if visualization should use anonymized data (without names and credentials of other users) from trainee point of view
+  */
   @Input() traineeModeInfo: Kypo2TraineeModeInfo;
 
   constructor(private configService: ConfigService,
-              private playerService: PlayerService) { }
+    private playerService: PlayerService) { }
 
   ngOnInit() {
     if (this.useLocalMock) {
-      this.gameData = {information: GAME_INFORMATION, events: EVENTS};
+      this.gameData = { information: GAME_INFORMATION, events: EVENTS };
       this.playerService.setPlayers(PLAYERS);
     }
   }

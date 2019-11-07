@@ -1,18 +1,18 @@
 import { PLAYERS } from './../../shared/mocks/players.mock';
 import { PlayerService } from './../../services/player.service';
-import {Component, OnInit, Input, OnDestroy, OnChanges, ViewChild} from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, OnChanges, ViewChild } from '@angular/core';
 import { GameData } from '../../shared/interfaces/game-data';
 import { DataProcessor } from '../../services/data-processor.service';
 import { ProgressPlayer } from '../timeline/interfaces/progress-player';
 import { TableService } from '../../services/table.service';
 import { Subscription } from 'rxjs';
 import { FiltersService } from '../../services/filters.service';
-import {GameInformation} from '../../shared/interfaces/game-information';
-import {GameEvents} from '../../shared/interfaces/game-events';
-import {DataService} from '../../services/data.service';
-import {ConfigService} from '../../config/config.service';
-import {EMPTY_INFO, GAME_INFORMATION} from '../../shared/mocks/information.mock';
-import {EMPTY_EVENTS, EVENTS} from '../../shared/mocks/events.mock';
+import { GameInformation } from '../../shared/interfaces/game-information';
+import { GameEvents } from '../../shared/interfaces/game-events';
+import { DataService } from '../../services/data.service';
+import { ConfigService } from '../../config/config.service';
+import { EMPTY_INFO, GAME_INFORMATION } from '../../shared/mocks/information.mock';
+import { EMPTY_EVENTS, EVENTS } from '../../shared/mocks/events.mock';
 import { Kypo2TraineeModeInfo } from '../../shared/interfaces/kypo2-trainee-mode-info';
 import { take } from 'rxjs/operators';
 
@@ -24,16 +24,41 @@ import { take } from 'rxjs/operators';
 
 export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
-  @Input() data: GameData = {information: null, events: null};
-  @Input() jsonGameData: GameData = {information: null, events: null};
+  /**
+   * Game data
+   */
+  @Input() data: GameData = { information: null, events: null };
+  /**
+  * JSON data to use instead of data from API
+  */
+  @Input() jsonGameData: GameData = { information: null, events: null };
+  /**
+   * Flag to use local mock
+   * @deprecated
+   */
   @Input() useLocalMock = false;
+  /**
+   * Flag to use in standalone mode
+   */
   @Input() standalone = false;
+  /**
+   * Id of player
+   */
   @Input() feedbackLearnerId: string;
+  /**
+   * Id of training definition
+   */
   @Input() trainingDefinitionId: number;
+  /**
+   * Id of training instance
+   */
   @Input() trainingInstanceId: number;
+  /**
+   * Use if visualization should use anonymized data (without names and credentials of other users) from trainee point of view
+   */
   @Input() traineeModeInfo: Kypo2TraineeModeInfo;
 
-  public scoreTableData = {playerIds: [], levels: [], finalScores: {}};
+  public scoreTableData = { playerIds: [], levels: [], finalScores: {} };
   public playersOrdered = [];
   public sortedColumn = null;
   public sortedDesc = false;
@@ -44,13 +69,13 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public playerColorScale = (id) => 'black';
 
   constructor(
-      private visualizationService: DataProcessor,
-      private tableService: TableService,
-      private filtersService: FiltersService,
-      private dataService: DataService,
-      private configService: ConfigService,
-      private playerService: PlayerService
-    ) {
+    private visualizationService: DataProcessor,
+    private tableService: TableService,
+    private filtersService: FiltersService,
+    private dataService: DataService,
+    private configService: ConfigService,
+    private playerService: PlayerService
+  ) {
     this.playerColorScaleSource = this.tableService.playerColorScale$.subscribe(
       (scale) => {
         setTimeout(() => this.playerColorScale = scale, 0);
@@ -64,7 +89,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     if (this.useLocalMock) {
-      this.data = {information: GAME_INFORMATION, events: EVENTS};
+      this.data = { information: GAME_INFORMATION, events: EVENTS };
       this.playerService.setPlayers(PLAYERS);
       this.redraw();
     } else {
@@ -157,11 +182,11 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     }
     this.playersOrdered.sort((a, b) => {
       if (typeof this.scoreTableData.levels[levelNumber][a.id] === 'undefined' ||
-          typeof this.scoreTableData.levels[levelNumber][b.id] === 'undefined') {
+        typeof this.scoreTableData.levels[levelNumber][b.id] === 'undefined') {
         return 1;
       }
       const result = this.scoreTableData.levels[levelNumber][b.id].wrongFlags -
-                     this.scoreTableData.levels[levelNumber][a.id].wrongFlags;
+        this.scoreTableData.levels[levelNumber][a.id].wrongFlags;
       return (this.sortedDesc) ? result : -result;
     });
     this.sortedColumn = 'w' + levelNumber;
@@ -176,7 +201,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     }
     this.playersOrdered.sort((a, b) => {
       if (typeof this.scoreTableData.levels[levelNumber][a.id] === 'undefined' ||
-          typeof this.scoreTableData.levels[levelNumber][b.id] === 'undefined') {
+        typeof this.scoreTableData.levels[levelNumber][b.id] === 'undefined') {
         return 1;
       }
       const result = this.scoreTableData.levels[levelNumber][b.id].hints - this.scoreTableData.levels[levelNumber][a.id].hints;

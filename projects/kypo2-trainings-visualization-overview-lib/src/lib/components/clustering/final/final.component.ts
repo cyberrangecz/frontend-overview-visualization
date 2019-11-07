@@ -21,10 +21,10 @@ import { BarVisualizationData } from '../interfaces/bar-visualization-data';
 import { PlayerVisualizationData } from '../interfaces/player-visualization-data';
 import { ClusteringFinalEventService } from '../interfaces/clustering-final-event-service';
 import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config';
-import {GameInformation} from '../../../shared/interfaces/game-information';
-import {GameEvents} from '../../../shared/interfaces/game-events';
-import {DataService} from '../../../services/data.service';
-import {EVENTS} from '../../../shared/mocks/events.mock';
+import { GameInformation } from '../../../shared/interfaces/game-information';
+import { GameEvents } from '../../../shared/interfaces/game-events';
+import { DataService } from '../../../services/data.service';
+import { EVENTS } from '../../../shared/mocks/events.mock';
 import { Kypo2TraineeModeInfo } from '../../../shared/interfaces/kypo2-trainee-mode-info';
 import { take } from 'rxjs/operators';
 
@@ -34,15 +34,46 @@ import { take } from 'rxjs/operators';
   styleUrls: ['./final.component.css']
 })
 export class FinalComponent implements OnInit, OnChanges {
-  @Input() data: GameData = {information: null, events: null};
-  @Input() jsonGameData: GameData = {information: null, events: null};
+  /**
+   * Game data
+   */
+  @Input() data: GameData = { information: null, events: null };
+  /**
+   * JSON data to use instead of data from API
+   */
+  @Input() jsonGameData: GameData = { information: null, events: null };
+  /**
+   * Flag to use local mock
+   * @deprecated
+   */
   @Input() useLocalMock = false;
+  /**
+   * Player to highlight
+   */
   @Input() inputSelectedPlayerId: string;
+  /**
+   * Id of player
+   */
   @Input() feedbackLearnerId: string;
+  /**
+   * Array of color strings for visualization.
+   */
   @Input() colorScheme: string[];
+  /**
+   * Service containing event handlers which are invoked whenever the visualization's events are fired.
+   */
   @Input() eventService: ClusteringFinalEventService;
+  /**
+   * Main svg dimensions.
+   */
   @Input() size: SvgConfig;
+  /**
+   * Use if visualization should use anonymized data (without names and credentials of other users) from trainee point of view
+   */
   @Input() traineeModeInfo: Kypo2TraineeModeInfo;
+  /**
+   * Emits id of selected player.
+   */
   @Output() outputSelectedPlayerId = new EventEmitter<string>();
 
   private d3: D3;
@@ -147,10 +178,10 @@ export class FinalComponent implements OnInit, OnChanges {
       .attr(
         'transform',
         'translate(' +
-          SVG_MARGIN_CONFIG.left +
-          ',' +
-          SVG_MARGIN_CONFIG.top +
-          ')'
+        SVG_MARGIN_CONFIG.left +
+        ',' +
+        SVG_MARGIN_CONFIG.top +
+        ')'
       );
   }
 
@@ -217,8 +248,8 @@ export class FinalComponent implements OnInit, OnChanges {
     this.drawMaximumTimeLegend({ x: x, y: y + yOffset }, labelOffset);
 
     if (this.feedbackLearnerId != null) {
-      this.drawOtherPlayersLegend({x: x, y: y + yOffset * 2}, labelOffset);
-      this.drawFeedbackLearnerLegend({x: x, y: y + yOffset * 3}, labelOffset);
+      this.drawOtherPlayersLegend({ x: x, y: y + yOffset * 2 }, labelOffset);
+      this.drawFeedbackLearnerLegend({ x: x, y: y + yOffset * 3 }, labelOffset);
     }
   }
 
@@ -314,7 +345,7 @@ export class FinalComponent implements OnInit, OnChanges {
       .attr(
         'transform',
         `translate(${AXES_CONFIG.xAxis.position.x}, ${
-          SVG_CONFIG.height + 20
+        SVG_CONFIG.height + 20
         })`
       )
       .call(xAxis);
@@ -330,9 +361,9 @@ export class FinalComponent implements OnInit, OnChanges {
   getTimeScale(): any {
     const scaleDomainStart = new Date(0, 0, 0, 0, 0, 0, 0);
     const scaleDomainEnd = new Date(0, 0, 0, 0, 0, this.getMaximumTime(), 0);
-    const fullTimeAxis = Math.abs(scaleDomainEnd.getTime() - scaleDomainStart.getTime() ) / 1000;
+    const fullTimeAxis = Math.abs(scaleDomainEnd.getTime() - scaleDomainStart.getTime()) / 1000;
 
-    while ((fullTimeAxis / this.tickLength) > 600 ) {
+    while ((fullTimeAxis / this.tickLength) > 600) {
       this.tickLength *= (this.tickLength === 1 || this.tickLength > 160) ? 5 : 2;
     }
 
@@ -355,7 +386,7 @@ export class FinalComponent implements OnInit, OnChanges {
       )
       .style('fill', '#4c4a4a')
       .text('game time');
-      /*.style('font-weight', 'bold');*/
+    /*.style('font-weight', 'bold');*/
   }
 
   /**
@@ -391,7 +422,7 @@ export class FinalComponent implements OnInit, OnChanges {
       .attr(
         'transform',
         `translate(${axesConfig.yAxis.position.x}, ${
-          axesConfig.yAxis.position.y
+        axesConfig.yAxis.position.y
         })`
       )
       .call(yAxis);
@@ -405,7 +436,7 @@ export class FinalComponent implements OnInit, OnChanges {
       .attr(
         'transform',
         `translate(${AXES_CONFIG.xAxis.position.x - 35}, ${this.svgHeight /
-          2}) rotate(-90)`
+        2}) rotate(-90)`
       )
       .text('score')
       .attr('text-anchor', 'middle')
