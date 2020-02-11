@@ -6,7 +6,6 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { D3, D3Service } from 'd3-ng2-service';
 import { DataProcessor } from '../../../services/data-processor.service';
 import { BarVisualizationData } from '../interfaces/bar-visualization-data';
 import { PlayerVisualizationData } from '../interfaces/player-visualization-data';
@@ -21,10 +20,12 @@ import {
   LEVEL_LABELS_CONFIG, colorScheme
 } from './config';
 import {
+  D3,
+  D3Service,
   ScaleLinear,
   ScaleBand,
   ContainerElement
-} from 'd3-ng2-service/src/bundle-d3';
+} from '../../../services/d3.service';
 import { ClusteringLevelsEventService } from '../interfaces/clustering-levels-event-service';
 import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config';
 import { DataService } from '../../../services/data.service';

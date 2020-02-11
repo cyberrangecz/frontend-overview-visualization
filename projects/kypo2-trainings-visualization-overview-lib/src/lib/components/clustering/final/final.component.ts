@@ -7,7 +7,7 @@ import {
   OnChanges
 } from '@angular/core';
 import { GameData } from '../../../shared/interfaces/game-data';
-import { D3, ScaleLinear, D3Service, ContainerElement } from 'd3-ng2-service';
+import { D3, ScaleLinear, D3Service, ContainerElement } from '../../../services/d3.service';
 import { DataProcessor } from '../../../services/data-processor.service';
 import {
   BAR_CONFIG,

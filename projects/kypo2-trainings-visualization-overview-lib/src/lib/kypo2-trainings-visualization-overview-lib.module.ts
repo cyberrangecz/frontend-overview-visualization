@@ -1,7 +1,5 @@
 import { PlayerService } from './services/player.service';
 import {ModuleWithProviders, NgModule, Optional, SkipSelf} from '@angular/core';
-import { Kypo2TrainingsVisualizationOverviewLibComponent } from './kypo2-trainings-visualization-overview-lib.component';
-import { D3Service } from 'd3-ng2-service';
 import { TimelineComponent } from './components/timeline/timeline.component';
 import { ClusteringComponent } from './components/clustering/clustering.component';
 import { FinalComponent } from './components/clustering/final/final.component';
@@ -17,8 +15,13 @@ import { FormsModule } from '@angular/forms';
 import { FiltersComponent } from './components/filters/filters.component';
 import { Kypo2TrainingsVisualizationOverviewLibConfig } from './config/kypo2-trainings-visualization-overview-lib';
 import {ConfigService} from './config/config.service';
-import {MatButtonModule, MatCheckboxModule, MatSortModule, MatTableModule, MatTooltipModule} from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import {CdkColumnDef, CdkHeaderCellDef} from '@angular/cdk/table';
+import {D3Service} from './services/d3.service';
 
 @NgModule({
   imports: [
@@ -31,7 +34,6 @@ import {CdkColumnDef, CdkHeaderCellDef} from '@angular/cdk/table';
     MatTooltipModule
   ],
   declarations: [
-    Kypo2TrainingsVisualizationOverviewLibComponent,
     TimelineComponent,
     ClusteringComponent,
     FinalComponent,
@@ -41,7 +43,6 @@ import {CdkColumnDef, CdkHeaderCellDef} from '@angular/cdk/table';
     FiltersComponent
   ],
   exports: [
-    Kypo2TrainingsVisualizationOverviewLibComponent,
     TimelineComponent,
     ClusteringComponent,
     TableComponent,
@@ -70,7 +71,7 @@ export class Kypo2TrainingsVisualizationOverviewLibModule {
     }
   }
 
-  static forRoot(config: Kypo2TrainingsVisualizationOverviewLibConfig): ModuleWithProviders {
+  static forRoot(config: Kypo2TrainingsVisualizationOverviewLibConfig): ModuleWithProviders<Kypo2TrainingsVisualizationOverviewLibModule> {
     return {
       ngModule: Kypo2TrainingsVisualizationOverviewLibModule,
       providers: [

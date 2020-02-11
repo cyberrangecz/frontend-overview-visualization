@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {GameEvents} from '../shared/interfaces/game-events';
-import {D3, D3Service} from 'd3-ng2-service';
+import {D3, D3Service} from './d3.service';
 import {Event} from '../shared/interfaces/event';
 import {Level} from '../shared/interfaces/level';
 import {GameInformation} from '../shared/interfaces/game-information';
