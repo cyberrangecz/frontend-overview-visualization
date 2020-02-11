@@ -4,9 +4,6 @@ import { GameInformation } from "../shared/interfaces/game-information";
 import { GameEvents } from "../shared/interfaces/game-events";
 import {
   HttpClient,
-  HttpErrorResponse,
-  HttpHeaders,
-  HttpResponse
 } from "@angular/common/http";
 import { catchError, map } from "rxjs/operators";
 import { Event } from "../shared/interfaces/event";

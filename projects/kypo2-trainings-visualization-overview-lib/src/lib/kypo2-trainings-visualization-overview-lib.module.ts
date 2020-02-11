@@ -1,7 +1,5 @@
 import { PlayerService } from './services/player.service';
 import {ModuleWithProviders, NgModule, Optional, SkipSelf} from '@angular/core';
-import { Kypo2TrainingsVisualizationOverviewLibComponent } from './kypo2-trainings-visualization-overview-lib.component';
-import { D3Service } from 'd3-ng2-service';
 import { TimelineComponent } from './components/timeline/timeline.component';
 import { ClusteringComponent } from './components/clustering/clustering.component';
 import { FinalComponent } from './components/clustering/final/final.component';
@@ -23,6 +21,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {CdkColumnDef, CdkHeaderCellDef} from '@angular/cdk/table';
+import {D3Service} from './services/d3.service';
 
 @NgModule({
   imports: [
@@ -35,7 +34,6 @@ import {CdkColumnDef, CdkHeaderCellDef} from '@angular/cdk/table';
     MatTooltipModule
   ],
   declarations: [
-    Kypo2TrainingsVisualizationOverviewLibComponent,
     TimelineComponent,
     ClusteringComponent,
     FinalComponent,
@@ -45,7 +43,6 @@ import {CdkColumnDef, CdkHeaderCellDef} from '@angular/cdk/table';
     FiltersComponent
   ],
   exports: [
-    Kypo2TrainingsVisualizationOverviewLibComponent,
     TimelineComponent,
     ClusteringComponent,
     TableComponent,

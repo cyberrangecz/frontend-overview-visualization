@@ -1,9 +1,8 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output} from '@angular/core';
 import {GameData} from '../../../shared/interfaces/game-data';
 import { ConfigService } from '../../../config/config.service';
-import {D3, D3Service} from 'd3-ng2-service';
 import {DataProcessor} from '../../../services/data-processor.service';
-import {Axis, BrushBehavior, Line, ScaleLinear, ScaleOrdinal, ScaleTime, ZoomBehavior} from 'd3-ng2-service/src/bundle-d3';
+import {D3, D3Service, Axis, BrushBehavior, Line, ScaleLinear, ScaleOrdinal, ScaleTime, ZoomBehavior} from '../../../services/d3.service';
 import {ProgressPlayer} from '../interfaces/progress-player';
 import {ScoredEvent} from '../interfaces/scored-event';
 import {AXES_CONFIG, colorScheme, CONTEXT_CONFIG, SVG_MARGIN_CONFIG} from './config';

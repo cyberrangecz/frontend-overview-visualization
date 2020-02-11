@@ -1,4 +1,4 @@
-/*@import '@angular/material/prebuilt-themes/deeppurple-amber.css'; //use this for local testing only!*/
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 .overview-visualization-container {
   font-family: Roboto, Arial, sans-serif;
