@@ -70,7 +70,7 @@ export class Kypo2TrainingsVisualizationOverviewLibModule {
     }
   }
 
-  static forRoot(config: Kypo2TrainingsVisualizationOverviewLibConfig): ModuleWithProviders {
+  static forRoot(config: Kypo2TrainingsVisualizationOverviewLibConfig): ModuleWithProviders<Kypo2TrainingsVisualizationOverviewLibModule> {
     return {
       ngModule: Kypo2TrainingsVisualizationOverviewLibModule,
       providers: [
