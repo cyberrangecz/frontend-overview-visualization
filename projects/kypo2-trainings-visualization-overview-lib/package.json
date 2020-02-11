@@ -2,8 +2,10 @@
   "name": "kypo2-trainings-visualization-overview-lib",
   "version": "1.0.2",
   "peerDependencies": {
-    "@angular/common": "^7.0.1",
-    "@angular/core": "^7.0.1",
+    "@angular/common": "^9.0.0",
+    "@angular/core": "^9.0.0",
+    "@angular/material": "^9.0.0",
+
     "d3-ng2-service": "^2.2.0"
   }
 }
