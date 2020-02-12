@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "lib-build": "ng build --prod kypo2-trainings-visualization-overview-lib && cp src/styles.css ./dist/kypo2-trainings-visualization-overview-lib",
+    "lib-build": "ng build --prod kypo2-trainings-visualization-overview-lib && cp ./projects/kypo2-trainings-visualization-overview-lib/src/lib/styles.css ./dist/kypo2-trainings-visualization-overview-lib",
     "lib-copy": "cp -a ./dist/kypo2-trainings-visualization-overview-lib/. ../kypo2-trainings-visualization-overview-package/",
     "cp": "rm -rf ../kypo2-visualization-dashboard/node_modules/kypo2-trainings-visualization-overview-lib/* && cp -a ./dist/kypo2-trainings-visualization-overview-lib/. ../kypo2-visualization-dashboard/node_modules/kypo2-trainings-visualization-overview-lib",
     "lib-push": "mkdir -p ../kypo2-trainings-visualization-overview-package && cd ../kypo2-trainings-visualization-overview-package && git add . && git commit -m 'Update according to master branch' && git push",

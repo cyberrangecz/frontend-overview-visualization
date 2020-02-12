@@ -1,8 +1,4 @@
-@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 
-.overview-visualization-container {
-  font-family: Roboto, Arial, sans-serif;
-}
 .overview-visualization-container .focus-line {
     fill: none;
     stroke: black;
@@ -20,7 +16,6 @@
 
 .overview-visualization-container .x-axis text {
     fill: #4e4e4e;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
     font-size: 14px;
   }
 
@@ -63,7 +58,6 @@
 
 .overview-visualization-container .y-axis .tick text{
     opacity: 0.65;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
     font-size: initial;
   }
 
@@ -161,7 +155,6 @@
 
 .player-tooltip {
   position: absolute;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
   font-size: 12px;
   color: white;
   z-index: 1;
@@ -180,7 +173,6 @@
 
 .score-progress-tooltip {
   position: absolute;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
   font-size: 12px;
   background: #5b5c5e;
   color: white;
@@ -192,7 +184,6 @@
 }
 
 .score-progress-line-tooltip {
-  font-family: Roboto, "Helvetica Neue", sans-serif;
   font-size: 12px;
   background: #5b5c5e;
   color: white;
