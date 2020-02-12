@@ -25,7 +25,7 @@ import {
   ScaleLinear,
   ScaleBand,
   ContainerElement
-} from '../../../services/d3.service';
+} from 'csirt-mu-d3-service';
 import { ClusteringLevelsEventService } from '../interfaces/clustering-levels-event-service';
 import { SvgConfig } from '../../../shared/interfaces/configurations/svg-config';
 import { DataService } from '../../../services/data.service';

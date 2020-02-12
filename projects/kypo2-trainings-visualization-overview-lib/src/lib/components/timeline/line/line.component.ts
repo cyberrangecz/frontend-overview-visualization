@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDe
 import {GameData} from '../../../shared/interfaces/game-data';
 import { ConfigService } from '../../../config/config.service';
 import {DataProcessor} from '../../../services/data-processor.service';
-import {D3, D3Service, Axis, BrushBehavior, Line, ScaleLinear, ScaleOrdinal, ScaleTime, ZoomBehavior} from '../../../services/d3.service';
+import {D3, D3Service, Axis, BrushBehavior, Line, ScaleLinear, ScaleOrdinal, ScaleTime, ZoomBehavior} from 'csirt-mu-d3-service';
 import {ProgressPlayer} from '../interfaces/progress-player';
 import {ScoredEvent} from '../interfaces/scored-event';
 import {AXES_CONFIG, colorScheme, CONTEXT_CONFIG, SVG_MARGIN_CONFIG} from './config';
