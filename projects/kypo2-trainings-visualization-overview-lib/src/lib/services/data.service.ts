@@ -213,7 +213,7 @@ export class DataService {
    */
   getInformation(): Observable<any> {
     return this.http.get<GameInformation>(
-      `${this.configService.config.kypo2TrainingsVisualizationRestBasePath}visualizations/training-instances/${this.configService.trainingInstanceId}`
+      `${this.configService.config.trainingServiceUrl}visualizations/training-instances/${this.configService.trainingInstanceId}`
     );
   }
 
@@ -222,7 +222,7 @@ export class DataService {
    */
   getInformationForTrainee(trainingRunId: number): Observable<any> {
     return this.http.get<GameInformation>(
-      `${this.configService.config.kypo2TrainingsVisualizationRestBasePath}visualizations/training-runs/${trainingRunId}`
+      `${this.configService.config.trainingServiceUrl}visualizations/training-runs/${trainingRunId}`
     );
   }
 
@@ -231,7 +231,7 @@ export class DataService {
    */
   getEvents(): Observable<any> {
     return this.http.get(
-      this.configService.config.kypo2TrainingsVisualizationRestBasePath +
+      this.configService.config.elasticSearchServiceUrl +
         "training-events/training-definitions/" +
         this.configService.trainingDefinitionId +
         "/training-instances/" +
@@ -245,7 +245,7 @@ export class DataService {
   getParticipants(): Observable<User[]> {
     return this.http
       .get<UserDTO[]>(
-        `${this.configService.config.kypo2TrainingsVisualizationRestBasePath}visualizations/training-instances/${this.configService.trainingInstanceId}/participants`
+        `${this.configService.config.trainingServiceUrl}visualizations/training-instances/${this.configService.trainingInstanceId}/participants`
       )
       .pipe(map(userDTOs => userDTOs.map(userDTO => User.fromDTO(userDTO))));
   }
