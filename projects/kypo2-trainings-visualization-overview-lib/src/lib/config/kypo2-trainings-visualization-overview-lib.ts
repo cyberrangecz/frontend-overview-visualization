@@ -1,3 +1,4 @@
-export class Kypo2TrainingsVisualizationOverviewLibConfig {
-  kypo2TrainingsVisualizationRestBasePath: string;
+export class VisualizationOverviewConfig {
+  trainingServiceUrl: string;
+  elasticSearchServiceUrl: string
 }

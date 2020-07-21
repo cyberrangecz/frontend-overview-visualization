@@ -13,7 +13,7 @@ import { ScoreService } from './services/score.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FiltersComponent } from './components/filters/filters.component';
-import { Kypo2TrainingsVisualizationOverviewLibConfig } from './config/kypo2-trainings-visualization-overview-lib';
+import { VisualizationOverviewConfig } from './config/kypo2-trainings-visualization-overview-lib';
 import {ConfigService} from './config/config.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -71,11 +71,11 @@ export class Kypo2TrainingsVisualizationOverviewLibModule {
     }
   }
 
-  static forRoot(config: Kypo2TrainingsVisualizationOverviewLibConfig): ModuleWithProviders<Kypo2TrainingsVisualizationOverviewLibModule> {
+  static forRoot(config: VisualizationOverviewConfig): ModuleWithProviders<Kypo2TrainingsVisualizationOverviewLibModule> {
     return {
       ngModule: Kypo2TrainingsVisualizationOverviewLibModule,
       providers: [
-        {provide: Kypo2TrainingsVisualizationOverviewLibConfig, useValue: config}
+        {provide: VisualizationOverviewConfig, useValue: config}
       ]
     };
   }
