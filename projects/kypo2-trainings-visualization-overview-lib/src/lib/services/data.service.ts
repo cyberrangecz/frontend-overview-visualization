@@ -232,7 +232,7 @@ export class DataService {
   getEvents(): Observable<any> {
     return this.http.get(
       this.configService.config.elasticSearchServiceUrl +
-        "training-events/training-definitions/" +
+        "training-platform-events/training-definitions/" +
         this.configService.trainingDefinitionId +
         "/training-instances/" +
         this.configService.trainingInstanceId
