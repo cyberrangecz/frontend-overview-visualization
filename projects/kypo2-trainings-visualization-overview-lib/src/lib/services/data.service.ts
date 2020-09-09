@@ -13,7 +13,7 @@ import { LevelEvents } from "../shared/interfaces/level-events";
 import { Hint } from "../shared/interfaces/hint";
 import { GenericEvent } from "../shared/interfaces/generic-event.enum";
 import { ConfigService } from "../config/config.service";
-import { User, UserDTO } from "kypo2-auth";
+import { User, UserDTO } from "@sentinel/auth";
 import { Kypo2TraineeModeInfo } from "../shared/interfaces/kypo2-trainee-mode-info";
 
 @Injectable()

@@ -1,12 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { Kypo2AuthInterceptor, Kypo2AuthModule } from 'kypo2-auth';
-import { OAuthModule, OAuthStorage } from 'angular-oauth2-oidc';
+import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { environment } from 'src/environments/environment';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {SentinelAuthModule} from '@sentinel/auth';
+import {SentinelAuthGuardWithLogin, SentinelNegativeAuthGuard} from '@sentinel/auth/guards';
 
 @NgModule({
   declarations: [
@@ -17,19 +17,11 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
-    OAuthModule.forRoot(
-      {
-        resourceServer: {
-          allowedUrls: [],
-          sendAccessToken: true
-        }
-      }),
-    Kypo2AuthModule.forRoot(environment.kypo2AuthConfig)
+    SentinelAuthModule.forRoot(environment.authConfig)
   ],
   providers: [
-    { provide: OAuthStorage, useValue: localStorage },
-    { provide: HTTP_INTERCEPTORS, useClass: Kypo2AuthInterceptor, multi: true },
-
+    SentinelAuthGuardWithLogin,
+    SentinelNegativeAuthGuard
   ],
   bootstrap: [AppComponent]
 })

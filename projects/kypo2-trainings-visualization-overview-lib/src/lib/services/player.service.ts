@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User } from 'kypo2-auth';
+import { User } from '@sentinel/auth';
 
 @Injectable({
   providedIn: 'root'
