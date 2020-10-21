@@ -1,17 +1,18 @@
 # Training run overview visualizations
-[Documentation (thesis)](https://is.muni.cz/auth/th/w9g9t/?lang=cs)
 
 ## How to integrate
+
 - Build library with `npm run lib-build`
 - Install npm package into your Angular app
-- Add `node_modules/kypo2-trainings-visualization-overview-lib/styles.scss` to your styles in `angular.json` 
+- Add `node_modules/kypo2-trainings-visualization-overview-lib/styles.scss` to your styles in `angular.json`
 
 ## How to use with other visualizations
+
 - If cross visualization communication is required, see project's [wiki](https://gitlab.ics.muni.cz/kypo2/frontend-new/kypo2-trainings-visualization-overview/wikis/home) for instructions
 
-## Input parameters of *kypo2-viz-overview-clustering* component
+## Input parameters of _kypo2-viz-overview-clustering_ component
 
-`useLocalMock: boolean` to use local jsons of a visualization 
+`useLocalMock: boolean` to use local jsons of a visualization
 
 `enableAllPlayers: boolean` set true to show all the players of a selected training run, false will only show the learner specified by feedbackLearnerId
 
@@ -21,11 +22,12 @@
 
 `size: {width: number; height: number}` object that specifies the vis size in pixels
 
-`trainingDefinitionId: number` 
+`trainingDefinitionId: number`
 
 `trainingInstanceId: number`
 
 ## How to use as a library
+
 - there are 3 components that can be independent (it depends on their parameters)
 
 ### Overview Table
@@ -36,7 +38,7 @@
     [trainingDefinitionId]="1"
     [standalone]="true"           <--- this ensures that the table does not cooperate with the timeline visualization and can be run independently
     [trainingInstanceId]="1"
-    [feedbackLearnerId]="'player'"> <--- the id should be set *only* for the trainee view - the vis. will provide a limited information 
+    [feedbackLearnerId]="'player'"> <--- the id should be set *only* for the trainee view - the vis. will provide a limited information
 </kypo2-viz-overview-table>
 ```
 
@@ -45,19 +47,20 @@
 ```
 <kypo2-viz-overview-clustering
   [useLocalMock]="true"          <--- if set to true, the visualization will use mocked data (available only when run localy!)
-  [feedbackLearnerId]="'player'" <--- the id should be set *only* for the trainee view - the vis. will provide a limited information 
+  [feedbackLearnerId]="'player'" <--- the id should be set *only* for the trainee view - the vis. will provide a limited information
   [size]="{width: 800, height: 500}"
   [trainingInstanceId]="2"
   [trainingDefinitionId]="3">
 </kypo2-viz-overview-clustering>
 ```
+
 ### Timeline
 
 ```
 <kypo2-viz-overview-timeline
   [useLocalMock]="true"          <--- if set to true, the visualization will use mocked data (available only when run localy!)
   [enableAllPlayers]="true"      <--- when set to false, it will hide the related filtering table and show only the line related to the feedbackLearnerId
-  [feedbackLearnerId]="'player'" <--- the id should be set *only* for the trainee view - the vis. will provide a limited information 
+  [feedbackLearnerId]="'player'" <--- the id should be set *only* for the trainee view - the vis. will provide a limited information
   [size]="{width: 1300, height: 700}"
   [trainingInstanceId]="2"
   [trainingDefinitionId]="3">
