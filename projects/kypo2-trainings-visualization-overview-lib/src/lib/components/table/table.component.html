@@ -18,7 +18,7 @@
               </span> <br>
               <span style="font-size: 10px; cursor:pointer" (click)="onLevelClick(i)"
                     (mouseover)="columnHovered = i" (mouseout)="columnHovered = null">
-                <span [matTooltip]="'Achieved score in level ' + (i + 1) ">
+                <span>
                   {{standalone || (!filters.hintFilter.checked && !filters.wrongFlagFilter.checked) ? 'Score' : 'S'}}
                 </span>
                 <ng-container *ngIf="sortedColumn === i || columnHovered === i;else hide_sort">
@@ -32,7 +32,7 @@
               <ng-container *ngIf="standalone || filters.hintFilter.checked || filters.wrongFlagFilter.checked">
                 <span style="font-size: 10px; cursor:pointer" *ngIf="standalone || filters.wrongFlagFilter.checked" (click)="onWrongClick(i)"
                 (mouseover)="columnHovered = 'w'+i" (mouseout)="columnHovered = null" > / <span style="opacity: 0"> | </span>
-                  <span [matTooltip]="'Wrong flags submitted in level ' + (i + 1) ">{{standalone ? 'Wrong flags' : 'WF'}}</span>
+                  <span>{{standalone ? 'Wrong flags' : 'WF'}}</span>
                     <ng-container *ngIf="sortedColumn === 'w'+i  || columnHovered === 'w'+i; else hide_sort">
                     <span *ngIf="sortedDesc">▼</span>
                     <span *ngIf="!sortedDesc">▲</span>
@@ -44,7 +44,7 @@
                 <span style="font-size: 10px; cursor:pointer" *ngIf="standalone || filters.hintFilter.checked" (click)="onHintsClick(i)"
                 (mouseover)="columnHovered = 'h'+i" (mouseout)="columnHovered = null"
                 > / <span style="opacity: 0"> | </span>
-                  <span [matTooltip]="'Number of hints taken in level ' + (i + 1) ">{{standalone ? 'Hints taken' : 'H'}}</span>
+                  <span>{{standalone ? 'Hints taken' : 'H'}}</span>
                     <ng-container *ngIf="sortedColumn === 'h'+i  || columnHovered === 'h'+i; else hide_sort">
                     <span *ngIf="sortedDesc">▼</span>
                     <span *ngIf="!sortedDesc">▲</span>
