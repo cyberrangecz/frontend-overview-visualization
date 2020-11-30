@@ -1,5 +1,5 @@
 {
-  "name": "kypo2-trainings-visualization-overview",
+  "name": "@kypo/overview-visualization",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
