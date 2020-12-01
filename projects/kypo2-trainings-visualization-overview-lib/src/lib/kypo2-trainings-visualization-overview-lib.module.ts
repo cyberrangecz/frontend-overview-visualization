@@ -21,7 +21,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {CdkColumnDef, CdkHeaderCellDef} from '@angular/cdk/table';
-import {D3Service} from 'csirt-mu-d3-service';
+import {D3Service} from '@kypo/d3-service';
 
 @NgModule({
   imports: [
