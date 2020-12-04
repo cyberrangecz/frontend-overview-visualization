@@ -3,7 +3,7 @@
 ## How to integrate
 
 - Install npm package into your Angular app
-- Add `node_modules/@kypo/overview-visualization/styles.scss` to your styles in `angular.json`
+- Add `node_modules/@muni-kypo-crp/overview-visualization/styles.scss` to your styles in `angular.json`
 
 ## How to use with other visualizations
 

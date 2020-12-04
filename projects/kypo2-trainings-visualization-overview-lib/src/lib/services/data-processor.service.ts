@@ -6,7 +6,7 @@ import {ProgressPlayer} from '../components/timeline/interfaces/progress-player'
 import {TimeService} from './time.service';
 import {ScoreService} from './score.service';
 import {GameData} from '../shared/interfaces/game-data';
-import {D3, D3Service} from '@kypo/d3-service';
+import {D3, D3Service} from '@muni-kypo-crp/d3-service';
 import {Event} from '../shared/interfaces/event';
 import {ScoredEvent} from '../components/timeline/interfaces/scored-event';
 import {LevelEvents} from '../shared/interfaces/level-events';

@@ -7,7 +7,7 @@ import {
   OnChanges
 } from '@angular/core';
 import { GameData } from '../../../shared/interfaces/game-data';
-import { D3, ScaleLinear, D3Service, ContainerElement } from '@kypo/d3-service';
+import { D3, ScaleLinear, D3Service, ContainerElement } from '@muni-kypo-crp/d3-service';
 import { DataProcessor } from '../../../services/data-processor.service';
 import {
   BAR_CONFIG,
