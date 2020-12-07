@@ -6,8 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
-    "lint": "ng lint",
+    "lint": "ng lint && npm run prettier-check",
     "e2e": "ng e2e",
+    "prettier-check": "prettier --check \"projects/**/*.ts\"",
     "build-example-app": "ng build kypo2-trainings-visualization-overview --prod",
     "build-library": "ng build --prod kypo2-trainings-visualization-overview-lib && cp ./projects/kypo2-trainings-visualization-overview-lib/src/lib/styles.css ./dist/kypo2-trainings-visualization-overview-lib",
     "create-package": "cd dist/kypo2-trainings-visualization-overview-lib && npm pack",
@@ -15,6 +16,11 @@
     "ci-update-version": "cd ./projects/kypo2-trainings-visualization-overview-lib/ && npm version $VERSION",
     "ci-build-and-pack": "npm ci --cache .npm --prefer-offline && npm run build-library && npm run create-package",
     "ci-publish-package": "cd dist/kypo2-trainings-visualization-overview-lib && npm publish"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run prettier-check"
+    }
   },
   "private": true,
   "dependencies": {
@@ -44,12 +50,19 @@
     "@angular/cli": "~10.0.0",
     "@angular/compiler-cli": "^10.0.1",
     "@angular/language-service": "^10.0.1",
+    "@angular-eslint/builder": "^0.8.0-beta.0",
+    "@angular-eslint/eslint-plugin": "^0.8.0-beta.0",
+    "@angular-eslint/eslint-plugin-template": "^0.8.0-beta.0",
+    "@angular-eslint/schematics": "^0.8.0-beta.0",
+    "@angular-eslint/template-parser": "^0.8.0-beta.0",
+    "@typescript-eslint/parser": "^4.3.0",
+    "@typescript-eslint/eslint-plugin": "^4.7.0",
+    "eslint": "^7.13.0",
     "@types/jasmine": "^2.8.9",
     "@types/jasminewd2": "^2.0.5",
     "@types/d3": "5.7.2",
     "@types/d3-dsv": "1",
     "@types/node": "^12.11.1",
-    "codelyzer": "^5.1.2",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "~5.0.0",
@@ -60,7 +73,6 @@
     "ng-packagr": "^10.0.0",
     "protractor": "~7.0.0",
     "ts-node": "~5.0.1",
-    "tslint": "~6.1.0",
     "typescript": "~3.9.5"
   }
 }
