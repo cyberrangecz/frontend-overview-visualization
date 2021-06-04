@@ -8,5 +8,5 @@ export enum GenericEvent {
   GameSurrendered = 'TrainingRunSurrendered',
   LevelCompleted = 'LevelCompleted',
   LevelStarted = 'LevelStarted',
-  GameStarted = 'TrainingRunStarted'
+  GameStarted = 'TrainingRunStarted',
 }

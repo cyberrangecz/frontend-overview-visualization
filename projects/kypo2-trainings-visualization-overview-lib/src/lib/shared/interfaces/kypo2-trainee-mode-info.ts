@@ -6,7 +6,12 @@ export class Kypo2TraineeModeInfo {
   activeTraineeId: number;
 
   static isTrainee(traineeModeInfo: Kypo2TraineeModeInfo) {
-    return traineeModeInfo && traineeModeInfo.trainingRunId !== undefined && traineeModeInfo.trainingRunId !== null
-            && traineeModeInfo.activeTraineeId !== undefined && traineeModeInfo.activeTraineeId !== null;
+    return (
+      traineeModeInfo &&
+      traineeModeInfo.trainingRunId !== undefined &&
+      traineeModeInfo.trainingRunId !== null &&
+      traineeModeInfo.activeTraineeId !== undefined &&
+      traineeModeInfo.activeTraineeId !== null
+    );
   }
 }

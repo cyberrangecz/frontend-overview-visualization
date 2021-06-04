@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Subject, Observable, BehaviorSubject } from 'rxjs';
-import { ProgressPlayer } from '../components/timeline/interfaces/progress-player';
+import { Subject, BehaviorSubject } from 'rxjs';
+import { PlayerTableData } from '../components/model/table/player-table-data';
 
 /**
  * Communication service between table and other components
  */
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TableService {
-
   private tableRowClicked = new Subject<any>();
   private tableRowMouseover = new Subject<number>();
   private tableRowMouseout = new Subject<number>();
@@ -21,9 +20,9 @@ export class TableService {
   tableRowMouseout$ = this.tableRowMouseout.asObservable();
   playerColorScale$ = this.playerColorScale.asObservable();
 
-  constructor() { }
+  constructor() {}
 
-  sendTableRowClick(player: ProgressPlayer) {
+  sendTableRowClick(player: PlayerTableData) {
     this.tableRowClicked.next(player);
   }
 

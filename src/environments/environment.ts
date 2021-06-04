@@ -6,8 +6,8 @@ const HOME_URL = 'https://localhost:4200'
 
 export const environment = {
   production: false,
-  trainingServiceUrl: 'https://172.19.0.22/kypo2-rest-training',
-  elasticSearchServiceUrl: 'https://172.19.0.22/kypo-elasticsearch-service/api/v1/',
+  trainingServiceUrl: 'https://172.19.0.22/kypo2-rest-training/api/v1/',
+  elasticSearchServiceUrl: 'http://172.19.0.22/kypo-elasticsearch-service/api/v1/',
   // OIDC SETTINGS
   // Url of the Identity Provider
   issuer: 'https://oidc.muni.cz/oidc/',
@@ -24,7 +24,9 @@ export const environment = {
     guardMainPageRedirect: 'visualization',
     guardLoginPageRedirect: 'login',
     interceptorAllowedUrls: [
-      'https://172.19.0.22'
+      'https://172.19.0.22',
+      'http://localhost',
+      'https://localhost'
     ],
     authorizationStrategyConfig: {
       authorizationUrl: 'https://172.19.0.22/kypo2-rest-user-and-group/api/v1/users/info'

@@ -1,13 +1,12 @@
-import {ScoredEvent} from '../../components/timeline/interfaces/scored-event';
-import {GenericEvent} from '../../shared/interfaces/generic-event.enum';
+import { BasicEventInfo, TimelineEvent } from '../../components/model/timeline/timeline-event';
 
-const filterFunction = function(event: ScoredEvent) {
-    return event.event !== GenericEvent.TypePrefix + GenericEvent.HintTaken;
+const filterFunction = function (event: TimelineEvent) {
+  return event.type === BasicEventInfo.TimelineEventTypeEnum.HINT_TAKEN;
 };
 
 export const hintFilter = {
-    name: 'hintFilter',
-    labelName: 'Hints taken',
-    checked: false,
-    filterFunction: filterFunction
+  name: 'hintFilter',
+  labelName: 'Hints taken',
+  checked: false,
+  filterFunction: filterFunction,
 };

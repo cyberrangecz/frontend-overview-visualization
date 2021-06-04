@@ -3,10 +3,9 @@ import { FILTERS_OBJECT, FILTERS_ARRAY } from './filters/filters';
 import { Subject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FiltersService {
-
   filtersObject;
   filtersArray;
 
