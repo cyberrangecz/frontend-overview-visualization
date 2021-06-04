@@ -1,14 +1,12 @@
-import {ScoredEvent} from '../../components/timeline/interfaces/scored-event';
-import {GenericEvent} from '../../shared/interfaces/generic-event.enum';
+import { BasicEventInfo, TimelineEvent } from '../../components/model/timeline/timeline-event';
 
-const filterFunction = function(event: ScoredEvent) {
-    return (event.event !== GenericEvent.TypePrefix + GenericEvent.CorrectFlag &&
-            event.event != GenericEvent.TypePrefix + GenericEvent.LevelCompleted);
+const filterFunction = function (event: TimelineEvent) {
+  return event.type === BasicEventInfo.TimelineEventTypeEnum.CORRECT_FLAG;
 };
 
 export const correctFlagFilter = {
-    name: 'correctFlagFilter',
-    labelName: 'Correct flags / finished levels',
-    checked: true,
-    filterFunction: filterFunction
+  name: 'correctFlagFilter',
+  labelName: 'Correct flags / finished levels',
+  checked: true,
+  filterFunction: filterFunction,
 };

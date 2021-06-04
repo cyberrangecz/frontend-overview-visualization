@@ -1,9 +1,8 @@
-import {Injectable} from '@angular/core';
-import {VisualizationOverviewConfig} from './kypo2-trainings-visualization-overview-lib';
+import { Injectable } from '@angular/core';
+import { VisualizationOverviewConfig } from './kypo2-trainings-visualization-overview-lib';
 
 @Injectable()
 export class ConfigService {
-
   private readonly _config: VisualizationOverviewConfig;
   private _trainingInstanceId: number;
   private _trainingDefinitionId: number;

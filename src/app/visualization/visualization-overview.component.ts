@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {CustomConfig} from '../custom-config';
 
 @Component({
   selector: 'app-visualization-overview',

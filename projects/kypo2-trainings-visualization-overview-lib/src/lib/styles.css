@@ -160,14 +160,14 @@
   text-align: center;
   padding: 2px;
   background: #5b5c5e;
-  border: 0px;
+  border: 0;
   border-radius: 8px;
   opacity: 0.9;
 }
 
 .player-tooltip p {
   padding: 4px 10px;
-  margin: 0px;
+  margin: 0;
 }
 
 .score-progress-tooltip {
@@ -178,7 +178,7 @@
   z-index: 1;
   text-align: center;
   padding: 8px;
-  border: 0px;
+  border: 0;
   border-radius: 8px;
 }
 
@@ -190,6 +190,6 @@
   z-index: 1;
   text-align: center;
   padding: 8px;
-  border: 0px;
+  border: 0;
   border-radius: 8px;
 }
