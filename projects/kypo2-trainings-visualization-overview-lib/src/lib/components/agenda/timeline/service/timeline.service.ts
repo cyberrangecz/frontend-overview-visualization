@@ -13,7 +13,7 @@ export class TimelineService {
   getAllData(traineeModeInfo: Kypo2TraineeModeInfo): Observable<Timeline> {
     return this.timelineApiService.getTimelineVisualizationData().pipe(
       map((data) =>
-        TimelineMapper.fromDTO(data, Kypo2TraineeModeInfo.isTrainee(traineeModeInfo), traineeModeInfo.activeTraineeId)
+        TimelineMapper.fromDTO(data, Kypo2TraineeModeInfo.isTrainee(traineeModeInfo), traineeModeInfo ? traineeModeInfo.activeTraineeId : 0)
       ),
       catchError((error) => {
         return throwError('timeline service not connect to API: ' + error.message);

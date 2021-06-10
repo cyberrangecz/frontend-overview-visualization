@@ -13,7 +13,7 @@ export class TableDataService {
   getAllData(traineeModeInfo: Kypo2TraineeModeInfo): Observable<TableData> {
     return this.tableApiService.getTableVisualizationData().pipe(
       map((data) =>
-        TableMapper.fromDTO(data, Kypo2TraineeModeInfo.isTrainee(traineeModeInfo), traineeModeInfo.activeTraineeId)
+        TableMapper.fromDTO(data, Kypo2TraineeModeInfo.isTrainee(traineeModeInfo), traineeModeInfo ? traineeModeInfo.activeTraineeId : 0)
       ),
       catchError((error) => {
         return throwError('tableService not connect to API: ' + error.message);
