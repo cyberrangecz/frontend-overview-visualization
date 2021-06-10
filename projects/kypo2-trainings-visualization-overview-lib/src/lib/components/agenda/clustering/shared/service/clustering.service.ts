@@ -12,7 +12,7 @@ export class ClusteringService {
 
   public getAllData(traineeModeInfo: Kypo2TraineeModeInfo): Observable<ClusteringGameData> {
     return this.clusteringFinalApiService.getClusteringVisualizationData().pipe(
-      map((data) => ClusteringMapper.fromDTO(data, traineeModeInfo.activeTraineeId)),
+      map((data) => ClusteringMapper.fromDTO(data, traineeModeInfo ? traineeModeInfo.activeTraineeId : 0)),
       catchError((error) => {
         return throwError('clusteringService not connect to API: ' + error.message);
       })
