@@ -56,7 +56,7 @@ export class EventMapper {
       case text.includes('Hint'): {
         return TimelineEventTypeEnum.HINT_TAKEN;
       }
-      case text.includes('resumed') || text.includes('ended'): {
+      case text.includes('resumed') || text.includes('ended') || (text.includes('started') && text.includes('run')): {
         return TimelineEventTypeEnum.BASE_EVENTS;
       }
       default: {

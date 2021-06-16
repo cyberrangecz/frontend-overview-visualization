@@ -6,14 +6,14 @@ import { LevelTableDataMapper } from './level-table-data-mapper';
  * @dynamic
  */
 export class PlayerTableDataMapper {
-  static fromDTOs(dtos: PlayerTableDataDTO[], anonymize: boolean, activePlayedId: number): PlayerTableData[] {
-    return dtos.map((dto) => PlayerTableDataMapper.fromDTO(dto, anonymize, activePlayedId));
+  static fromDTOs(dtos: PlayerTableDataDTO[]): PlayerTableData[] {
+    return dtos.map((dto) => PlayerTableDataMapper.fromDTO(dto));
   }
 
-  private static fromDTO(dto: PlayerTableDataDTO, anonymize: boolean, activePlayerId: number): PlayerTableData {
+  private static fromDTO(dto: PlayerTableDataDTO): PlayerTableData {
     const player: PlayerTableData = new PlayerTableData();
     player.id = dto.id;
-    player.name = anonymize ? PlayerTableDataMapper.anonymizePlayers(dto.id, activePlayerId) : dto.name;
+    player.name = dto.name;
     player.picture = dto.picture;
     player.avatarColor = dto.avatar_color;
     player.trainingRunId = dto.training_run_id;
@@ -25,9 +25,5 @@ export class PlayerTableDataMapper {
     player.checked = false;
 
     return player;
-  }
-
-  static anonymizePlayers(playerId: number, activePlayerId: number): string {
-    return playerId === activePlayerId ? 'you' : 'other player';
   }
 }

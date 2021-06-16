@@ -399,12 +399,12 @@ export class FinalComponent implements OnInit, OnChanges {
       .data(this.dataClusteringFinal.finalResults.playerData)
       .enter()
       .append('circle')
-      .attr('class', (playerData: PlayerData) => 'player-point p' + playerData.id)
-      .attr('id', (playerData: PlayerData) => 'p' + playerData.id)
+      .attr('class', (playerData: PlayerData) => 'player-point p' + playerData.trainingRunId)
+      .attr('id', (playerData: PlayerData) => 'p' + playerData.trainingRunId)
       .attr('cx', (playerData: PlayerData) => this.xScale(playerData.trainingTime))
       .attr('cy', (playerData: PlayerData) => this.yScale(playerData.gameScore))
       .attr('r', (playerData: PlayerData) =>
-        playerData.id === Number(this.feedbackLearnerId)
+        playerData.trainingRunId === Number(this.feedbackLearnerId)
           ? PLAYER_POINT_CONFIG.feedbackLearner.pointRadius
           : PLAYER_POINT_CONFIG.pointRadius
       )
@@ -488,7 +488,7 @@ export class FinalComponent implements OnInit, OnChanges {
     this.showTooltip(player);
     this.showCrosshair();
     if (this.playerClicked === false) {
-      this.outputSelectedPlayerId.emit(player.id);
+      this.outputSelectedPlayerId.emit(player.trainingRunId);
     }
 
     const noEventServiceWasPassed = typeof this.eventService === 'undefined' || this.eventService === null;
@@ -502,8 +502,8 @@ export class FinalComponent implements OnInit, OnChanges {
    * @param player data held by player's <circle> element in __data__
    */
   highlightHoveredPlayer(player: PlayerData) {
-    const players = this.d3.selectAll('.player-point.p' + player.id);
-    const isFeedbackLearner = player.id === Number(this.feedbackLearnerId);
+    const players = this.d3.selectAll('.player-point.p' + player.trainingRunId);
+    const isFeedbackLearner = player.trainingRunId === Number(this.feedbackLearnerId);
     const radius = isFeedbackLearner
       ? PLAYER_POINT_CONFIG.feedbackLearner.pointRadius
       : PLAYER_POINT_CONFIG.pointRadius;
@@ -661,8 +661,8 @@ export class FinalComponent implements OnInit, OnChanges {
    * @param player data held by <circle> element in __data__ property
    */
   unhighlightHoveredPlayer(player: PlayerData) {
-    const players = this.d3.selectAll('.player-point-highlighted.p' + player.id);
-    const isFeedbackLearner = player.id === Number(this.feedbackLearnerId);
+    const players = this.d3.selectAll('.player-point-highlighted.p' + player.trainingRunId);
+    const isFeedbackLearner = player.trainingRunId === Number(this.feedbackLearnerId);
     const radius = isFeedbackLearner
       ? PLAYER_POINT_CONFIG.feedbackLearner.pointRadius
       : PLAYER_POINT_CONFIG.pointRadius;
@@ -690,7 +690,7 @@ export class FinalComponent implements OnInit, OnChanges {
    */
   onPlayerClick(player: PlayerData) {
     this.d3.event.stopPropagation();
-    this.outputSelectedPlayerId.emit(player.id);
+    this.outputSelectedPlayerId.emit(player.trainingRunId);
     this.playerClicked = true;
 
     const noEventServiceWasPassed = typeof this.eventService === 'undefined' || this.eventService === null;

@@ -11,9 +11,13 @@ export class TableDataService {
   constructor(private tableApiService: TableApiService) {}
 
   getAllData(traineeModeInfo: Kypo2TraineeModeInfo): Observable<TableData> {
-    return this.tableApiService.getTableVisualizationData().pipe(
+    const service = Kypo2TraineeModeInfo.isTrainee(traineeModeInfo) ?
+      this.tableApiService.getAnonymizedTableVisualizationData() :
+      this.tableApiService.getTableVisualizationData();
+
+    return service.pipe(
       map((data) =>
-        TableMapper.fromDTO(data, Kypo2TraineeModeInfo.isTrainee(traineeModeInfo), traineeModeInfo ? traineeModeInfo.activeTraineeId : 0)
+        TableMapper.fromDTO(data)
       ),
       catchError((error) => {
         return throwError('tableService not connect to API: ' + error.message);

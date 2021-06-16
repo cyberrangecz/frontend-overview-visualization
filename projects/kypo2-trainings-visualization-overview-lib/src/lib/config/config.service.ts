@@ -6,9 +6,14 @@ export class ConfigService {
   private readonly _config: VisualizationOverviewConfig;
   private _trainingInstanceId: number;
   private _trainingDefinitionId: number;
+  private _trainingRunId: number;
 
   get trainingInstanceId(): number {
     return this._trainingInstanceId;
+  }
+
+  get trainingRunId(): number {
+    return this._trainingRunId;
   }
 
   get trainingDefinitionId(): number {
@@ -20,6 +25,10 @@ export class ConfigService {
   }
   set trainingDefinitionId(value: number) {
     this._trainingDefinitionId = value;
+  }
+
+  set trainingRunId(value: number) {
+    this._trainingRunId = value;
   }
 
   get config(): VisualizationOverviewConfig {

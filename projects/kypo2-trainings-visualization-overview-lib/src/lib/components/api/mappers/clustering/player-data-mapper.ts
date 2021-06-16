@@ -5,14 +5,14 @@ import { PlayerData } from '../../../model/clustering/player-data';
  * @dynamic
  */
 export class PlayerDataMapper {
-  static fromDTOs(dtos: PlayerDataDTO[], activePlayerId: number): PlayerData[] {
-    return dtos.map((dto) => PlayerDataMapper.fromDTO(dto, activePlayerId));
+  static fromDTOs(dtos: PlayerDataDTO[]): PlayerData[] {
+    return dtos.map((dto) => PlayerDataMapper.fromDTO(dto));
   }
 
-  private static fromDTO(dto: PlayerDataDTO, activePlayerId: number): PlayerData {
+  private static fromDTO(dto: PlayerDataDTO): PlayerData {
     const player = new PlayerData();
     player.id = dto.id;
-    player.name = player.id === activePlayerId ? 'you' : 'other player';
+    player.name = dto.name ? dto.name : 'Unknown';
     player.picture = dto.picture;
     player.avatarColor = dto.avatar_color;
     player.trainingRunId = dto.training_run_id;

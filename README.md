@@ -37,6 +37,7 @@
     [trainingDefinitionId]="1"
     [standalone]="true"           <--- this ensures that the table does not cooperate with the timeline visualization and can be run independently
     [trainingInstanceId]="1"
+    [trainingRunId]="4"
     [feedbackLearnerId]="'player'"> <--- the id should be set *only* for the trainee view - the vis. will provide a limited information
 </kypo2-viz-overview-table>
 ```
@@ -49,6 +50,7 @@
   [feedbackLearnerId]="'player'" <--- the id should be set *only* for the trainee view - the vis. will provide a limited information
   [size]="{width: 800, height: 500}"
   [trainingInstanceId]="2"
+  [trainingRunId]="4"
   [trainingDefinitionId]="3">
 </kypo2-viz-overview-clustering>
 ```
@@ -62,6 +64,7 @@
   [feedbackLearnerId]="'player'" <--- the id should be set *only* for the trainee view - the vis. will provide a limited information
   [size]="{width: 1300, height: 700}"
   [trainingInstanceId]="2"
+  [trainingRunId]="4"
   [trainingDefinitionId]="3">
 </kypo2-viz-overview-timeline>
 ```

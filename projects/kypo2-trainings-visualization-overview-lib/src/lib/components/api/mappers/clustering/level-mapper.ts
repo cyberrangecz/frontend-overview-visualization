@@ -7,11 +7,11 @@ import { PlayerLevelDataMapper } from './player-level-data-mapper';
  * @dynamic
  */
 export class LevelMapper {
-  static fromDTOs(dtos: LevelDTO[], activePlayerId: number): Level[] {
-    return dtos.map((dto) => LevelMapper.fromDTO(dto, activePlayerId));
+  static fromDTOs(dtos: LevelDTO[]): Level[] {
+    return dtos.map((dto) => LevelMapper.fromDTO(dto));
   }
 
-  private static fromDTO(dto: LevelDTO, activePlayerId: number): Level {
+  private static fromDTO(dto: LevelDTO): Level {
     const level: Level = new Level();
     level.id = dto.id;
     level.title = dto.title;
@@ -22,7 +22,7 @@ export class LevelMapper {
     level.averageTime = dto.average_time / 1000;
     level.maxParticipantTime = dto.max_participant_time / 1000;
     level.levelType = LevelMapper.levelTypeFromDTO(dto.level_type);
-    level.playerLevelData = PlayerLevelDataMapper.fromDTOs(dto.player_data, activePlayerId);
+    level.playerLevelData = PlayerLevelDataMapper.fromDTOs(dto.player_data);
 
     return level;
   }

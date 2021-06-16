@@ -5,7 +5,7 @@ import { FinalResults } from '../../../model/clustering/final-results';
 import { PlayerDataMapper } from './player-data-mapper';
 
 export class ClusteringMapper {
-  static fromDTO(dto: ClusteringVisualizationResourceDTO, activePlayerId: number): ClusteringGameData {
+  static fromDTO(dto: ClusteringVisualizationResourceDTO): ClusteringGameData {
     const result = new ClusteringGameData();
 
     result.finalResults = new FinalResults();
@@ -16,8 +16,8 @@ export class ClusteringMapper {
     result.finalResults.maxParticipantTime = dto.final_results.max_participant_time / 1000;
     result.finalResults.averageTime = dto.final_results.average_time / 1000;
     result.finalResults.estimatedTime = dto.final_results.estimated_time / 1000;
-    result.finalResults.playerData = PlayerDataMapper.fromDTOs(dto.final_results.player_data, activePlayerId);
-    result.levels = LevelMapper.fromDTOs(dto.levels, activePlayerId);
+    result.finalResults.playerData = PlayerDataMapper.fromDTOs(dto.final_results.player_data);
+    result.levels = LevelMapper.fromDTOs(dto.levels);
 
     return result;
   }

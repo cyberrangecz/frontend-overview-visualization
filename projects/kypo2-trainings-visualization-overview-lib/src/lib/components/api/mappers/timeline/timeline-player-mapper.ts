@@ -6,15 +6,15 @@ import { TimelineLevelMapper } from './timeline-level-mapper';
  * @dynamic
  */
 export class TimelinePlayerMapper {
-  static fromDTOs(dtos: TimelinePlayerDataDTO[], anonymize: boolean, activePlayerId: number): TimelinePlayer[] {
-    return dtos.map((dto) => TimelinePlayerMapper.fromDTO(dto, anonymize, activePlayerId));
+  static fromDTOs(dtos: TimelinePlayerDataDTO[]): TimelinePlayer[] {
+    return dtos.map((dto) => TimelinePlayerMapper.fromDTO(dto));
   }
 
-  private static fromDTO(dto: TimelinePlayerDataDTO, anonymize: boolean, activePlayerId: number): TimelinePlayer {
+  private static fromDTO(dto: TimelinePlayerDataDTO): TimelinePlayer {
     const result = new TimelinePlayer();
     result.id = dto.id;
     if (dto.name) {
-      result.name = anonymize ? TimelinePlayerMapper.anonymizePlayers(dto.id, activePlayerId) : dto.name;
+      result.name = dto.name;
     } else {
       result.name = 'Unknown';
     }
@@ -26,9 +26,5 @@ export class TimelinePlayerMapper {
     result.assessmentScore = dto.assessment_score;
     result.levels = TimelineLevelMapper.fromDTOs(dto.levels);
     return result;
-  }
-
-  static anonymizePlayers(playerId: number, activePlayerId: number): string {
-    return playerId === activePlayerId ? 'you' : 'other player';
   }
 }
