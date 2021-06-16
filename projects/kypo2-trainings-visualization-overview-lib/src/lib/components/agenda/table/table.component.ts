@@ -48,6 +48,10 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
    */
   @Input() trainingInstanceId: number;
   /**
+   * Id of training run
+   */
+  @Input() trainingRunId: number;
+  /**
    * Use if visualization should use anonymized data (without names and credentials of other users) from trainee point of view
    */
   @Input() traineeModeInfo: Kypo2TraineeModeInfo;
@@ -92,6 +96,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     }
     this.configService.trainingDefinitionId = this.trainingDefinitionId;
     this.configService.trainingInstanceId = this.trainingInstanceId;
+    this.configService.trainingRunId = this.trainingRunId;
     if (this.tableData.players) {
       this.getMaxReachedLevel();
       this.redraw();
@@ -122,7 +127,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     let i = 0;
     for (let index = 0; index < this.tableData.players.length; index++) {
       const element = this.tableData.players[index];
-      if (element.id === Number(this.feedbackLearnerId)) {
+      if (element.trainingRunId === Number(this.feedbackLearnerId)) {
         i = index;
         break;
       }
@@ -139,7 +144,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     if (this.tableData.players === null) {
       return;
     }
-    const feedbackLearner = this.tableData.players.find((player) => player.id === Number(this.feedbackLearnerId));
+    const feedbackLearner = this.tableData.players.find((player) => player.trainingRunId === Number(this.feedbackLearnerId));
     if (feedbackLearner !== undefined) {
       feedbackLearner.checked = !feedbackLearner.checked;
     }
@@ -151,11 +156,11 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onRowMouseover(player) {
-    this.tableService.sendTableRowMouseover(player.id);
+    this.tableService.sendTableRowMouseover(player.trainingRunId);
   }
 
   onRowMouseout(player) {
-    this.tableService.sendTableRowMouseout(player.id);
+    this.tableService.sendTableRowMouseout(player.trainingRunId);
   }
 
   onWrongClick(levelNumber) {
@@ -227,7 +232,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
     this.playersOrdered.sort((a, b) => {
-      return !this.sortedDesc ? a.id - b.id : b.id - a.id;
+      return !this.sortedDesc ? a.trainingRunId - b.trainingRunId : b.trainingRunId - a.trainingRunId;
     });
     this.sortedColumn = -1;
   }

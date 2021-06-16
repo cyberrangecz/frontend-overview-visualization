@@ -4,14 +4,14 @@ import { TimelinePlayerMapper } from './timeline-player-mapper';
 import { TimelineDataDTO } from '../../dto/timeline/timeline-data-dto';
 
 export class TimelineMapper {
-  static fromDTO(dto: TimelineDataDTO, anonymize: boolean, activePlayerId: number): Timeline {
+  static fromDTO(dto: TimelineDataDTO): Timeline {
     const result = new Timeline();
     result.timeline = new TimelineData();
     result.timeline.averageTime = dto.average_time / 1000;
     result.timeline.estimatedTime = dto.estimated_time / 1000;
     result.timeline.maxScoreOfLevels = TimelineMapper.adjustLevelPoints(dto.max_score_of_levels);
     result.timeline.maxParticipantTime = dto.max_participant_time / 1000;
-    result.timeline.playerData = TimelinePlayerMapper.fromDTOs(dto.player_data, anonymize, activePlayerId);
+    result.timeline.playerData = TimelinePlayerMapper.fromDTOs(dto.player_data);
     return result;
   }
 

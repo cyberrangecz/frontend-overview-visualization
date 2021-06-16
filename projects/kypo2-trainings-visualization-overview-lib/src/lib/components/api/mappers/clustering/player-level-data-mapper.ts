@@ -5,14 +5,14 @@ import { PlayerLevelData } from '../../../model/clustering/player-level-data';
  * @dynamic
  */
 export class PlayerLevelDataMapper {
-  static fromDTOs(dtos: PlayerLevelDataDTO[], activePlayerId: number): PlayerLevelData[] {
-    return dtos.map((dto) => PlayerLevelDataMapper.fromDTO(dto, activePlayerId));
+  static fromDTOs(dtos: PlayerLevelDataDTO[]): PlayerLevelData[] {
+    return dtos.map((dto) => PlayerLevelDataMapper.fromDTO(dto));
   }
 
-  private static fromDTO(dto: PlayerLevelDataDTO, activePlayerId: number): PlayerLevelData {
+  private static fromDTO(dto: PlayerLevelDataDTO): PlayerLevelData {
     const player = new PlayerLevelData();
     player.id = dto.id;
-    player.name = player.id === activePlayerId ? 'you' : 'other player';
+    player.name = dto.name ? dto.name : 'Unknown';
     player.picture = dto.picture;
     player.avatarColor = dto.avatar_color;
     player.trainingRunId = dto.training_run_id;

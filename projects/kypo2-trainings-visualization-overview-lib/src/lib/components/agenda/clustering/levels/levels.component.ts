@@ -409,11 +409,11 @@ export class LevelsComponent implements OnInit, OnChanges {
       .data(players)
       .enter()
       .append('circle')
-      .attr('class', (d: PlayerLevelData) => 'player-point player-point-level-' + i + ' p' + d.id)
+      .attr('class', (d: PlayerLevelData) => 'player-point player-point-level-' + i + ' p' + d.trainingRunId)
       .attr('cx', (d: PlayerLevelData) => xScale(d.trainingTime))
       .attr('cy', (d: PlayerLevelData) => yBarScale(d.participantLevelScore))
       .attr('r', (d: PlayerLevelData) =>
-        d.id === Number(this.feedbackLearnerId) ? pointConfig.feedbackLearner.pointRadius : pointConfig.pointRadius
+        d.trainingRunId === Number(this.feedbackLearnerId) ? pointConfig.feedbackLearner.pointRadius : pointConfig.pointRadius
       )
       .style('fill', () => {
         const c = this.d3.hsl(colorScale(i.toString()).toString());
@@ -618,7 +618,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     this.showTooltip(player);
     this.showCrosshair();
     if (this.playerClicked === false) {
-      this.outputSelectedPlayerId.emit(player.id);
+      this.outputSelectedPlayerId.emit(player.trainingRunId);
     }
     const noEventServiceWasPassed = typeof this.eventService === 'undefined' || this.eventService === null;
     if (!noEventServiceWasPassed) {
@@ -631,8 +631,8 @@ export class LevelsComponent implements OnInit, OnChanges {
    * @param player data held by player's <circle> element in __data__
    */
   highlightHoveredPlayer(player: PlayerLevelData) {
-    const players = this.d3.selectAll('.player-point.p' + player.id);
-    const isFeedbackLearner = player.id === Number(this.feedbackLearnerId);
+    const players = this.d3.selectAll('.player-point.p' + player.trainingRunId);
+    const isFeedbackLearner = player.trainingRunId === Number(this.feedbackLearnerId);
     const radius = isFeedbackLearner
       ? PLAYER_POINT_CONFIG.feedbackLearner.pointRadius
       : PLAYER_POINT_CONFIG.pointRadius;
@@ -732,8 +732,8 @@ export class LevelsComponent implements OnInit, OnChanges {
    * @param player data held by <circle> element in __data__ property
    */
   unhighlightHoveredPlayer(player: PlayerLevelData) {
-    const players = this.d3.selectAll('.player-point-highlighted.p' + player.id);
-    const isFeedbackLearner = player.id === Number(this.feedbackLearnerId);
+    const players = this.d3.selectAll('.player-point-highlighted.p' + player.trainingRunId);
+    const isFeedbackLearner = player.trainingRunId === Number(this.feedbackLearnerId);
     const radius = isFeedbackLearner
       ? PLAYER_POINT_CONFIG.feedbackLearner.pointRadius
       : PLAYER_POINT_CONFIG.pointRadius;
@@ -753,7 +753,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    */
   onPlayerPointClick(player: PlayerLevelData) {
     this.d3.event.stopPropagation();
-    this.outputSelectedPlayerId.emit(player.id);
+    this.outputSelectedPlayerId.emit(player.trainingRunId);
     this.playerClicked = true;
     const noEventServiceWasPassed = typeof this.eventService === 'undefined' || this.eventService === null;
     if (!noEventServiceWasPassed) {

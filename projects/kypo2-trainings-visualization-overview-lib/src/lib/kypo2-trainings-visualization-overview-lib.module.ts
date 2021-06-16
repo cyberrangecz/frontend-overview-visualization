@@ -23,6 +23,7 @@ import { TableDataService } from './components/agenda/table/service/table-data.s
 import { TableApiService } from './components/api/table/table-api.service';
 import { TimelineService } from './components/agenda/timeline/service/timeline.service';
 import { TimelineApiService } from './components/api/timeline/timeline-api.service';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   imports: [
@@ -33,6 +34,7 @@ import { TimelineApiService } from './components/api/timeline/timeline-api.servi
     MatCheckboxModule,
     MatSortModule,
     MatTooltipModule,
+    MatProgressSpinnerModule
   ],
   declarations: [
     TimelineComponent,

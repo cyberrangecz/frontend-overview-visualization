@@ -49,6 +49,10 @@ export class ClusteringComponent implements OnInit, OnChanges {
    */
   @Input() trainingInstanceId: number;
   /**
+   * Id of training run
+   */
+  @Input() trainingRunId: number;
+  /**
    * Use if visualization should use anonymized data (without names and credentials of other users) from trainee point of view
    */
   @Input() traineeModeInfo: Kypo2TraineeModeInfo;
@@ -64,6 +68,7 @@ export class ClusteringComponent implements OnInit, OnChanges {
   ngOnChanges() {
     this.configService.trainingDefinitionId = this.trainingDefinitionId;
     this.configService.trainingInstanceId = this.trainingInstanceId;
+    this.configService.trainingRunId = this.trainingRunId;
   }
 
   get levelsCount() {
