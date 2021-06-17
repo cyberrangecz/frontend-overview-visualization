@@ -1,2 +1,3 @@
+12.0.5 Bump version
 12.0.4 Fixed filtering and player id
 12.0.3 Update gitlab CI
