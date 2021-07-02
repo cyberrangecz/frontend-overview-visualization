@@ -6,7 +6,7 @@ const HOME_URL = 'https://localhost:4200'
 
 export const environment = {
   production: true,
-  trainingServiceUrl: 'https://172.19.0.22/kypo2-rest-training/api/v1/',
+  trainingServiceUrl: 'https://172.19.0.22/kypo-rest-training/api/v1/',
   elasticSearchServiceUrl: 'https://172.19.0.22/kypo-elasticsearch-service/api/v1/',
   // OIDC SETTINGS
   // Url of the Identity Provider
@@ -28,7 +28,7 @@ export const environment = {
       'http://localhost'
     ],
     authorizationStrategyConfig: {
-      authorizationUrl: 'https://172.19.0.22/kypo2-rest-user-and-group/api/v1/users/info'
+      authorizationUrl: 'https://172.19.0.22/kypo-rest-user-and-group/api/v1/users/info'
     },
     providers: [
       {
