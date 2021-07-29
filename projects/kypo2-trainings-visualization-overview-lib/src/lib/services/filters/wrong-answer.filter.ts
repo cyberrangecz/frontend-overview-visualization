@@ -1,12 +1,12 @@
 import { BasicEventInfo, TimelineEvent } from '../../components/model/timeline/timeline-event';
 
 const filterFunction = function (event: TimelineEvent) {
-  return event.type === BasicEventInfo.TimelineEventTypeEnum.WRONG_FLAG;
+  return event.type === BasicEventInfo.TimelineEventTypeEnum.WRONG_ANSWER;
 };
 
-export const wrongFlagFilter = {
-  name: 'wrongFlagFilter',
-  labelName: 'Wrong flags',
+export const wrongAnswerFilter = {
+  name: 'wrongAnswerFilter',
+  labelName: 'Wrong answers',
   checked: false,
   filterFunction: filterFunction,
 };

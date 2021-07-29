@@ -22,7 +22,7 @@ export class TimelinePlayerMapper {
     result.avatarColor = dto.avatar_color;
     result.trainingRunId = dto.training_run_id;
     result.trainingTime = dto.training_time / 1000;
-    result.gameScore = dto.game_score;
+    result.trainingScore = dto.training_score;
     result.assessmentScore = dto.assessment_score;
     result.levels = TimelineLevelMapper.fromDTOs(dto.levels);
     return result;

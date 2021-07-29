@@ -1,16 +1,16 @@
 import { ClusteringVisualizationResourceDTO } from '../../dto/clustering/clustering-visualization-resource-dto';
-import { ClusteringGameData } from '../../../model/clustering/clustering-game-data';
+import { ClusteringTrainingData } from '../../../model/clustering/clustering-training-data';
 import { LevelMapper } from './level-mapper';
 import { FinalResults } from '../../../model/clustering/final-results';
 import { PlayerDataMapper } from './player-data-mapper';
 
 export class ClusteringMapper {
-  static fromDTO(dto: ClusteringVisualizationResourceDTO): ClusteringGameData {
-    const result = new ClusteringGameData();
+  static fromDTO(dto: ClusteringVisualizationResourceDTO): ClusteringTrainingData {
+    const result = new ClusteringTrainingData();
 
     result.finalResults = new FinalResults();
     result.finalResults.maxParticipantAssessmentScore = dto.final_results.max_participant_assessment_score;
-    result.finalResults.maxParticipantGameScore = dto.final_results.max_participant_game_score;
+    result.finalResults.maxParticipantTrainingScore = dto.final_results.max_participant_training_score;
     result.finalResults.maxParticipantScore = dto.final_results.max_participant_score;
     result.finalResults.averageScore = dto.final_results.average_score;
     result.finalResults.maxParticipantTime = dto.final_results.max_participant_time / 1000;

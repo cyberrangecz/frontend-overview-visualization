@@ -1,6 +1,6 @@
 <div class="overview-visualization-container">
     <kypo2-viz-overview-final
-        [dataClusteringFinal]="clusteringGameData"
+        [dataClusteringFinal]="clusteringTrainingData"
         [useLocalMock]="useLocalMock"
         (outputSelectedPlayerId)="selectPlayer($event)"
         [inputSelectedPlayerId]="selectedPlayerId"
@@ -12,7 +12,7 @@
     ></kypo2-viz-overview-final>
 
     <kypo2-viz-overview-levels
-        [levelsData]="clusteringGameData"
+        [levelsData]="clusteringTrainingData"
         [useLocalMock]="useLocalMock"
         (outputSelectedPlayerId)="selectPlayer($event)"
         [inputSelectedPlayerId]="selectedPlayerId"

@@ -1,14 +1,14 @@
 import { LevelTypeEnum } from '../../components/model/clustering/enums/level-type.enum';
 
-export const CLUSTERING_GAME_RESULTS = {
+export const CLUSTERING_TRAINING_RESULTS = {
   estimatedTime: 2700.0,
   maxParticipantScore: 230,
-  maxParticipantGameScore: 30,
+  maxParticipantTrainingScore: 30,
   maxParticipantAssessmentScore: 200,
   maxParticipantTime: 2635.498,
   averageTime: 2635.498,
   averageScore: 240,
-  averageGameScore: 40,
+  averageTrainingScore: 40,
   averageAssessmentScore: 200,
   playerData: [
     {
@@ -19,7 +19,7 @@ export const CLUSTERING_GAME_RESULTS = {
       avatarColor: '#643165',
       trainingRunId: 1,
       trainingTime: 2635.498,
-      gameScore: 30,
+      trainingScore: 30,
       assessmentScore: 200,
       finished: true,
     },
@@ -31,13 +31,13 @@ export const CLUSTERING_GAME_RESULTS = {
       avatarColor: '#100975',
       trainingRunId: 2,
       trainingTime: 2635.498,
-      gameScore: 50,
+      trainingScore: 50,
       assessmentScore: 200,
       finished: true,
     },
   ],
 };
-export const CLUSTERING_GAME_LEVELS = [
+export const CLUSTERING_TRAINING_LEVELS = [
   {
     id: 40,
     order: 0,
@@ -76,7 +76,7 @@ export const CLUSTERING_GAME_LEVELS = [
   {
     id: 41,
     order: 1,
-    levelType: LevelTypeEnum.GameLevel,
+    levelType: LevelTypeEnum.TrainingLevel,
     title: 'Finding open ports',
     estimatedTime: 600.0,
     maxParticipantScore: 30,
@@ -111,7 +111,7 @@ export const CLUSTERING_GAME_LEVELS = [
   {
     id: 42,
     order: 2,
-    levelType: LevelTypeEnum.GameLevel,
+    levelType: LevelTypeEnum.TrainingLevel,
     title: 'Connecting via Telnet',
     estimatedTime: 600.0,
     maxParticipantScore: 0,
@@ -146,7 +146,7 @@ export const CLUSTERING_GAME_LEVELS = [
   {
     id: 43,
     order: 3,
-    levelType: LevelTypeEnum.GameLevel,
+    levelType: LevelTypeEnum.TrainingLevel,
     title: 'Privilege Escalation',
     estimatedTime: 900.0,
     maxParticipantScore: 0,

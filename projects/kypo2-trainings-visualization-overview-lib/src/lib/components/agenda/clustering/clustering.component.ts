@@ -4,8 +4,8 @@ import { FinalComponent } from './final/final.component';
 import { LevelsComponent } from './levels/levels.component';
 import { ConfigService } from '../../../config/config.service';
 import { Kypo2TraineeModeInfo } from '../../../shared/interfaces/kypo2-trainee-mode-info';
-import { ClusteringGameData } from '../../model/clustering/clustering-game-data';
-import { CLUSTERING_GAME_LEVELS, CLUSTERING_GAME_RESULTS } from '../../../shared/mocks/clustering.mock';
+import { ClusteringTrainingData } from '../../model/clustering/clustering-training-data';
+import { CLUSTERING_TRAINING_LEVELS, CLUSTERING_TRAINING_RESULTS } from '../../../shared/mocks/clustering.mock';
 
 @Component({
   selector: 'kypo2-viz-overview-clustering',
@@ -17,7 +17,7 @@ export class ClusteringComponent implements OnInit, OnChanges {
   @ViewChild(LevelsComponent, { static: true }) levelsComponent;
 
   public selectedPlayerId: number;
-  clusteringGameData: ClusteringGameData = { finalResults: null, levels: null };
+  clusteringTrainingData: ClusteringTrainingData = { finalResults: null, levels: null };
 
   /**
    * Flag to use local mock
@@ -61,7 +61,7 @@ export class ClusteringComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     if (this.useLocalMock) {
-      this.clusteringGameData = { finalResults: CLUSTERING_GAME_RESULTS, levels: CLUSTERING_GAME_LEVELS };
+      this.clusteringTrainingData = { finalResults: CLUSTERING_TRAINING_RESULTS, levels: CLUSTERING_TRAINING_LEVELS };
     }
   }
 
@@ -72,7 +72,7 @@ export class ClusteringComponent implements OnInit, OnChanges {
   }
 
   get levelsCount() {
-    return this.clusteringGameData.levels.length;
+    return this.clusteringTrainingData.levels.length;
   }
 
   selectPlayer(id) {

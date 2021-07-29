@@ -21,7 +21,7 @@ export class PlayerTableDataMapper {
     player.assessmentScore = dto.assessment_score;
     player.finished = dto.finished;
     player.levels = LevelTableDataMapper.fromDTOs(dto.levels);
-    player.totalScore = dto.assessment_score + dto.game_score;
+    player.totalScore = dto.assessment_score + dto.training_score;
     player.checked = false;
 
     return player;

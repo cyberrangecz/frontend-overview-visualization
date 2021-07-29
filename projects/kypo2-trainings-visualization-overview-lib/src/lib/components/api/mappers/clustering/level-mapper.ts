@@ -31,8 +31,8 @@ export class LevelMapper {
     switch (levelTypeDTO) {
       case BasicLevelInfoDTO.LevelTypeEnum.ASSESSMENT:
         return LevelTypeEnum.AssessmentLevel;
-      case BasicLevelInfoDTO.LevelTypeEnum.GAME:
-        return LevelTypeEnum.GameLevel;
+      case BasicLevelInfoDTO.LevelTypeEnum.TRAINING:
+        return LevelTypeEnum.TrainingLevel;
       case BasicLevelInfoDTO.LevelTypeEnum.INFO:
         return LevelTypeEnum.InfoLevel;
       default: {

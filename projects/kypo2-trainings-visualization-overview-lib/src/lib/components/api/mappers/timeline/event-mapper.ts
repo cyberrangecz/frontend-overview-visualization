@@ -12,7 +12,7 @@ export class EventMapper {
     levelOrder: number,
     levelType: BasicLevelInfoDTO.TimelineLevelTypeEnum
   ): TimelineEvent[] {
-    dtos = dtos.filter((event) => !event.text.includes('Correct flag'));
+    dtos = dtos.filter((event) => !event.text.includes('Correct answer'));
     return EventMapper.scoreChange(dtos.map((dto) => EventMapper.fromDTO(dto, levelOrder, levelType)));
   }
 
@@ -36,7 +36,7 @@ export class EventMapper {
     event.forEach((playerEvent, index) => {
       playerEvent.scoreChange = index ? event[index].score - event[index - 1].score : event[index].score;
       // for nice visualization score change is visualized when new level is started not when points are gained
-      if (playerEvent.type == TimelineEventTypeEnum.CORRECT_FLAG) {
+      if (playerEvent.type == TimelineEventTypeEnum.CORRECT_ANSWER) {
         playerEvent.score = index ? event[index - 1].score : event[index].score;
       }
     });
@@ -45,13 +45,13 @@ export class EventMapper {
 
   private static eventType(text: string, levelType: BasicLevelInfoDTO.TimelineLevelTypeEnum): TimelineEventTypeEnum {
     switch (text != '') {
-      case text.includes('Correct flag') ||
+      case text.includes('Correct answer') ||
         text.includes('answered') ||
         (text.includes('completed') && levelType !== BasicLevelInfoDTO.TimelineLevelTypeEnum.INFO): {
-        return TimelineEventTypeEnum.CORRECT_FLAG;
+        return TimelineEventTypeEnum.CORRECT_ANSWER;
       }
-      case text.includes('Wrong flag'): {
-        return TimelineEventTypeEnum.WRONG_FLAG;
+      case text.includes('Wrong answer'): {
+        return TimelineEventTypeEnum.WRONG_ANSWER;
       }
       case text.includes('Hint'): {
         return TimelineEventTypeEnum.HINT_TAKEN;
@@ -60,7 +60,7 @@ export class EventMapper {
         return TimelineEventTypeEnum.BASE_EVENTS;
       }
       default: {
-        return TimelineEventTypeEnum.NON_GAME;
+        return TimelineEventTypeEnum.NON_TRAINING;
       }
     }
   }

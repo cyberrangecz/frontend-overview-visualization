@@ -17,7 +17,7 @@ export class PlayerDataMapper {
     player.avatarColor = dto.avatar_color;
     player.trainingRunId = dto.training_run_id;
     player.trainingTime = dto.training_time / 1000;
-    player.gameScore = dto.game_score;
+    player.trainingScore = dto.training_score;
     player.assessmentScore = dto.assessment_score;
     player.finished = dto.finished;
     return player;

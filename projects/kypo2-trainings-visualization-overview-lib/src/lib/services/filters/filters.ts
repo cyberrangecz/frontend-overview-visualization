@@ -1,17 +1,17 @@
 import { hintFilter } from './hint.filter';
-import { correctFlagFilter } from './correct-flag.filter';
-import { wrongFlagFilter } from './wrong-flag.filter';
+import { correctAnswerFilter } from './correct-answer.filter';
+import {wrongAnswerFilter} from './wrong-answer.filter';
 import { basicfilter } from './basicfilter';
-import { gameLevelFilter } from './game-level.filter';
+import { trainingLevelFilter } from './training-level.filter';
 import { assessmentLevelFilter } from './assessment-level.filter';
 import { infoLevelFilter } from './info-level.filter';
 
 // Add every new filter to this array
 export const FILTERS_ARRAY = [
-  correctFlagFilter,
+  correctAnswerFilter,
   hintFilter,
-  wrongFlagFilter,
-  gameLevelFilter,
+  wrongAnswerFilter,
+  trainingLevelFilter,
   assessmentLevelFilter,
   infoLevelFilter,
   basicfilter,

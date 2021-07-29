@@ -1,5 +1,5 @@
 {
-  "/kypo-rest-training/api/v1/visualizations/training-instances/:id/clustering": "/clustering",
-  "/kypo-rest-training/api/v1/visualizations/training-instances/:id/table": "/table",
-  "/kypo-rest-training/api/v1/visualizations/training-instances/:id/timeline": "/timeline"
+  "/kypo-rest-training/api/v1/visualizations/training-runs/:id/clustering": "/clustering",
+  "/kypo-rest-training/api/v1/visualizations/training-runs/:id/table": "/table",
+  "/kypo-rest-training/api/v1/visualizations/training-runs/:id/timeline": "/timeline"
 }
