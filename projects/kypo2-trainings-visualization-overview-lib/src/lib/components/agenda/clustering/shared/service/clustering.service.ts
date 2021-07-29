@@ -4,13 +4,13 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ClusteringApiService } from '../../../../api/clustering/clustering-api.service';
 import { ClusteringMapper } from '../../../../api/mappers/clustering/clustering-mapper';
-import { ClusteringGameData } from '../../../../model/clustering/clustering-game-data';
+import { ClusteringTrainingData } from '../../../../model/clustering/clustering-training-data';
 
 @Injectable()
 export class ClusteringService {
   constructor(private clusteringFinalApiService: ClusteringApiService) {}
 
-  public getAllData(traineeModeInfo: Kypo2TraineeModeInfo): Observable<ClusteringGameData> {
+  public getAllData(traineeModeInfo: Kypo2TraineeModeInfo): Observable<ClusteringTrainingData> {
     const service = Kypo2TraineeModeInfo.isTrainee(traineeModeInfo) ?
       this.clusteringFinalApiService.getAnonymizedClusteringVisualizationData() :
       this.clusteringFinalApiService.getClusteringVisualizationData();

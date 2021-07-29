@@ -2,11 +2,11 @@ export enum GenericEvent {
   TypePrefix = 'cz.muni.csirt.kypo.events.trainings.',
 
   HintTaken = 'HintTaken',
-  CorrectFlag = 'CorrectFlagSubmitted',
-  WrongFlag = 'WrongFlagSubmitted',
+  CorrectAnswer = 'CorrectAnswerSubmitted',
+  WrongAnswer = 'WrongAnswerSubmitted',
   SolutionDisplayed = 'SolutionDisplayed',
-  GameSurrendered = 'TrainingRunSurrendered',
+  TrainingSurrendered = 'TrainingRunSurrendered',
   LevelCompleted = 'LevelCompleted',
   LevelStarted = 'LevelStarted',
-  GameStarted = 'TrainingRunStarted',
+  TrainingStarted = 'TrainingRunStarted',
 }

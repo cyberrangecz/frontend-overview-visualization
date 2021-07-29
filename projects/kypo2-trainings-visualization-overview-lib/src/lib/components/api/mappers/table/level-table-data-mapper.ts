@@ -18,7 +18,7 @@ export class LevelTableDataMapper {
     result.levelType = LevelTableDataMapper.levelTypeFromDTO(dto.level_type);
     result.participantLevelScore = dto.participant_level_score;
     result.hintsTaken = dto.hints_taken;
-    result.wrongFlags = dto.wrong_flags;
+    result.wrongAnswers = dto.wrong_answers;
 
     return result;
   }
@@ -27,8 +27,8 @@ export class LevelTableDataMapper {
     switch (levelTypeDTO) {
       case BasicLevelInfoDTO.LevelTypeEnum.ASSESSMENT:
         return LevelTypeEnum.AssessmentLevel;
-      case BasicLevelInfoDTO.LevelTypeEnum.GAME:
-        return LevelTypeEnum.GameLevel;
+      case BasicLevelInfoDTO.LevelTypeEnum.TRAINING:
+        return LevelTypeEnum.TrainingLevel;
       case BasicLevelInfoDTO.LevelTypeEnum.INFO:
         return LevelTypeEnum.InfoLevel;
       default: {

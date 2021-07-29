@@ -12,7 +12,7 @@ import { ClusteringFinalEventService } from '../interfaces/clustering-final-even
 import { SvgConfig } from '../../../../shared/interfaces/configurations/svg-config';
 import { Kypo2TraineeModeInfo } from '../../../../shared/interfaces/kypo2-trainee-mode-info';
 import { take } from 'rxjs/operators';
-import { ClusteringGameData } from '../../../model/clustering/clustering-game-data';
+import { ClusteringTrainingData } from '../../../model/clustering/clustering-training-data';
 import { FinalResults } from '../../../model/clustering/final-results';
 import { ClusteringService } from '../shared/service/clustering.service';
 import { PlayerData } from '../../../model/clustering/player-data';
@@ -24,13 +24,13 @@ import { PlayerData } from '../../../model/clustering/player-data';
 })
 export class FinalComponent implements OnInit, OnChanges {
   /**
-   * Game data
+   * Training data
    */
-  @Input() dataClusteringFinal: ClusteringGameData = { finalResults: null, levels: null };
+  @Input() dataClusteringFinal: ClusteringTrainingData = { finalResults: null, levels: null };
   /**
    * JSON data to use instead of data from API
    */
-  @Input() jsonClusteringFinal: ClusteringGameData = { finalResults: null, levels: null };
+  @Input() jsonClusteringFinal: ClusteringTrainingData = { finalResults: null, levels: null };
 
   /**
    * Flag to use local mock
@@ -144,7 +144,7 @@ export class FinalComponent implements OnInit, OnChanges {
     this.yScale = this.d3
       .scaleLinear()
       .range([SVG_CONFIG.height, 0])
-      .domain([0, this.dataClusteringFinal.finalResults.maxParticipantGameScore]);
+      .domain([0, this.dataClusteringFinal.finalResults.maxParticipantTrainingScore]);
   }
 
   /**
@@ -319,7 +319,7 @@ export class FinalComponent implements OnInit, OnChanges {
   }
 
   /**
-   * Initialize time scale of range [0, this.barWidth] and domain [0, maximum game time]
+   * Initialize time scale of range [0, this.barWidth] and domain [0, maximum training time]
    * @returns D3 ScaleTime
    */
   getTimeScale(): any {
@@ -343,7 +343,7 @@ export class FinalComponent implements OnInit, OnChanges {
       .append('text')
       .attr('transform', `translate(${this.barWidth / 2 - 50}, ${this.svgHeight + 75})`)
       .style('fill', '#4c4a4a')
-      .text('game time');
+      .text('training time');
     /*.style('font-weight', 'bold');*/
   }
 
@@ -360,7 +360,7 @@ export class FinalComponent implements OnInit, OnChanges {
    */
   drawScoreAxis() {
     const axesConfig = AXES_CONFIG;
-    const maximumScore = this.dataClusteringFinal.finalResults.maxParticipantGameScore;
+    const maximumScore = this.dataClusteringFinal.finalResults.maxParticipantTrainingScore;
     const scoreScale = this.yScale;
 
     const yAxis = this.d3
@@ -402,7 +402,7 @@ export class FinalComponent implements OnInit, OnChanges {
       .attr('class', (playerData: PlayerData) => 'player-point p' + playerData.trainingRunId)
       .attr('id', (playerData: PlayerData) => 'p' + playerData.trainingRunId)
       .attr('cx', (playerData: PlayerData) => this.xScale(playerData.trainingTime))
-      .attr('cy', (playerData: PlayerData) => this.yScale(playerData.gameScore))
+      .attr('cy', (playerData: PlayerData) => this.yScale(playerData.trainingScore))
       .attr('r', (playerData: PlayerData) =>
         playerData.trainingRunId === Number(this.feedbackLearnerId)
           ? PLAYER_POINT_CONFIG.feedbackLearner.pointRadius
@@ -533,7 +533,7 @@ export class FinalComponent implements OnInit, OnChanges {
     const y = this.d3.event.pageY + yOffset;
 
     playerTooltip
-      .html(`<p><b>Player: ${player.name} <br> Score: ${player.gameScore}</b>`)
+      .html(`<p><b>Player: ${player.name} <br> Score: ${player.trainingScore}</b>`)
       .style('left', x + 'px')
       .style('top', y + 'px');
   }
@@ -568,7 +568,7 @@ export class FinalComponent implements OnInit, OnChanges {
       x: playerElementNode.getAttribute('cx'),
       y: playerElementNode.getAttribute('cy'),
       time: d3.timeFormat('%H:%M:%S')(new Date(0, 0, 0, 0, 0, player.trainingTime, 0)),
-      score: player.gameScore,
+      score: player.trainingScore,
     };
 
     this.updateCrosshair(groups, playersData);

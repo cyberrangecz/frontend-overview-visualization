@@ -18,7 +18,7 @@ import { TableService } from '../../../services/table.service';
 })
 export class TableComponent implements OnInit, OnChanges, OnDestroy {
   /**
-   * Game data
+   * Training data
    */
   @Input() tableData: TableData = { players: null };
 
@@ -173,7 +173,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
       if (typeof a.levels[levelNumber] === 'undefined' || typeof b.levels[levelNumber] === 'undefined') {
         return 1;
       }
-      const result = b.levels[levelNumber].wrongFlags - a.levels[levelNumber].wrongFlags;
+      const result = b.levels[levelNumber].wrongAnswers - a.levels[levelNumber].wrongAnswers;
       return this.sortedDesc ? result : -result;
     });
     this.sortedColumn = 'w' + levelNumber;

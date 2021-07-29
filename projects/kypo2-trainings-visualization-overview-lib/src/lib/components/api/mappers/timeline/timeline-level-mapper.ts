@@ -1,8 +1,8 @@
 import { BasicLevelInfoDTO, TimelineLevelDataDTO } from '../../dto/timeline/timeline-level-data-dto';
 import { BasicLevelInfo, TimelineLevel } from '../../../model/timeline/timeline-level';
 import TimelineLevelTypeEnum = BasicLevelInfo.TimelineLevelTypeEnum;
-import { GameLevelMapper } from './game-level-mapper';
-import { GameLevelDTO } from '../../dto/timeline/game-level-dto';
+import { TrainingLevelMapper } from './training-level-mapper';
+import { TrainingLevelDto } from '../../dto/timeline/training-level-dto';
 import { AssessmentLevelMapper } from './assessment-level-mapper';
 import { AssessmentLevelDTO } from '../../dto/timeline/assessment-level-dto';
 import { InfoLevel } from '../../../model/timeline/info-level';
@@ -19,10 +19,10 @@ export class TimelineLevelMapper {
   static fromDTO(dto: TimelineLevelDataDTO): TimelineLevel {
     let level: TimelineLevel;
     switch (dto.level_type) {
-      case BasicLevelInfoDTO.TimelineLevelTypeEnum.GAME: {
-        level = GameLevelMapper.fromDTO(dto as GameLevelDTO);
+      case BasicLevelInfoDTO.TimelineLevelTypeEnum.TRAINING: {
+        level = TrainingLevelMapper.fromDTO(dto as TrainingLevelDto);
         level.events = EventMapper.fromDTOs(dto.events, dto.order, dto.level_type);
-        level.levelType = TimelineLevelTypeEnum.GAME;
+        level.levelType = TimelineLevelTypeEnum.TRAINING;
         break;
       }
       case BasicLevelInfoDTO.TimelineLevelTypeEnum.INFO: {

@@ -7,7 +7,7 @@ export class TimelinePlayer {
   avatarColor: string;
   trainingRunId: number;
   trainingTime: number;
-  gameScore: number;
+  trainingScore: number;
   assessmentScore: number;
   levels: TimelineLevel[];
   checked?: boolean;

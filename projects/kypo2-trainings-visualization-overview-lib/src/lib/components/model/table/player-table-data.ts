@@ -7,7 +7,7 @@ export class PlayerTableData {
   avatarColor: string;
   trainingRunId: number;
   trainingTime: number;
-  gameScore: number;
+  trainingScore: number;
   assessmentScore: number;
   finished: boolean;
   levels: LevelTableData[];

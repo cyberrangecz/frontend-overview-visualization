@@ -1,7 +1,7 @@
 import { BasicEventInfo, TimelineEvent } from '../../components/model/timeline/timeline-event';
 
 /**
- * Are skips obsolete? Used for filtering of non-game levels instead
+ * Are skips obsolete? Used for filtering of non-training levels instead
  * @param event
  */
 const filterFunction = function (event: TimelineEvent) {

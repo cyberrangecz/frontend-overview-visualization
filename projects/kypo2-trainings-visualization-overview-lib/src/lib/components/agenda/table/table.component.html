@@ -19,7 +19,7 @@
               <span style="font-size: 10px; cursor:pointer" (click)="onLevelClick(i)"
                     (mouseover)="columnHovered = i" (mouseout)="columnHovered = null">
                 <span>
-                  {{standalone || (!filters.hintFilter.checked && !filters.wrongFlagFilter.checked) ? 'Score' : 'S'}}
+                  {{standalone || (!filters.hintFilter.checked && !filters.wrongAnswerFilter.checked) ? 'Score' : 'S'}}
                 </span>
                 <ng-container *ngIf="sortedColumn === i || columnHovered === i;else hide_sort">
                     <span *ngIf="sortedDesc">▼</span>
@@ -29,10 +29,10 @@
                     <span style="opacity: 0">▼</span>
                 </ng-template>
               </span>
-              <ng-container *ngIf="standalone || filters.hintFilter.checked || filters.wrongFlagFilter.checked">
-                <span style="font-size: 10px; cursor:pointer" *ngIf="standalone || filters.wrongFlagFilter.checked" (click)="onWrongClick(i)"
+              <ng-container *ngIf="standalone || filters.hintFilter.checked || filters.wrongAnswerFilter.checked">
+                <span style="font-size: 10px; cursor:pointer" *ngIf="standalone || filters.wrongAnswerFilter.checked" (click)="onWrongClick(i)"
                 (mouseover)="columnHovered = 'w'+i" (mouseout)="columnHovered = null" > / <span style="opacity: 0"> | </span>
-                  <span>{{standalone ? 'Wrong flags' : 'WF'}}</span>
+                  <span>{{standalone ? 'Wrong answers' : 'WA'}}</span>
                     <ng-container *ngIf="sortedColumn === 'w'+i  || columnHovered === 'w'+i; else hide_sort">
                     <span *ngIf="sortedDesc">▼</span>
                     <span *ngIf="!sortedDesc">▲</span>
@@ -90,8 +90,8 @@
               <td class="mat-cell">
                 <ng-container *ngIf="level">
                     {{ level.participantLevelScore }}
-                    <span *ngIf="standalone || filters.wrongFlagFilter.checked">
-                      / {{ level.wrongFlags }}
+                    <span *ngIf="standalone || filters.wrongAnswerFilter.checked">
+                      / {{ level.wrongAnswers }}
                     </span>
                     <span *ngIf="standalone || filters.hintFilter.checked">
                         / {{ level.hintsTaken }}

@@ -12,18 +12,18 @@ export class TimelineEvent {
 
 export namespace BasicEventInfo {
   export type TimelineEventTypeEnum =
-    | 'CORRECT_FLAG_EVENT'
+    | 'CORRECT_ANSWER_EVENT'
     | 'ASSESSMENT_EVENTS'
     | 'HINT_TAKEN_EVENT'
-    | 'WRONG_FLAG_EVENT'
-    | 'NON_GAME_EVENTS'
+    | 'WRONG_ANSWER_EVENT'
+    | 'NON_TRAINING_EVENTS'
     | 'BASE_EVENTS';
   export const TimelineEventTypeEnum = {
-    CORRECT_FLAG: 'CORRECT_FLAG_EVENT' as TimelineEventTypeEnum,
+    CORRECT_ANSWER: 'CORRECT_ANSWER_EVENT' as TimelineEventTypeEnum,
     ASSESSMENT_EVENTS: 'ASSESSMENT_EVENTS' as TimelineEventTypeEnum,
     HINT_TAKEN: 'HINT_TAKEN_EVENT' as TimelineEventTypeEnum,
-    WRONG_FLAG: 'WRONG_FLAG_EVENT' as TimelineEventTypeEnum,
-    NON_GAME: 'NON_GAME_EVENTS' as TimelineEventTypeEnum,
+    WRONG_ANSWER: 'WRONG_ANSWER_EVENT' as TimelineEventTypeEnum,
+    NON_TRAINING: 'NON_TRAINING_EVENTS' as TimelineEventTypeEnum,
     BASE_EVENTS: 'BASE_EVENTS' as TimelineEventTypeEnum,
   };
 }

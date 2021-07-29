@@ -14,7 +14,7 @@ import { ClusteringLevelsEventService } from '../interfaces/clustering-levels-ev
 import { SvgConfig } from '../../../../shared/interfaces/configurations/svg-config';
 import { Kypo2TraineeModeInfo } from '../../../../shared/interfaces/kypo2-trainee-mode-info';
 import { take } from 'rxjs/operators';
-import { ClusteringGameData } from '../../../model/clustering/clustering-game-data';
+import { ClusteringTrainingData } from '../../../model/clustering/clustering-training-data';
 import { LevelTypeEnum } from '../../../model/clustering/enums/level-type.enum';
 import { Level } from '../../../model/clustering/level';
 import { ClusteringService } from '../shared/service/clustering.service';
@@ -27,13 +27,13 @@ import { PlayerLevelData } from '../../../model/clustering/player-level-data';
 })
 export class LevelsComponent implements OnInit, OnChanges {
   /**
-   * Game data
+   * Training data
    */
-  @Input() levelsData: ClusteringGameData = { finalResults: null, levels: null };
+  @Input() levelsData: ClusteringTrainingData = { finalResults: null, levels: null };
   /**
    * JSON data to use instead of data from API
    */
-  @Input() jsonLevels: ClusteringGameData = { finalResults: null, levels: null };
+  @Input() jsonLevels: ClusteringTrainingData = { finalResults: null, levels: null };
 
   /**
    * Flag to use local mock
@@ -159,7 +159,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    */
   drawBars() {
     const barsGroup = this.svg.append('g').attr('id', 'score-level-bars');
-    const data: Level[] = this.getGameLevels();
+    const data: Level[] = this.getTrainingLevels();
     this.initializeScaleBand(data);
     this.drawMaximumBars(barsGroup, data);
     this.drawAverageBars(barsGroup, data);
@@ -227,8 +227,8 @@ export class LevelsComponent implements OnInit, OnChanges {
       return;
     }
     this.levelsData.levels.forEach((level) => {
-      // we only show game levels in this visualization
-      if (level.levelType === LevelTypeEnum.GameLevel) {
+      // we only show training levels in this visualization
+      if (level.levelType === LevelTypeEnum.TrainingLevel) {
         const bar = this.d3.select('#score-level-bar-max-' + level.order);
         const barWidth = bar.attr('width');
         const barY = bar.attr('y');
@@ -331,19 +331,19 @@ export class LevelsComponent implements OnInit, OnChanges {
    */
   drawScoreAxes() {
     const d3 = this.d3;
-    const gameLevels =
+    const trainingLevels =
       this.levelsData !== null
-        ? this.levelsData.levels.filter((level) => level.levelType === LevelTypeEnum.GameLevel)
+        ? this.levelsData.levels.filter((level) => level.levelType === LevelTypeEnum.TrainingLevel)
         : [];
     d3.selectAll('.score-level-bar-max').each((bar) => {
       const yScale = d3
         .scaleLinear()
         .range([this.yScaleBandBars.bandwidth(), 0])
-        .domain([0, gameLevels[bar['order'] - 1].maxParticipantScore]);
+        .domain([0, trainingLevels[bar['order'] - 1].maxParticipantScore]);
       const yAxis = d3
         .axisLeft(yScale)
         .tickSize(AXES_CONFIG.yAxis.tickSize)
-        .tickValues([0, gameLevels[bar['order'] - 1].maxParticipantScore])
+        .tickValues([0, trainingLevels[bar['order'] - 1].maxParticipantScore])
         .tickPadding(AXES_CONFIG.yAxis.tickPadding)
         .tickFormat((d) => (d === 0 ? '' : d.toString()));
       const barY = d3.select('#score-level-bar-max-' + bar['order']).attr('y');
@@ -370,12 +370,12 @@ export class LevelsComponent implements OnInit, OnChanges {
   }
 
   /**
-   * Draw players (circles) on each level bar indicating each level game time and achieved score
+   * Draw players (circles) on each level bar indicating each level training time and achieved score
    */
   drawPlayers() {
     const yScaleBand = this.yScaleBandBars;
     const colorScale = this.d3.scaleOrdinal().range(this.colorScheme || colorScheme);
-    const levels = this.getGameLevels();
+    const levels = this.getTrainingLevels();
     levels.forEach((level, i) => {
       this.drawPlayersOnSingleBar(level.playerLevelData, i, colorScale);
     });
@@ -392,14 +392,14 @@ export class LevelsComponent implements OnInit, OnChanges {
     const levelNumber = i + 1;
     const barCoordinateY = this.yScaleBandBars(levelNumber.toString());
     const barHeight = barCoordinateY + this.yScaleBandBars.bandwidth();
-    const gameLevels = this.levelsData !== null ? this.getGameLevels() : [];
+    const trainingLevels = this.levelsData !== null ? this.getTrainingLevels() : [];
     const yBarScale = this.d3
       .scaleLinear()
       .range([
         barHeight, // bottom coordinate
         barCoordinateY, // top coordinate (y values goes from top to bottom)
       ])
-      .domain([0, gameLevels[i].maxParticipantScore]);
+      .domain([0, trainingLevels[i].maxParticipantScore]);
 
     const playersGroup = this.svg.append('g').attr('class', 'score-level-players').datum({ number: levelNumber });
 
@@ -499,15 +499,15 @@ export class LevelsComponent implements OnInit, OnChanges {
     const coordinates = d3.mouse(bar.node());
     const x = coordinates[0];
     const y = coordinates[1];
-    const gameLevels =
+    const trainingLevels =
       this.levelsData !== null
-        ? this.levelsData.levels.filter((level) => level.levelType === LevelTypeEnum.GameLevel)
+        ? this.levelsData.levels.filter((level) => level.levelType === LevelTypeEnum.TrainingLevel)
         : [];
     const xScale = this.d3.scaleLinear().range([0, this.barWidth]).domain([0, this.getMaxTime()]);
     xScale.clamp(true);
     const yScale = d3
       .scaleLinear()
-      .range([0, gameLevels[barData.order - 1].maxParticipantScore])
+      .range([0, trainingLevels[barData.order - 1].maxParticipantScore])
       .domain([this.yScaleBandBars.bandwidth(), 0]);
     yScale.clamp(true);
 
@@ -676,13 +676,13 @@ export class LevelsComponent implements OnInit, OnChanges {
     const playerElementNode = nodeList[index];
     const playersGroup = playerElementNode.parentNode;
     const level = d3.select(playersGroup).datum()['order'];
-    const gameLevels =
+    const trainingLevels =
       this.levelsData !== null
-        ? this.levelsData.levels.filter((gameLevel) => gameLevel.levelType === LevelTypeEnum.GameLevel)
+        ? this.levelsData.levels.filter((trainingLevel) => trainingLevel.levelType === LevelTypeEnum.TrainingLevel)
         : [];
     const yScale = d3
       .scaleLinear()
-      .range([0, gameLevels[level - 1].maxParticipantScore])
+      .range([0, trainingLevels[level - 1].maxParticipantScore])
       .domain([this.yScaleBandBars.bandwidth(), 0]);
     yScale.clamp(true);
     const x = playerElementNode.getAttribute('cx');
@@ -795,8 +795,8 @@ export class LevelsComponent implements OnInit, OnChanges {
   /**
    * @returns data for bar drawing
    */
-  getGameLevels(): Level[] {
-    const levels = this.levelsData.levels.filter((level) => level.levelType === LevelTypeEnum.GameLevel);
+  getTrainingLevels(): Level[] {
+    const levels = this.levelsData.levels.filter((level) => level.levelType === LevelTypeEnum.TrainingLevel);
     levels.forEach((level, i) => {
       level.order = ++i;
     });
@@ -804,7 +804,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   }
 
   private getMaxTime(): number {
-    const levels = this.levelsData.levels.filter((level) => level.levelType === LevelTypeEnum.GameLevel);
+    const levels = this.levelsData.levels.filter((level) => level.levelType === LevelTypeEnum.TrainingLevel);
     let maxTime = 0;
     levels.forEach((level, i) => {
       maxTime = level.maxParticipantTime > maxTime ? level.maxParticipantTime : maxTime;

@@ -4,12 +4,12 @@ module.exports = function() {
       final_results: {
         estimated_time: 2700000,
         max_participant_score: 230,
-        max_participant_game_score: 30,
+        max_participant_training_score: 30,
         max_participant_assessment_score: 200,
         max_participant_time: 2635498,
         average_time: 2635498,
         average_score: 240,
-        average_game_score: 40,
+        average_training_score: 40,
         average_assessment_score: 200,
         player_data: [
           {
@@ -20,7 +20,7 @@ module.exports = function() {
             avatar_color: '#643165',
             training_run_id: 1,
             training_time: 2635498,
-            game_score: 30,
+            training_score: 30,
             assessment_score: 200,
             finished: true,
           },
@@ -32,7 +32,7 @@ module.exports = function() {
             avatar_color: '#100975',
             training_run_id: 2,
             training_time: 2635498,
-            game_score: 50,
+            training_score: 50,
             assessment_score: 200,
             finished: true,
           },
@@ -77,7 +77,7 @@ module.exports = function() {
         {
           id: 41,
           order: 1,
-          level_type: 'GAME_LEVEL',
+          level_type: 'TRAINING_LEVEL',
           title: 'Finding open ports',
           estimated_time: 600000,
           max_participant_score: 30,
@@ -112,7 +112,7 @@ module.exports = function() {
         {
           id: 42,
           order: 2,
-          level_type: 'GAME_LEVEL',
+          level_type: 'TRAINING_LEVEL',
           title: 'Connecting via Telnet',
           estimated_time: 600000,
           max_participant_score: 0,
@@ -147,7 +147,7 @@ module.exports = function() {
         {
           id: 43,
           order: 3,
-          level_type: 'GAME_LEVEL',
+          level_type: 'TRAINING_LEVEL',
           title: 'Privilege Escalation',
           estimated_time: 900000,
           max_participant_score: 0,
@@ -260,7 +260,7 @@ module.exports = function() {
         avatar_color: '#243165',
         training_run_id: 1,
         training_time: 2635498,
-        game_score: 30,
+        training_score: 30,
         assessment_score: 200,
         finished: true,
         checked: false,
@@ -274,24 +274,24 @@ module.exports = function() {
           {
             id: 41,
             order: 1,
-            level_type: 'GAME_LEVEL',
-            wrong_flags: 1,
+            level_type: 'TRAINING_LEVEL',
+            wrong_answers: 1,
             hints_taken: 1,
             participant_level_score: 30,
           },
           {
             id: 42,
             order: 2,
-            level_type: 'GAME_LEVEL',
-            wrong_flags: 1,
+            level_type: 'TRAINING_LEVEL',
+            wrong_answers: 1,
             hints_taken: 2,
             participant_level_score: 0,
           },
           {
             id: 43,
             order: 3,
-            level_type: 'GAME_LEVEL',
-            wrong_flags: 4,
+            level_type: 'TRAINING_LEVEL',
+            wrong_answers: 4,
             hints_taken: 1,
             participant_level_score: 0,
           },
@@ -317,7 +317,7 @@ module.exports = function() {
         avatar_color: '#643165',
         training_run_id: 2,
         training_time: 2635498,
-        game_score: 30,
+        training_score: 30,
         assessment_score: 200,
         finished: true,
         checked: false,
@@ -331,24 +331,24 @@ module.exports = function() {
           {
             id: 41,
             order: 1,
-            level_type: 'GAME_LEVEL',
-            wrong_flags: 1,
+            level_type: 'TRAINING_LEVEL',
+            wrong_answers: 1,
             hints_taken: 1,
             participant_level_score: 30,
           },
           {
             id: 42,
             order: 2,
-            level_type: 'GAME_LEVEL',
-            wrong_flags: 1,
+            level_type: 'TRAINING_LEVEL',
+            wrong_answers: 1,
             hints_taken: 2,
             participant_level_score: 0,
           },
           {
             id: 43,
             order: 3,
-            level_type: 'GAME_LEVEL',
-            wrong_flags: 4,
+            level_type: 'TRAINING_LEVEL',
+            wrong_answers: 4,
             hints_taken: 1,
             participant_level_score: 0,
           },
@@ -381,7 +381,7 @@ module.exports = function() {
           avatar_color: '#456233',
           training_run_id: 1,
           training_time: 2635498,
-          game_score: 30,
+          training_score: 30,
           assessment_score: 200,
           levels: [
             {
@@ -411,9 +411,9 @@ module.exports = function() {
             {
               id: 41,
               order: 1,
-              level_type: 'GAME_LEVEL',
+              level_type: 'TRAINING_LEVEL',
               solution_displayed_time: 0,
-              correct_flag_time: 76762,
+              correct_answer_time: 76762,
               start_time: 4333,
               participant_level_score: 30,
               events: [
@@ -428,12 +428,12 @@ module.exports = function() {
                   score: 30,
                 },
                 {
-                  text: 'Wrong flag submitted.',
+                  text: 'Wrong answer submitted.',
                   time: 448468,
                   score: 30,
                 },
                 {
-                  text: 'Correct flag submitted.',
+                  text: 'Correct answer submitted.',
                   time: 76762,
                   levelOrder: 1,
                 },
@@ -447,9 +447,9 @@ module.exports = function() {
             {
               id: 42,
               order: 2,
-              level_type: 'GAME_LEVEL',
+              level_type: 'TRAINING_LEVEL',
               solution_displayed_time: 1502785,
-              correct_flag_time: 1526435,
+              correct_answer_time: 1526435,
               start_time: 767693,
               participant_level_score: 0,
               events: [
@@ -474,12 +474,12 @@ module.exports = function() {
                   score: 30,
                 },
                 {
-                  text: 'Wrong flag submitted.',
+                  text: 'Wrong answer submitted.',
                   score: 30,
                   time: 1517459,
                 },
                 {
-                  text: 'Correct flag submitted.',
+                  text: 'Correct answer submitted.',
                   score: 30,
                   time: 1526435,
                 },
@@ -493,9 +493,9 @@ module.exports = function() {
             {
               id: 43,
               order: 3,
-              level_type: 'GAME_LEVEL',
+              level_type: 'TRAINING_LEVEL',
               solution_displayed_time: 2593857,
-              correct_flag_time: 2607616,
+              correct_answer_time: 2607616,
               start_time: 152648,
               participant_level_score: 0,
               events: [
@@ -510,17 +510,17 @@ module.exports = function() {
                   score: 70,
                 },
                 {
-                  text: 'Wrong flag submitted.',
+                  text: 'Wrong answer submitted.',
                   score: 70,
                   time: 2476713,
                 },
                 {
-                  text: 'Wrong flag submitted.',
+                  text: 'Wrong answer submitted.',
                   score: 70,
                   time: 2489708,
                 },
                 {
-                  text: 'Wrong flag submitted.',
+                  text: 'Wrong answer submitted.',
                   score: 70,
                   time: 2498401,
                 },
@@ -530,12 +530,12 @@ module.exports = function() {
                   score: 30,
                 },
                 {
-                  text: 'Wrong flag submitted.',
+                  text: 'Wrong answer submitted.',
                   score: 30,
                   time: 2599967,
                 },
                 {
-                  text: 'Correct flag submitted.',
+                  text: 'Correct answer submitted.',
                   score: 30,
                   time: 2607616,
                 },
@@ -606,7 +606,7 @@ module.exports = function() {
           avatar_color: '#638273',
           training_run_id: 2,
           training_time: 2635498,
-          game_score: 150,
+          training_score: 150,
           assessment_score: 150,
           levels: [
             {
@@ -636,9 +636,9 @@ module.exports = function() {
             {
               id: 41,
               order: 1,
-              level_type: 'GAME_LEVEL',
+              level_type: 'TRAINING_LEVEL',
               solution_displayed_time: 0,
-              correct_flag_time: 76762,
+              correct_answer_time: 76762,
               start_time: 4333,
               participant_level_score: 50,
               events: [
@@ -648,12 +648,12 @@ module.exports = function() {
                   score: 50,
                 },
                 {
-                  text: 'Wrong flag submitted.',
+                  text: 'Wrong answer submitted.',
                   time: 448468,
                   score: 50,
                 },
                 {
-                  text: 'Correct flag submitted.',
+                  text: 'Correct answer submitted.',
                   time: 767620,
                   levelOrder: 1,
                 },
@@ -667,9 +667,9 @@ module.exports = function() {
             {
               id: 42,
               order: 2,
-              level_type: 'GAME_LEVEL',
+              level_type: 'TRAINING_LEVEL',
               solution_displayed_time: 1502785,
-              correct_flag_time: 1526435,
+              correct_answer_time: 1526435,
               start_time: 767693,
               participant_level_score: 0,
               events: [
@@ -694,12 +694,12 @@ module.exports = function() {
                   score: 30,
                 },
                 {
-                  text: 'Wrong flag submitted.',
+                  text: 'Wrong answer submitted.',
                   score: 30,
                   time: 1517459,
                 },
                 {
-                  text: 'Correct flag submitted.',
+                  text: 'Correct answer submitted.',
                   score: 30,
                   time: 1526435,
                 },
@@ -713,9 +713,9 @@ module.exports = function() {
             {
               id: 43,
               order: 3,
-              level_type: 'GAME_LEVEL',
+              level_type: 'TRAINING_LEVEL',
               solution_displayed_time: 2593857,
-              correct_flag_time: 2607616,
+              correct_answer_time: 2607616,
               start_time: 152648,
               participant_level_score: 100,
               events: [
@@ -725,7 +725,7 @@ module.exports = function() {
                   score: 150,
                 },
                 {
-                  text: 'Wrong flag submitted.',
+                  text: 'Wrong answer submitted.',
                   score: 150,
                   time: 2476713,
                 },
@@ -735,12 +735,12 @@ module.exports = function() {
                   score: 150,
                 },
                 {
-                  text: 'Wrong flag submitted.',
+                  text: 'Wrong answer submitted.',
                   score: 150,
                   time: 2599967,
                 },
                 {
-                  text: 'Correct flag submitted.',
+                  text: 'Correct answer submitted.',
                   score: 150,
                   time: 2607616,
                 },

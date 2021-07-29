@@ -33,7 +33,7 @@ import { Timeline } from '../../../model/timeline/timeline';
 import { TimelineService } from '../service/timeline.service';
 import { TimelinePlayer } from '../../../model/timeline/timeline-player';
 import { BasicLevelInfo, TimelineLevel } from '../../../model/timeline/timeline-level';
-import { GameLevel } from '../../../model/timeline/game-level';
+import { TrainingLevel } from '../../../model/timeline/training-level';
 import TimelineLevelTypeEnum = BasicLevelInfo.TimelineLevelTypeEnum;
 import { TimelineEvent } from '../../../model/timeline/timeline-event';
 import { InfoLevel } from '../../../model/timeline/info-level';
@@ -47,7 +47,7 @@ import { AssessmentLevel } from '../../../model/timeline/assessment-level';
 })
 export class LineComponent implements OnInit, OnDestroy, OnChanges {
   /**
-   * Game data
+   * Training data
    */
   @Input() timelineData: Timeline = { timeline: null };
   /**
@@ -468,7 +468,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   /**
-   * Draw color hatched time bars indicating estimated game time
+   * Draw color hatched time bars indicating estimated training time
    */
   drawEstimatedTimesBars() {
     if (this.timelineData.timeline === null) {
@@ -492,7 +492,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
       .attr('width', (level) => this.timeScale(level.time))
       .attr('height', this.size.height)
       .style('fill', (level) => {
-        if (level.type !== 'GAME_LEVEL') {
+        if (level.type !== 'TRAINING_LEVEL') {
           return 'lightgray';
         }
         return colorScale(level.number.toString());
@@ -556,7 +556,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
     this.svg
       .append('text')
       .attr('transform', `translate(${this.svgConfig.width / 2 - 50}, ${this.svgConfig.height + 65})`)
-      .text('game time')
+      .text('training time')
       .style('fill', '#4c4a4a');
 
     this.svg
@@ -889,7 +889,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
 
     const line = lineGroup
       .append('path')
-      .attr('d', this.lineGenerator(this.getEvents(player))) // (level as GameLevel).events)
+      .attr('d', this.lineGenerator(this.getEvents(player))) // (level as TrainingLevel).events)
       .attr('class', 'score-progress-player')
       .classed('score-progress-player-highlight', player.trainingRunId === Number(this.feedbackLearnerId))
       .classed('visible-line', true)
@@ -901,7 +901,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
 
     const clickableLine = lineGroup
       .append('path')
-      .attr('d', this.lineGenerator(this.getEvents(player))) // (level as GameLevel).events)
+      .attr('d', this.lineGenerator(this.getEvents(player))) // (level as TrainingLevel).events)
       .attr('class', 'score-progress-player')
       .datum(player)
       .style('fill', 'none')
@@ -1104,7 +1104,7 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   /**
-   * Draws small circles in correct flag submit events
+   * Draws small circles in correct answer submit events
    * @param eventsGroup
    * @param filteredEvents
    * @param colorScale
@@ -1266,8 +1266,8 @@ export class LineComponent implements OnInit, OnDestroy, OnChanges {
   getEvents(player: TimelinePlayer): TimelineEvent[] {
     let events = [];
     player.levels.forEach((level) => {
-      if (level.levelType === TimelineLevelTypeEnum.GAME) {
-        events = [...events, ...(level as GameLevel).events];
+      if (level.levelType === TimelineLevelTypeEnum.TRAINING) {
+        events = [...events, ...(level as TrainingLevel).events];
       } else if (level.levelType === TimelineLevelTypeEnum.INFO) {
         events = [...events, ...(level as InfoLevel).events];
       } else if (level.levelType === TimelineLevelTypeEnum.ASSESSMENT) {

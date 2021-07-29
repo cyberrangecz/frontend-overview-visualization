@@ -3,6 +3,6 @@ export class LevelTableData {
   order: number;
   levelType: string;
   participantLevelScore: number;
-  wrongFlags?: number;
+  wrongAnswers?: number;
   hintsTaken?: number;
 }
