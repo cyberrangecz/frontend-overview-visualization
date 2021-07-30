@@ -1,3 +1,4 @@
+12.0.6 Fix local config paths, add build of example app to CI, renaming terms game to training and flag to answer.
 12.0.5 Bump version
 12.0.4 Fixed filtering and player id
 12.0.3 Update gitlab CI
