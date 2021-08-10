@@ -2,9 +2,8 @@
     <kypo2-viz-overview-final
         [dataClusteringFinal]="clusteringTrainingData"
         [useLocalMock]="useLocalMock"
-        (outputSelectedPlayerId)="selectPlayer($event)"
-        [inputSelectedPlayerId]="selectedPlayerId"
-        [feedbackLearnerId]="feedbackLearnerId"
+        (outputSelectedTrainingRunId)="selectPlayer($event)"
+        [selectedTrainingRunId]='selectedTrainingRunId'
         [colorScheme]="colorScheme"
         [eventService]="eventService"
         [size]="{width: size.width, height: 100}"
@@ -14,9 +13,8 @@
     <kypo2-viz-overview-levels
         [levelsData]="clusteringTrainingData"
         [useLocalMock]="useLocalMock"
-        (outputSelectedPlayerId)="selectPlayer($event)"
-        [inputSelectedPlayerId]="selectedPlayerId"
-        [feedbackLearnerId]="feedbackLearnerId"
+        (outputSelectedTrainingRunId)='selectPlayer($event)'
+        [selectedTrainingRunId]='selectedTrainingRunId'
         [colorScheme]="colorScheme"
         [eventService]="eventService"
         [size]="size"

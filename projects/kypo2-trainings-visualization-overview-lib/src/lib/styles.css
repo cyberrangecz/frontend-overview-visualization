@@ -126,15 +126,6 @@
   cursor: -webkit-grab !important;
 }
 
-.overview-visualization-container .row-stripe {
-  display:inline-block;
-  width: 7px;
-  height: 33px;
-  position:absolute;
-  margin-top: -6.5px;
-  margin-left: -13px;
-}
-
 .overview-visualization-container .table tbody tr:hover {
   background: #d2d2cd !important;
 }
@@ -184,6 +175,18 @@
 
 .score-progress-line-tooltip {
   font-size: 12px;
+  background: #5b5c5e;
+  color: white;
+  position: absolute;
+  z-index: 1;
+  text-align: center;
+  padding: 8px;
+  border: 0;
+  border-radius: 8px;
+}
+
+.average-time-line-tooltip {
+  font-size: 11px;
   background: #5b5c5e;
   color: white;
   position: absolute;

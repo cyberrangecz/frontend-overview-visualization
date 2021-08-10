@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angu
 import {
   AXES_CONFIG,
   BARS_CONFIG,
-  colorScheme,
   CROSSHAIR_CONFIG,
   LEVEL_LABELS_CONFIG,
   PLAYER_POINT_CONFIG,
@@ -43,11 +42,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   /**
    * Player to highlight
    */
-  @Input() inputSelectedPlayerId: string;
-  /**
-   * Id of player
-   */
-  @Input() feedbackLearnerId: string;
+  @Input() selectedTrainingRunId: number;
   /**
    * Service containing event handlers which are invoked whenever the visualization's events are fired.
    */
@@ -67,7 +62,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   /**
    * Emits id of selected player.
    */
-  @Output() outputSelectedPlayerId = new EventEmitter<number>();
+  @Output() outputSelectedTrainingRunId = new EventEmitter<number>();
 
   private d3: D3;
   private xScale: ScaleLinear<number, number>;
@@ -80,6 +75,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   private tickLength = 1;
 
   private playerClicked = false; // If no player is selected, hover out of player will cancel the highlight
+  private traineesTrainingRunId: number;
 
   constructor(d3: D3Service, private dataService: ClusteringService) {
     this.d3 = d3.getD3();
@@ -88,6 +84,9 @@ export class LevelsComponent implements OnInit, OnChanges {
   ngOnInit() {
     if (!this.useLocalMock) {
       this.load();
+    }
+    if (this.traineeModeInfo) {
+      this.traineesTrainingRunId = this.traineeModeInfo.trainingRunId;
     }
   }
 
@@ -123,7 +122,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     this.drawPlayers();
     this.buildCrosshair();
     this.addListeners();
-    this.highlightSelectedPlayer();
+    this.highlightSelectedTrainingRun();
   }
 
   /**
@@ -162,7 +161,8 @@ export class LevelsComponent implements OnInit, OnChanges {
     const data: Level[] = this.getTrainingLevels();
     this.initializeScaleBand(data);
     this.drawMaximumBars(barsGroup, data);
-    this.drawAverageBars(barsGroup, data);
+    this.drawEstimateBars(barsGroup, data);
+    this.drawAverageTimeLines(barsGroup, data);
     this.drawBarLabels();
   }
 
@@ -178,12 +178,11 @@ export class LevelsComponent implements OnInit, OnChanges {
   }
 
   /**
-   *
+   * Draw maximum time bars
    * @param barsGroup d3 selection of group holding each bar
    * @param data holding necessary values for bar visualization
    */
   drawMaximumBars(barsGroup, data: Level[]) {
-    const colorScale = this.d3.scaleOrdinal().range(this.colorScheme || colorScheme);
     barsGroup
       .selectAll('.score-level-bar-max')
       .data(data)
@@ -195,28 +194,55 @@ export class LevelsComponent implements OnInit, OnChanges {
       .attr('y', (level: Level) => this.yScaleBandBars(level.order.toString()))
       .attr('height', this.yScaleBandBars.bandwidth())
       .attr('width', (level: Level) => this.xScale(level.maxParticipantTime))
-      .style('fill', (d, i) => colorScale(i))
+      .style('fill', (d, i) => this.d3.interpolateGreys((1 / (data.length + 4)) * (i + 2)))
       .style('opacity', BARS_CONFIG.maxBarOpacity);
   }
 
   /**
-   * Draw average bars overlaying the maximum bars with darker color
+   * Draw estimate time bars overlaying maximum bars with hatch pattern
    * @param barsGroup d3 selection of group holding each bar
    * @param data holding necessary values for bar visualization
    */
-  drawAverageBars(barsGroup, data: Level[]) {
-    const colorScale = this.d3.scaleOrdinal().range(this.colorScheme || colorScheme);
+  drawEstimateBars(barsGroup, data: Level[]) {
     barsGroup
-      .selectAll('.score-level-bar-avg')
+      .selectAll('.score-level-bar-estimate')
       .data(data)
       .enter()
       .append('rect')
-      .attr('class', 'score-level-bar score-level-bar-avg')
+      .attr('id', (level: Level) => 'score-level-bar-estimate-' + level.order)
+      .attr('class', 'score-level-bar score-level-bar-estimate')
       .attr('x', 0)
       .attr('y', (level: Level) => this.yScaleBandBars(level.order.toString()))
       .attr('height', this.yScaleBandBars.bandwidth())
-      .attr('width', (level: Level) => this.xScale(level.averageTime))
-      .style('fill', (d, i) => colorScale(i));
+      .attr('width', (level: Level) => this.xScale(level.estimatedTime))
+      .style('fill', (level: Level) => {
+        if (level.order > 5) {
+          return 'url(#diagonalHatch)';
+        } else {
+          return 'url(#diagonalHatchDarker)';
+        }
+      });
+  }
+
+  /**
+   * Draw average time lines overlaying the maximum and estimate bars
+   * @param barsGroup d3 selection of group holding each bar
+   * @param data holding necessary values for bar visualization
+   */
+  drawAverageTimeLines(barsGroup, data: Level[]) {
+    barsGroup
+      .selectAll('.score-level-line-avg')
+      .data(data)
+      .enter()
+      .append('line')
+      .attr('class', 'score-level-line score-level-line-avg')
+      .style('stroke-dasharray', '5,5')
+      .style('stroke-width', 2)
+      .style('stroke', '#3C4445')
+      .attr('x1', (level: Level) => this.xScale(level.averageTime))
+      .attr('y1', (level: Level) => this.yScaleBandBars(level.order.toString()))
+      .attr('x2', (level: Level) => this.xScale(level.averageTime))
+      .attr('y2', (level: Level) => this.yScaleBandBars.bandwidth() + this.yScaleBandBars(level.order.toString()));
   }
 
   /**
@@ -373,11 +399,9 @@ export class LevelsComponent implements OnInit, OnChanges {
    * Draw players (circles) on each level bar indicating each level training time and achieved score
    */
   drawPlayers() {
-    const yScaleBand = this.yScaleBandBars;
-    const colorScale = this.d3.scaleOrdinal().range(this.colorScheme || colorScheme);
     const levels = this.getTrainingLevels();
     levels.forEach((level, i) => {
-      this.drawPlayersOnSingleBar(level.playerLevelData, i, colorScale);
+      this.drawPlayersOnSingleBar(level.playerLevelData, i);
     });
   }
 
@@ -387,8 +411,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    * @param i number of level
    * @param colorScale color of level
    */
-  drawPlayersOnSingleBar(players: PlayerLevelData[], i: number, colorScale) {
-    const pointConfig = PLAYER_POINT_CONFIG;
+  drawPlayersOnSingleBar(players: PlayerLevelData[], i: number) {
     const levelNumber = i + 1;
     const barCoordinateY = this.yScaleBandBars(levelNumber.toString());
     const barHeight = barCoordinateY + this.yScaleBandBars.bandwidth();
@@ -413,12 +436,11 @@ export class LevelsComponent implements OnInit, OnChanges {
       .attr('cx', (d: PlayerLevelData) => xScale(d.trainingTime))
       .attr('cy', (d: PlayerLevelData) => yBarScale(d.participantLevelScore))
       .attr('r', (d: PlayerLevelData) =>
-        d.trainingRunId === Number(this.feedbackLearnerId) ? pointConfig.feedbackLearner.pointRadius : pointConfig.pointRadius
+        d.trainingRunId === this.traineesTrainingRunId
+          ? PLAYER_POINT_CONFIG.feedbackLearner.pointRadius
+          : PLAYER_POINT_CONFIG.pointRadius
       )
-      .style('fill', () => {
-        const c = this.d3.hsl(colorScale(i.toString()).toString());
-        return c.darker(0.6);
-      });
+      .style('fill', (d: PlayerLevelData) => d.avatarColor);
   }
 
   /**
@@ -604,7 +626,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    * Cancels player selection when clicked everywhere inside the container
    */
   onContainerClick() {
-    this.outputSelectedPlayerId.emit();
+    this.outputSelectedTrainingRunId.emit();
     this.playerClicked = false;
   }
 
@@ -617,9 +639,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     this.highlightHoveredPlayer(player);
     this.showTooltip(player);
     this.showCrosshair();
-    if (this.playerClicked === false) {
-      this.outputSelectedPlayerId.emit(player.trainingRunId);
-    }
+
     const noEventServiceWasPassed = typeof this.eventService === 'undefined' || this.eventService === null;
     if (!noEventServiceWasPassed) {
       this.eventService.clusteringLevelsOnPlayerMouseover(player);
@@ -632,11 +652,9 @@ export class LevelsComponent implements OnInit, OnChanges {
    */
   highlightHoveredPlayer(player: PlayerLevelData) {
     const players = this.d3.selectAll('.player-point.p' + player.trainingRunId);
-    const isFeedbackLearner = player.trainingRunId === Number(this.feedbackLearnerId);
-    const radius = isFeedbackLearner
-      ? PLAYER_POINT_CONFIG.feedbackLearner.pointRadius
-      : PLAYER_POINT_CONFIG.pointRadius;
-    const magnifier = isFeedbackLearner ? 1.05 : PLAYER_POINT_CONFIG.pointHighlight;
+    const isTraineesRun = player.trainingRunId === this.traineesTrainingRunId;
+    const radius = isTraineesRun ? PLAYER_POINT_CONFIG.feedbackLearner.pointRadius : PLAYER_POINT_CONFIG.pointRadius;
+    const magnifier = isTraineesRun ? 1.05 : PLAYER_POINT_CONFIG.pointHighlight;
     const newRadius = radius * magnifier;
 
     players
@@ -675,7 +693,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     const d3 = this.d3;
     const playerElementNode = nodeList[index];
     const playersGroup = playerElementNode.parentNode;
-    const level = d3.select(playersGroup).datum()['order'];
+    const level = d3.select(playersGroup).datum()['number'];
     const trainingLevels =
       this.levelsData !== null
         ? this.levelsData.levels.filter((trainingLevel) => trainingLevel.levelType === LevelTypeEnum.TrainingLevel)
@@ -685,8 +703,6 @@ export class LevelsComponent implements OnInit, OnChanges {
       .range([0, trainingLevels[level - 1].maxParticipantScore])
       .domain([this.yScaleBandBars.bandwidth(), 0]);
     yScale.clamp(true);
-    const x = playerElementNode.getAttribute('cx');
-    const y = playerElementNode.getAttribute('cy');
     const crosshairLinesGroup = this.svg.select('.focus-lines');
     const crosshairLabelsGroup = this.svg.select('.focus-labels');
     yScale.clamp(true);
@@ -697,10 +713,10 @@ export class LevelsComponent implements OnInit, OnChanges {
     };
 
     const playersData = {
-      x: x,
-      y: y,
+      x: playerElementNode.getAttribute('cx'),
+      y: playerElementNode.getAttribute('cy'),
       time: d3.timeFormat('%H:%M:%S')(new Date(0, 0, 0, 0, 0, player.time, 0)),
-      score: player.score.toFixed(0),
+      score: player.participantLevelScore.toFixed(0),
     };
 
     this.updateCrosshair(groups, playersData);
@@ -718,9 +734,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     this.unhighlightHoveredPlayer(player);
     this.hideTooltip();
     this.hideCrosshair();
-    if (this.playerClicked === false) {
-      this.outputSelectedPlayerId.emit();
-    }
+
     const noEventServiceWasPassed = typeof this.eventService === 'undefined' || this.eventService === null;
     if (!noEventServiceWasPassed) {
       this.eventService.clusteringLevelsOnPlayerMouseout(player);
@@ -733,10 +747,8 @@ export class LevelsComponent implements OnInit, OnChanges {
    */
   unhighlightHoveredPlayer(player: PlayerLevelData) {
     const players = this.d3.selectAll('.player-point-highlighted.p' + player.trainingRunId);
-    const isFeedbackLearner = player.trainingRunId === Number(this.feedbackLearnerId);
-    const radius = isFeedbackLearner
-      ? PLAYER_POINT_CONFIG.feedbackLearner.pointRadius
-      : PLAYER_POINT_CONFIG.pointRadius;
+    const isTraineesRun = player.trainingRunId === this.traineesTrainingRunId;
+    const radius = isTraineesRun ? PLAYER_POINT_CONFIG.feedbackLearner.pointRadius : PLAYER_POINT_CONFIG.pointRadius;
     players.attr('r', radius).classed('player-point-highlighted', false).classed('player-point', true);
   }
 
@@ -753,7 +765,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    */
   onPlayerPointClick(player: PlayerLevelData) {
     this.d3.event.stopPropagation();
-    this.outputSelectedPlayerId.emit(player.trainingRunId);
+    this.outputSelectedTrainingRunId.emit(player.trainingRunId);
     this.playerClicked = true;
     const noEventServiceWasPassed = typeof this.eventService === 'undefined' || this.eventService === null;
     if (!noEventServiceWasPassed) {
@@ -764,16 +776,16 @@ export class LevelsComponent implements OnInit, OnChanges {
   /**
    * Set player's circles in Score Level and Score Final components to bigger radius and fill color
    */
-  highlightSelectedPlayer() {
+  highlightSelectedTrainingRun() {
     this.hideTooltip(); // Prevents showing the tooltip when user quickly leaves the viz
-    if (!this.inputSelectedPlayerId) {
+    if (!this.selectedTrainingRunId) {
       return;
     }
 
     this.svg.selectAll('.player-point').style('opacity', 0.5);
 
     const player = this.svg
-      .selectAll('.p' + this.inputSelectedPlayerId)
+      .selectAll('.p' + this.selectedTrainingRunId)
       .classed('player-point', false)
       .classed('player-point-selected', true)
       .transition()
@@ -782,10 +794,10 @@ export class LevelsComponent implements OnInit, OnChanges {
       .style('opacity', 1)
       .style('fill', (data, index, nodeList) => {
         const color = this.d3.hsl(nodeList[index].style.fill);
-        return color.darker(1.5);
+        return color.darker(0.8);
       });
 
-    if (this.inputSelectedPlayerId === this.feedbackLearnerId) {
+    if (this.selectedTrainingRunId === this.traineesTrainingRunId) {
       return;
     }
 

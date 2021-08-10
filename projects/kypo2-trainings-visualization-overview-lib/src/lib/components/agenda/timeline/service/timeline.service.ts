@@ -11,14 +11,12 @@ export class TimelineService {
   constructor(private timelineApiService: TimelineApiService) {}
 
   getAllData(traineeModeInfo: Kypo2TraineeModeInfo): Observable<Timeline> {
-    const service = Kypo2TraineeModeInfo.isTrainee(traineeModeInfo) ?
-      this.timelineApiService.getAnonymizedTimelineVisualizationData() :
-      this.timelineApiService.getTimelineVisualizationData();
+    const service = Kypo2TraineeModeInfo.isTrainee(traineeModeInfo)
+      ? this.timelineApiService.getAnonymizedTimelineVisualizationData()
+      : this.timelineApiService.getTimelineVisualizationData();
 
     return service.pipe(
-      map((data) =>
-        TimelineMapper.fromDTO(data)
-      ),
+      map((data) => TimelineMapper.fromDTO(data)),
       catchError((error) => {
         return throwError('timeline service not connect to API: ' + error.message);
       })

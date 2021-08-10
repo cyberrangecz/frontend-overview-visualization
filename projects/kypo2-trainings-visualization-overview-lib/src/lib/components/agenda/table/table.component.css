@@ -13,6 +13,15 @@ table {
   margin-bottom: 20px;
 }
 
+.row-stripe {
+  display:inline-block;
+  width: 7px;
+  height: 33px;
+  position:absolute;
+  margin-top: -6.5px;
+  margin-left: -13px;
+}
+
 th, td {
   min-width: 50px;
 }

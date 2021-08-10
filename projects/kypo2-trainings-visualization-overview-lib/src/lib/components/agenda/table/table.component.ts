@@ -36,10 +36,6 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
    */
   @Input() standalone = false;
   /**
-   * Id of player
-   */
-  @Input() feedbackLearnerId: string;
-  /**
    * Id of training definition
    */
   @Input() trainingDefinitionId: number;
@@ -47,10 +43,6 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
    * Id of training instance
    */
   @Input() trainingInstanceId: number;
-  /**
-   * Id of training run
-   */
-  @Input() trainingRunId: number;
   /**
    * Use if visualization should use anonymized data (without names and credentials of other users) from trainee point of view
    */
@@ -62,6 +54,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public sortedDesc = false;
   public columnHovered = null;
   public filters;
+  public traineesTrainingRun: number;
   private playerColorScaleSource: Subscription;
   public playerColorScale = (id) => 'black';
 
@@ -96,7 +89,9 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     }
     this.configService.trainingDefinitionId = this.trainingDefinitionId;
     this.configService.trainingInstanceId = this.trainingInstanceId;
-    this.configService.trainingRunId = this.trainingRunId;
+    if (this.traineeModeInfo) {
+      this.configService.trainingRunId = this.traineeModeInfo.trainingRunId;
+    }
     if (this.tableData.players) {
       this.getMaxReachedLevel();
       this.redraw();
@@ -109,6 +104,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(take(1))
       .subscribe((res) => {
         this.tableData = res;
+        this.traineesTrainingRun = this.traineeModeInfo.trainingRunId;
         this.redraw();
         this.getMaxReachedLevel();
       });
@@ -127,7 +123,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     let i = 0;
     for (let index = 0; index < this.tableData.players.length; index++) {
       const element = this.tableData.players[index];
-      if (element.trainingRunId === Number(this.feedbackLearnerId)) {
+      if (element.trainingRunId === this.traineesTrainingRun) {
         i = index;
         break;
       }
@@ -144,7 +140,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     if (this.tableData.players === null) {
       return;
     }
-    const feedbackLearner = this.tableData.players.find((player) => player.trainingRunId === Number(this.feedbackLearnerId));
+    const feedbackLearner = this.tableData.players.find((player) => player.trainingRunId === this.traineesTrainingRun);
     if (feedbackLearner !== undefined) {
       feedbackLearner.checked = !feedbackLearner.checked;
     }
