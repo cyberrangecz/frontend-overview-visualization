@@ -78,8 +78,8 @@
             (mouseout)="!standalone ? onRowMouseout(player): null"
             [ngClass]="{'checked' : standalone ? false : player.checked}">
             <td class="mat-cell">
-              <div *ngIf="player.checked && !standalone" class="row-stripe" [ngStyle]="{'background': playerColorScale(player.id.toString())}"></div>
-              <span [ngStyle]="{'font-weight': player.id === feedbackLearnerId ? 'bold' : 'normal', 'padding-right': '10px'}">{{
+              <div *ngIf="player.checked" class="row-stripe" [ngStyle]="{'background': player.avatarColor }"></div>
+              <span [ngStyle]="{'font-weight': player.trainingRunId === traineesTrainingRun ? 'bold' : 'normal', 'padding-right': '10px'}">{{
                 player.name
               }}</span>
               <ng-container *ngIf="!standalone">

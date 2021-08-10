@@ -22,10 +22,6 @@ export class TimelineComponent implements OnInit, OnChanges {
    */
   @Input() enableAllPlayers = true;
   /**
-   * Id of player
-   */
-  @Input() feedbackLearnerId: string;
-  /**
    * Array of color strings for visualization.
    */
   @Input() colorScheme: string[];
@@ -41,10 +37,6 @@ export class TimelineComponent implements OnInit, OnChanges {
    * Id of training instance
    */
   @Input() trainingInstanceId: number;
-  /**
-   * Id of training run
-   */
-  @Input() trainingRunId: number;
 
   public fullWidthTable = false;
   /**
@@ -65,7 +57,9 @@ export class TimelineComponent implements OnInit, OnChanges {
   ngOnChanges() {
     this.configService.trainingDefinitionId = this.trainingDefinitionId;
     this.configService.trainingInstanceId = this.trainingInstanceId;
-    this.configService.trainingRunId = this.trainingRunId;
+    if (this.traineeModeInfo) {
+      this.configService.trainingRunId = this.traineeModeInfo.trainingRunId;
+    }
   }
 
   getLineComponent(): LineComponent {

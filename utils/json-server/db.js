@@ -2,12 +2,12 @@ module.exports = function() {
   return {
     clustering: {
       final_results: {
-        estimated_time: 2700000,
+        estimated_time: 2135498,
         max_participant_score: 230,
         max_participant_training_score: 30,
         max_participant_assessment_score: 200,
         max_participant_time: 2635498,
-        average_time: 2635498,
+        average_time: 2535498,
         average_score: 240,
         average_training_score: 40,
         average_assessment_score: 200,
@@ -82,7 +82,7 @@ module.exports = function() {
           estimated_time: 600000,
           max_participant_score: 30,
           max_participant_time: 763290,
-          average_time: 763290,
+          average_time: 760290,
           average_score: 30,
           player_data: [
             {
@@ -104,7 +104,7 @@ module.exports = function() {
               avatar_color: '#100975',
               training_run_id: 2,
               training_time: 763290,
-              participant_level_score: 50,
+              participant_level_score: 20,
               finished: true,
             },
           ],
@@ -117,7 +117,7 @@ module.exports = function() {
           estimated_time: 600000,
           max_participant_score: 0,
           max_participant_time: 758743,
-          average_time: 758743,
+          average_time: 752043,
           average_score: 0,
           player_data: [
             {
@@ -152,7 +152,7 @@ module.exports = function() {
           estimated_time: 900000,
           max_participant_score: 0,
           max_participant_time: 1081137,
-          average_time: 1081137,
+          average_time: 1001137,
           average_score: 0,
           player_data: [
             {
@@ -277,7 +277,7 @@ module.exports = function() {
             level_type: 'TRAINING_LEVEL',
             wrong_answers: 1,
             hints_taken: 1,
-            participant_level_score: 30,
+            participant_level_score: 20,
           },
           {
             id: 42,
@@ -368,7 +368,7 @@ module.exports = function() {
       },
     ],
     timeline: {
-      estimated_time: 2700000000,
+      estimated_time: 2700000,
       max_score_of_levels: [0, 50, 100, 100, 300, 0],
       max_participant_time: 2635498,
       average_time: 2635498,

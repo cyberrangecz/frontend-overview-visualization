@@ -11,9 +11,9 @@ export class ClusteringService {
   constructor(private clusteringFinalApiService: ClusteringApiService) {}
 
   public getAllData(traineeModeInfo: Kypo2TraineeModeInfo): Observable<ClusteringTrainingData> {
-    const service = Kypo2TraineeModeInfo.isTrainee(traineeModeInfo) ?
-      this.clusteringFinalApiService.getAnonymizedClusteringVisualizationData() :
-      this.clusteringFinalApiService.getClusteringVisualizationData();
+    const service = Kypo2TraineeModeInfo.isTrainee(traineeModeInfo)
+      ? this.clusteringFinalApiService.getAnonymizedClusteringVisualizationData()
+      : this.clusteringFinalApiService.getClusteringVisualizationData();
 
     return service.pipe(
       map((data) => ClusteringMapper.fromDTO(data)),

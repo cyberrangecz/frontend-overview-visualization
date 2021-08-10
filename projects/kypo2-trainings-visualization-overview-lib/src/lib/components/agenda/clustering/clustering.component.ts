@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, ViewChild, SimpleChanges } from '@angular/core';
 import { ClusteringFinalEventService } from './interfaces/clustering-final-event-service';
 import { FinalComponent } from './final/final.component';
 import { LevelsComponent } from './levels/levels.component';
@@ -16,7 +16,7 @@ export class ClusteringComponent implements OnInit, OnChanges {
   @ViewChild(FinalComponent, { static: true }) finalComponent;
   @ViewChild(LevelsComponent, { static: true }) levelsComponent;
 
-  public selectedPlayerId: number;
+  public selectedTrainingRunId: number;
   clusteringTrainingData: ClusteringTrainingData = { finalResults: null, levels: null };
 
   /**
@@ -24,10 +24,6 @@ export class ClusteringComponent implements OnInit, OnChanges {
    * @deprecated
    */
   @Input() useLocalMock = false;
-  /**
-   * Id of player
-   */
-  @Input() feedbackLearnerId: string;
   /**
    * Array of color strings for visualization.
    */
@@ -49,10 +45,6 @@ export class ClusteringComponent implements OnInit, OnChanges {
    */
   @Input() trainingInstanceId: number;
   /**
-   * Id of training run
-   */
-  @Input() trainingRunId: number;
-  /**
    * Use if visualization should use anonymized data (without names and credentials of other users) from trainee point of view
    */
   @Input() traineeModeInfo: Kypo2TraineeModeInfo;
@@ -63,27 +55,17 @@ export class ClusteringComponent implements OnInit, OnChanges {
     if (this.useLocalMock) {
       this.clusteringTrainingData = { finalResults: CLUSTERING_TRAINING_RESULTS, levels: CLUSTERING_TRAINING_LEVELS };
     }
+    if (this.traineeModeInfo) {
+      this.selectedTrainingRunId = this.traineeModeInfo.trainingRunId;
+    }
   }
 
   ngOnChanges() {
     this.configService.trainingDefinitionId = this.trainingDefinitionId;
     this.configService.trainingInstanceId = this.trainingInstanceId;
-    this.configService.trainingRunId = this.trainingRunId;
   }
 
-  get levelsCount() {
-    return this.clusteringTrainingData.levels.length;
-  }
-
-  selectPlayer(id) {
-    this.selectedPlayerId = id;
-  }
-
-  getFinalComponent(): FinalComponent {
-    return this.finalComponent;
-  }
-
-  getLevelsComponent(): LevelsComponent {
-    return this.levelsComponent;
+  selectPlayer(id: number) {
+    this.selectedTrainingRunId = id;
   }
 }

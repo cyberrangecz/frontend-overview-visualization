@@ -40,11 +40,7 @@ export class FinalComponent implements OnInit, OnChanges {
   /**
    * Player to highlight
    */
-  @Input() inputSelectedPlayerId: string;
-  /**
-   * Id of player
-   */
-  @Input() feedbackLearnerId: string;
+  @Input() selectedTrainingRunId: number;
   /**
    * Array of color strings for visualization.
    */
@@ -64,7 +60,7 @@ export class FinalComponent implements OnInit, OnChanges {
   /**
    * Emits id of selected player.
    */
-  @Output() outputSelectedPlayerId = new EventEmitter<number>();
+  @Output() outputSelectedTrainingRunId = new EventEmitter<number>();
 
   private d3: D3;
   private xScale: ScaleLinear<number, number>;
@@ -77,6 +73,7 @@ export class FinalComponent implements OnInit, OnChanges {
   private tickLength = 1;
 
   private playerClicked = false; // If no player is selected, hover out of player will cancel the highlight
+  private traineesTrainingRunId: number;
 
   constructor(d3: D3Service, private dataService: ClusteringService) {
     this.d3 = d3.getD3();
@@ -85,6 +82,9 @@ export class FinalComponent implements OnInit, OnChanges {
   ngOnInit() {
     if (!this.useLocalMock) {
       this.load();
+    }
+    if (this.traineeModeInfo) {
+      this.traineesTrainingRunId = this.traineeModeInfo.trainingRunId;
     }
   }
 
@@ -121,7 +121,7 @@ export class FinalComponent implements OnInit, OnChanges {
     this.drawPlayers();
     this.buildCrosshair();
     this.addListeners();
-    this.highlightSelectedPlayer();
+    this.highlightSelectedTrainingRun();
   }
 
   /**
@@ -167,12 +167,13 @@ export class FinalComponent implements OnInit, OnChanges {
     const barsGroup = this.svg.append('g').attr('class', 'score-final-bars');
 
     this.drawMaximumTimeBar(barsGroup, this.dataClusteringFinal.finalResults);
-    this.drawAverageTimeBar(barsGroup, this.dataClusteringFinal.finalResults);
+    this.drawEstimatedTimeBar(barsGroup, this.dataClusteringFinal.finalResults);
+    this.drawAverageTimeLine(barsGroup, this.dataClusteringFinal.finalResults);
     this.drawBarLabel();
   }
 
   /**
-   *
+   * Creates maximum time bar of training
    * @param barsGroup D3 selection of group holding both bars
    * @param data
    */
@@ -188,19 +189,52 @@ export class FinalComponent implements OnInit, OnChanges {
   }
 
   /**
-   *
+   * Creates estimated time bar for training
    * @param barsGroup D3 selection of group holding both bars
    * @param data
    */
-  drawAverageTimeBar(barsGroup, data: FinalResults) {
+  drawEstimatedTimeBar(barsGroup, data: FinalResults) {
+    this.svg
+      .append('defs')
+      .append('pattern')
+      .attr('id', 'diagonalHatchDarker')
+      .attr('patternUnits', 'userSpaceOnUse')
+      .attr('width', '7')
+      .attr('height', '4')
+      .attr('patternTransform', 'rotate(45)')
+      .append('rect')
+      .attr('width', '3')
+      .attr('height', '4')
+      .attr('transform', 'translate(0,0)')
+      .attr('fill', '#9A9A9A')
+      .attr('opacity', '0.5');
+
     barsGroup
       .append('rect')
-      .attr('class', 'score-final-bar-avg')
+      .attr('class', 'score-final-bar-estimate')
       .attr('x', 0)
       .attr('y', 0)
       .attr('height', this.svgHeight)
-      .attr('width', this.xScale(data.averageTime))
-      .attr('fill', BAR_CONFIG.fillColorDark);
+      .attr('width', this.xScale(data.estimatedTime))
+      .attr('fill', 'url(#diagonalHatchDarker)');
+  }
+
+  /**
+   * Creates average time line of training
+   * @param barsGroup D3 selection of group holding both bars
+   * @param data
+   */
+  drawAverageTimeLine(barsGroup, data: FinalResults) {
+    barsGroup
+      .append('line')
+      .attr('id', 'score-final-line-average')
+      .style('stroke-dasharray', '5,5')
+      .style('stroke-width', 2)
+      .style('stroke', '#3C4445')
+      .attr('x1', this.xScale(data.averageTime))
+      .attr('y1', 1)
+      .attr('x2', this.xScale(data.averageTime))
+      .attr('y2', this.svgHeight + 1);
   }
 
   /**
@@ -218,54 +252,74 @@ export class FinalComponent implements OnInit, OnChanges {
     const y = this.svgHeight * 0.15;
     const yOffset = 20;
     const labelOffset = 25;
+    const timeLabelOffset = 35;
 
-    this.drawAverageTimeLegend({ x: x, y: y }, labelOffset);
-    this.drawMaximumTimeLegend({ x: x, y: y + yOffset }, labelOffset);
+    this.drawMaximumTimeLegend({ x: x, y: y }, timeLabelOffset);
+    this.drawEstimatedTimeLegend({ x: x, y: y + yOffset }, timeLabelOffset);
+    this.drawAverageTimeLegend({ x: x, y: y + yOffset * 2 }, labelOffset);
 
-    if (this.feedbackLearnerId != null) {
-      this.drawOtherPlayersLegend({ x: x, y: y + yOffset * 2 }, labelOffset);
-      this.drawFeedbackLearnerLegend({ x: x, y: y + yOffset * 3 }, labelOffset);
+    if (this.traineesTrainingRunId != null) {
+      this.drawOtherPlayersLegend({ x: x, y: y + yOffset * 3 }, labelOffset);
+      this.drawFeedbackLearnerLegend({ x: x, y: y + yOffset * 4 }, labelOffset);
     }
   }
 
-  drawAverageTimeLegend(coordinates: { x: number; y: number }, labelOffset) {
-    const rect = this.svg
-      .append('rect')
-      .attr('x', coordinates.x)
-      .attr('y', coordinates.y)
-      .attr('width', 10)
-      .attr('height', 10)
-      .style('fill', 'rgb(140, 140, 140)');
-    const label = this.svg
-      .append('text')
-      .attr('x', coordinates.x + labelOffset)
-      .attr('y', coordinates.y + 9.5)
-      .html('Average time');
-  }
-
   drawMaximumTimeLegend(coordinates: { x: number; y: number }, labelOffset) {
-    const maximumTime = this.svg
+    this.svg
       .append('rect')
       .attr('x', coordinates.x)
       .attr('y', coordinates.y)
-      .attr('width', 10)
+      .attr('width', 30)
       .attr('height', 10)
       .style('fill', '#D6D6D6');
-    const maximumLabel = this.svg
+    this.svg
       .append('text')
       .attr('x', coordinates.x + labelOffset)
       .attr('y', coordinates.y + 9.5)
       .html('Maximum time');
   }
 
+  drawEstimatedTimeLegend(coordinates: { x: number; y: number }, labelOffset) {
+    this.svg
+      .append('rect')
+      .attr('x', coordinates.x)
+      .attr('y', coordinates.y)
+      .attr('width', 30)
+      .attr('height', 10)
+      .style('fill', 'url(#diagonalHatchDarker)');
+
+    this.svg
+      .append('text')
+      .attr('x', coordinates.x + labelOffset)
+      .attr('y', coordinates.y + 9.5)
+      .html('Estimated time');
+  }
+
+  drawAverageTimeLegend(coordinates: { x: number; y: number }, labelOffset) {
+    this.svg
+      .append('line')
+      .style('stroke-dasharray', '3,5')
+      .style('stroke-width', 2)
+      .style('stroke', '#3C4445')
+      .attr('x1', coordinates.x + 5)
+      .attr('y1', coordinates.y)
+      .attr('x2', coordinates.x + 5)
+      .attr('y2', coordinates.y + 15);
+    this.svg
+      .append('text')
+      .attr('x', coordinates.x + labelOffset)
+      .attr('y', coordinates.y + 9.5)
+      .html('Average time');
+  }
+
   drawOtherPlayersLegend(coordinates: { x: number; y: number }, labelOffset) {
-    const otherPlayers = this.svg
+    this.svg
       .append('circle')
       .attr('cx', coordinates.x + PLAYER_POINT_CONFIG.pointRadius)
       .attr('cy', coordinates.y + PLAYER_POINT_CONFIG.pointRadius)
       .attr('r', PLAYER_POINT_CONFIG.pointRadius)
       .style('fill', PLAYER_POINT_CONFIG.fillColor);
-    const otherPlayersLabel = this.svg
+    this.svg
       .append('text')
       .attr('x', coordinates.x + labelOffset)
       .attr('y', coordinates.y + 9.5)
@@ -273,13 +327,13 @@ export class FinalComponent implements OnInit, OnChanges {
   }
 
   drawFeedbackLearnerLegend(coordinates: { x: number; y: number }, labelOffset) {
-    const feedbackLearner = this.svg
+    this.svg
       .append('circle')
       .attr('cx', coordinates.x + PLAYER_POINT_CONFIG.pointRadius + 1)
       .attr('cy', coordinates.y + PLAYER_POINT_CONFIG.feedbackLearner.pointRadius / 1.5)
       .attr('r', PLAYER_POINT_CONFIG.feedbackLearner.pointRadius)
       .style('fill', PLAYER_POINT_CONFIG.fillColor);
-    const feedbackLearnerLabel = this.svg
+    this.svg
       .append('text')
       .attr('x', coordinates.x + labelOffset)
       .attr('y', coordinates.y + 9.5)
@@ -404,11 +458,11 @@ export class FinalComponent implements OnInit, OnChanges {
       .attr('cx', (playerData: PlayerData) => this.xScale(playerData.trainingTime))
       .attr('cy', (playerData: PlayerData) => this.yScale(playerData.trainingScore))
       .attr('r', (playerData: PlayerData) =>
-        playerData.trainingRunId === Number(this.feedbackLearnerId)
+        playerData.trainingRunId === this.traineesTrainingRunId
           ? PLAYER_POINT_CONFIG.feedbackLearner.pointRadius
           : PLAYER_POINT_CONFIG.pointRadius
       )
-      .style('fill', PLAYER_POINT_CONFIG.fillColor);
+      .style('fill', (playerData: PlayerData) => playerData.avatarColor);
   }
 
   /**
@@ -487,9 +541,6 @@ export class FinalComponent implements OnInit, OnChanges {
     this.highlightHoveredPlayer(player);
     this.showTooltip(player);
     this.showCrosshair();
-    if (this.playerClicked === false) {
-      this.outputSelectedPlayerId.emit(player.trainingRunId);
-    }
 
     const noEventServiceWasPassed = typeof this.eventService === 'undefined' || this.eventService === null;
     if (!noEventServiceWasPassed) {
@@ -503,11 +554,9 @@ export class FinalComponent implements OnInit, OnChanges {
    */
   highlightHoveredPlayer(player: PlayerData) {
     const players = this.d3.selectAll('.player-point.p' + player.trainingRunId);
-    const isFeedbackLearner = player.trainingRunId === Number(this.feedbackLearnerId);
-    const radius = isFeedbackLearner
-      ? PLAYER_POINT_CONFIG.feedbackLearner.pointRadius
-      : PLAYER_POINT_CONFIG.pointRadius;
-    const magnifier = isFeedbackLearner ? 1.05 : PLAYER_POINT_CONFIG.pointHighlight;
+    const isTraineesRun = player.trainingRunId === this.traineesTrainingRunId;
+    const radius = isTraineesRun ? PLAYER_POINT_CONFIG.feedbackLearner.pointRadius : PLAYER_POINT_CONFIG.pointRadius;
+    const magnifier = isTraineesRun ? 1.05 : PLAYER_POINT_CONFIG.pointHighlight;
     const newRadius = radius * magnifier;
 
     players
@@ -646,9 +695,9 @@ export class FinalComponent implements OnInit, OnChanges {
     this.unhighlightHoveredPlayer(player);
     this.hideTooltip();
     this.hideCrosshair();
-    if (this.playerClicked === false) {
-      this.outputSelectedPlayerId.emit(); // Unhiglight with fade
-    }
+    // if (this.playerClicked === false) {
+    //   this.outputSelectedTrainingRunId.emit(); // Unhiglight with fade
+    // }
 
     const noEventServiceWasPassed = typeof this.eventService === 'undefined' || this.eventService === null;
     if (!noEventServiceWasPassed) {
@@ -662,7 +711,7 @@ export class FinalComponent implements OnInit, OnChanges {
    */
   unhighlightHoveredPlayer(player: PlayerData) {
     const players = this.d3.selectAll('.player-point-highlighted.p' + player.trainingRunId);
-    const isFeedbackLearner = player.trainingRunId === Number(this.feedbackLearnerId);
+    const isFeedbackLearner = player.trainingRunId === this.traineesTrainingRunId;
     const radius = isFeedbackLearner
       ? PLAYER_POINT_CONFIG.feedbackLearner.pointRadius
       : PLAYER_POINT_CONFIG.pointRadius;
@@ -690,7 +739,7 @@ export class FinalComponent implements OnInit, OnChanges {
    */
   onPlayerClick(player: PlayerData) {
     this.d3.event.stopPropagation();
-    this.outputSelectedPlayerId.emit(player.trainingRunId);
+    this.outputSelectedTrainingRunId.emit(player.trainingRunId);
     this.playerClicked = true;
 
     const noEventServiceWasPassed = typeof this.eventService === 'undefined' || this.eventService === null;
@@ -763,22 +812,22 @@ export class FinalComponent implements OnInit, OnChanges {
    * Cancel player selection by clicking anywhere in the container except players
    */
   onContainerClick() {
-    this.outputSelectedPlayerId.emit();
+    this.outputSelectedTrainingRunId.emit();
     this.playerClicked = false;
   }
 
   /**
    * Set player's circles in Score Level and Score Final components to bigger radius and fill color
    */
-  highlightSelectedPlayer() {
-    if (!this.inputSelectedPlayerId) {
+  highlightSelectedTrainingRun() {
+    if (!this.selectedTrainingRunId) {
       return;
     }
 
     this.svg.selectAll('.player-point').style('opacity', 0.5);
 
     const player = this.svg
-      .selectAll('.p' + this.inputSelectedPlayerId)
+      .selectAll('.p' + this.selectedTrainingRunId)
       .classed('player-point', false)
       .classed('player-point-selected', true)
       .transition()
@@ -790,7 +839,7 @@ export class FinalComponent implements OnInit, OnChanges {
         return color.darker(1.5);
       });
 
-    if (this.inputSelectedPlayerId === this.feedbackLearnerId) {
+    if (this.selectedTrainingRunId === this.traineesTrainingRunId) {
       return;
     }
 

@@ -195,5 +195,17 @@
   border-radius: 8px;
 }
 
+.average-time-line-tooltip {
+  font-size: 11px;
+  background: #5b5c5e;
+  color: white;
+  position: absolute;
+  z-index: 1;
+  text-align: center;
+  padding: 8px;
+  border: 0;
+  border-radius: 8px;
+}
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -6,7 +6,7 @@ import { PlayerTableDataDTO } from '../dto/table/player-table-data-dto';
 
 @Injectable()
 export class TableApiService {
-  private readonly trainingVisualizationEndpoint = `${this.configService.config.trainingServiceUrl}visualizations/training-instances`
+  private readonly trainingVisualizationEndpoint = `${this.configService.config.trainingServiceUrl}visualizations/training-instances`;
   private readonly anonymizedTrainingVisualizationEndpoint = `${this.configService.config.trainingServiceUrl}visualizations/training-runs`;
 
   constructor(private http: HttpClient, private configService: ConfigService) {}
