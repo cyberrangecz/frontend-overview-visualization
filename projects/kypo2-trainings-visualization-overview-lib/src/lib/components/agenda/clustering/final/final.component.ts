@@ -215,7 +215,7 @@ export class FinalComponent implements OnInit, OnChanges {
       .attr('x', 0)
       .attr('y', 0)
       .attr('height', this.svgHeight)
-      .attr('width', this.xScale(data.estimatedTime))
+      .attr('width', this.xScale(data.estimatedTime) > this.barWidth ? this.xScale(data.maxParticipantTime) : this.xScale(data.estimatedTime))
       .attr('fill', 'url(#diagonalHatchDarker)');
   }
 
