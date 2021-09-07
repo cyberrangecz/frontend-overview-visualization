@@ -214,7 +214,7 @@ export class LevelsComponent implements OnInit, OnChanges {
       .attr('x', 0)
       .attr('y', (level: Level) => this.yScaleBandBars(level.order.toString()))
       .attr('height', this.yScaleBandBars.bandwidth())
-      .attr('width', (level: Level) => this.xScale(level.estimatedTime))
+      .attr('width', (level: Level) => this.xScale(level.estimatedTime) > this.barWidth ? this.xScale(level.maxParticipantTime) : this.xScale(level.estimatedTime))
       .style('fill', (level: Level) => {
         if (level.order > 5) {
           return 'url(#diagonalHatch)';
