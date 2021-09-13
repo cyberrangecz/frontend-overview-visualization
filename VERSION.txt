@@ -1,3 +1,4 @@
+12.0.8 Fixed problems with estimated time bars.
 12.0.7 Adjust visualization according to proposed design, add average time lines and estimated time bars.
 12.0.6 Fix local config paths, add build of example app to CI, renaming terms game to training and flag to answer.
 12.0.5 Bump version
