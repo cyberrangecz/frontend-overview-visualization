@@ -9,7 +9,7 @@ export class FiltersService {
   filtersObject;
   filtersArray;
 
-  private filterChanged = new Subject<any>();
+  private filterChanged: Subject<any> = new Subject<any>();
 
   filterChanged$ = this.filterChanged.asObservable();
 
@@ -18,15 +18,19 @@ export class FiltersService {
     this.filtersArray = FILTERS_ARRAY;
   }
 
-  getFiltersObject() {
+  getFiltersObject(): any {
     return this.filtersObject;
   }
 
-  getFiltersArray() {
+  getFiltersArray(): any {
     return this.filtersArray;
   }
 
-  filter() {
+  setFilters(filters: any[]): void {
+    this.filter()
+  }
+
+  filter(): void {
     this.filterChanged.next();
   }
 }

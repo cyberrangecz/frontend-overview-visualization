@@ -1,11 +1,9 @@
-import { Component, OnInit, OnChanges, Input, ViewChild, SimpleChanges } from '@angular/core';
-import { ClusteringFinalEventService } from './interfaces/clustering-final-event-service';
+import { Component, OnInit, OnChanges, Input, ViewChild, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { FinalComponent } from './final/final.component';
 import { LevelsComponent } from './levels/levels.component';
 import { ConfigService } from '../../../config/config.service';
 import { Kypo2TraineeModeInfo } from '../../../shared/interfaces/kypo2-trainee-mode-info';
 import { ClusteringTrainingData } from '../../model/clustering/clustering-training-data';
-import { CLUSTERING_TRAINING_LEVELS, CLUSTERING_TRAINING_RESULTS } from '../../../shared/mocks/clustering.mock';
 
 @Component({
   selector: 'kypo2-viz-overview-clustering',
@@ -20,18 +18,9 @@ export class ClusteringComponent implements OnInit, OnChanges {
   clusteringTrainingData: ClusteringTrainingData = { finalResults: null, levels: null };
 
   /**
-   * Flag to use local mock
-   * @deprecated
-   */
-  @Input() useLocalMock = false;
-  /**
    * Array of color strings for visualization.
    */
   @Input() colorScheme: string[];
-  /**
-   * Service containing event handlers which are invoked whenever the visualization's events are fired.
-   */
-  @Input() eventService: ClusteringFinalEventService;
   /**
    * Main svg dimensions.
    */
@@ -48,24 +37,48 @@ export class ClusteringComponent implements OnInit, OnChanges {
    * Use if visualization should use anonymized data (without names and credentials of other users) from trainee point of view
    */
   @Input() traineeModeInfo: Kypo2TraineeModeInfo;
+  /**
+   * List of players which should be displayed
+   */
+  @Input() filterPlayers: number[];
+  /**
+   * Id of trainee which should be highlighted
+   */
+  @Input() highlightedTrainee: number;
+  /**
+   * Emits Id of trainee which should be highlighted
+   */
+  @Output() selectedTrainee: EventEmitter<number> = new EventEmitter();
+  /**
+   * Enables trainee view - defaulty highlights given trainee
+   */
+  @Input() standalone: boolean;
+  /**
+   * Id of trainees which should be displayed
+   */
+  @Input() displayedTrainees: number[];
 
   constructor(private configService: ConfigService) {}
 
-  ngOnInit() {
-    if (this.useLocalMock) {
-      this.clusteringTrainingData = { finalResults: CLUSTERING_TRAINING_RESULTS, levels: CLUSTERING_TRAINING_LEVELS };
-    }
-    if (this.traineeModeInfo) {
+  ngOnInit(): void {
+    if (this.traineeModeInfo && this.standalone) {
       this.selectedTrainingRunId = this.traineeModeInfo.trainingRunId;
     }
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges): void {
     this.configService.trainingDefinitionId = this.trainingDefinitionId;
     this.configService.trainingInstanceId = this.trainingInstanceId;
+
+    if ('highlightedTrainee' in changes) {
+      this.selectedTrainingRunId = this.highlightedTrainee;
+    }
   }
 
-  selectPlayer(id: number) {
+  selectPlayer(id: number): void {
+    if (this.highlightedTrainee !== id) {
+      this.selectedTrainee.emit(id);
+    }
     this.selectedTrainingRunId = id;
   }
 }
