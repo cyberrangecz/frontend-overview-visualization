@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FiltersService } from '../../../services/filters.service';
 
 @Component({
@@ -7,15 +7,18 @@ import { FiltersService } from '../../../services/filters.service';
   styleUrls: ['./filters.component.css'],
 })
 export class FiltersComponent implements OnInit {
+
+  @Output() activeFilters: EventEmitter<any> = new EventEmitter();
   filtersArray;
 
   constructor(private filtersService: FiltersService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.filtersArray = this.filtersService.getFiltersArray();
   }
 
-  onFilterChange() {
+  onFilterChange(): void {
     this.filtersService.filter();
+    this.activeFilters.emit(this.filtersService.getFiltersObject());
   }
 }

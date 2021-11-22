@@ -20,8 +20,6 @@ export class TableService {
   tableRowMouseout$ = this.tableRowMouseout.asObservable();
   playerColorScale$ = this.playerColorScale.asObservable();
 
-  constructor() {}
-
   sendTableRowClick(player: PlayerTableData) {
     this.tableRowClicked.next(player);
   }

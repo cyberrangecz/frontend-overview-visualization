@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import {
   AXES_CONFIG,
   BARS_CONFIG,
@@ -9,7 +9,6 @@ import {
   SVG_MARGIN_CONFIG,
 } from './config';
 import { ContainerElement, D3, D3Service, ScaleBand, ScaleLinear } from '@muni-kypo-crp/d3-service';
-import { ClusteringLevelsEventService } from '../interfaces/clustering-levels-event-service';
 import { SvgConfig } from '../../../../shared/interfaces/configurations/svg-config';
 import { Kypo2TraineeModeInfo } from '../../../../shared/interfaces/kypo2-trainee-mode-info';
 import { take } from 'rxjs/operators';
@@ -30,23 +29,9 @@ export class LevelsComponent implements OnInit, OnChanges {
    */
   @Input() levelsData: ClusteringTrainingData = { finalResults: null, levels: null };
   /**
-   * JSON data to use instead of data from API
-   */
-  @Input() jsonLevels: ClusteringTrainingData = { finalResults: null, levels: null };
-
-  /**
-   * Flag to use local mock
-   * @deprecated
-   */
-  @Input() useLocalMock = false;
-  /**
    * Player to highlight
    */
   @Input() selectedTrainingRunId: number;
-  /**
-   * Service containing event handlers which are invoked whenever the visualization's events are fired.
-   */
-  @Input() eventService: ClusteringLevelsEventService;
   /**
    * Main svg dimensions.
    */
@@ -60,9 +45,18 @@ export class LevelsComponent implements OnInit, OnChanges {
    */
   @Input() traineeModeInfo: Kypo2TraineeModeInfo;
   /**
+   * List of players which should be displayed
+   */
+  @Input() filterPlayers: number[];
+  /**
    * Emits id of selected player.
    */
-  @Output() outputSelectedTrainingRunId = new EventEmitter<number>();
+  @Output() selectedTrainee = new EventEmitter<number>();
+  /**
+   * If visualization is used as standalone it displays all given players automatically, highlighting feedback learner
+   * if provided. On the other hand, it displays only players from @filterPlayers and reacts to event selectedTrainingRunId.
+   */
+  @Input() standalone: boolean;
 
   private d3: D3;
   private xScale: ScaleLinear<number, number>;
@@ -81,28 +75,30 @@ export class LevelsComponent implements OnInit, OnChanges {
     this.d3 = d3.getD3();
   }
 
-  ngOnInit() {
-    if (!this.useLocalMock) {
-      this.load();
-    }
+  ngOnInit(): void {
+    this.load();
     if (this.traineeModeInfo) {
-      this.traineesTrainingRunId = this.traineeModeInfo.trainingRunId;
+      if (!this.standalone) {
+        this.traineesTrainingRunId = this.traineeModeInfo.trainingRunId;
+      }
     }
   }
 
-  ngOnChanges() {
-    if (this.jsonLevels !== undefined && this.jsonLevels.finalResults !== null) {
-      this.levelsData.finalResults = this.jsonLevels.finalResults;
-    }
-    if (this.jsonLevels !== undefined && this.jsonLevels.levels !== null) {
-      this.levelsData.levels = this.jsonLevels.levels;
-    }
+  ngOnChanges(changes: SimpleChanges): void {
     if (this.levelsData.levels) {
       this.updateCanvas();
     }
+
+    if ('selectedTrainingRunId' in changes) {
+        if (changes.selectedTrainingRunId.currentValue !== changes.selectedTrainingRunId.previousValue) {
+          if (!changes.selectedTrainingRunId.isFirstChange()) {
+            this.highlightSelectedTrainingRun();
+        }
+      }
+    }
   }
 
-  load() {
+  load(): void {
     this.dataService
       .getAllData(this.traineeModeInfo)
       .pipe(take(1))
@@ -112,7 +108,7 @@ export class LevelsComponent implements OnInit, OnChanges {
       });
   }
 
-  updateCanvas() {
+  updateCanvas(): void {
     this.svgHeight = typeof this.size !== 'undefined' && this.size !== null ? this.size.height : SVG_CONFIG.height;
     this.svgWidth = typeof this.size !== 'undefined' && this.size !== null ? this.size.width : SVG_CONFIG.width;
     this.barWidth = 0.7 * this.svgWidth;
@@ -128,7 +124,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   /**
    * Initialize scales
    */
-  setup() {
+  setup(): void {
     this.initializeScales();
     this.buildSVG();
   }
@@ -136,14 +132,14 @@ export class LevelsComponent implements OnInit, OnChanges {
   /**
    * Initialize global D3 scales
    */
-  initializeScales() {
+  initializeScales(): void {
     this.xScale = this.d3.scaleLinear().range([0, this.barWidth]).domain([0, this.getMaxTime()]);
   }
 
   /**
    * Appends main SVG element to the #score-level-container and assigns it to the class svg property
    */
-  buildSVG() {
+  buildSVG(): void {
     const container = this.d3.select('#score-level-container').html('');
     this.svg = container
       .append('svg')
@@ -156,7 +152,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   /**
    * Draws each level bars
    */
-  drawBars() {
+  drawBars(): void {
     const barsGroup = this.svg.append('g').attr('id', 'score-level-bars');
     const data: Level[] = this.getTrainingLevels();
     this.initializeScaleBand(data);
@@ -169,7 +165,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   /**
    * Initialize D3 ScaleBand and assign it to global property
    */
-  initializeScaleBand(data: Level[]) {
+  initializeScaleBand(data: Level[]): void {
     this.yScaleBandBars = this.d3
       .scaleBand()
       .range([0, this.svgHeight]) // [this.svgConfig.height, 0] results with reversed order
@@ -182,7 +178,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    * @param barsGroup d3 selection of group holding each bar
    * @param data holding necessary values for bar visualization
    */
-  drawMaximumBars(barsGroup, data: Level[]) {
+  drawMaximumBars(barsGroup, data: Level[]): void {
     barsGroup
       .selectAll('.score-level-bar-max')
       .data(data)
@@ -203,7 +199,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    * @param barsGroup d3 selection of group holding each bar
    * @param data holding necessary values for bar visualization
    */
-  drawEstimateBars(barsGroup, data: Level[]) {
+  drawEstimateBars(barsGroup, data: Level[]): void {
     barsGroup
       .selectAll('.score-level-bar-estimate')
       .data(data)
@@ -229,7 +225,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    * @param barsGroup d3 selection of group holding each bar
    * @param data holding necessary values for bar visualization
    */
-  drawAverageTimeLines(barsGroup, data: Level[]) {
+  drawAverageTimeLines(barsGroup, data: Level[]): void {
     barsGroup
       .selectAll('.score-level-line-avg')
       .data(data)
@@ -248,7 +244,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   /**
    * Draw bar labels (Level number and name) next to the maximum bars
    */
-  drawBarLabels() {
+  drawBarLabels(): void {
     if (this.levelsData == null) {
       return;
     }
@@ -278,7 +274,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   /**
    * Draw time axis, dashed left axis and score axis for each level
    */
-  drawAxes() {
+  drawAxes(): void {
     this.drawTimeAxis();
     this.drawDashedLeftAxis();
     this.drawScoreAxes();
@@ -287,7 +283,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   /**
    * Draw time x axis, ticks every 5 minutes
    */
-  drawTimeAxis() {
+  drawTimeAxis(): void {
     const d3 = this.d3;
     const timeScale = this.getTimeScale();
     const xAxis = d3
@@ -325,7 +321,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   /**
    * Draws time axis label
    */
-  drawTimeAxisLabel() {
+  drawTimeAxisLabel(): void {
     this.svg
       .append('text')
       .attr('transform', `translate(${this.barWidth / 2 - 50}, ${this.svgHeight + 60})`)
@@ -336,14 +332,14 @@ export class LevelsComponent implements OnInit, OnChanges {
   /**
    * Removes the line tick and adds circle instead on the first tick of time axis
    */
-  styleFirstTickOfTimeAxis() {
+  styleFirstTickOfTimeAxis(): void {
     this.svg.select('.x-axis>.tick').append('circle').attr('r', 3.5).style('fill', '#888888');
   }
 
   /**
    * Draws dashed left axis underneath score axis
    */
-  drawDashedLeftAxis() {
+  drawDashedLeftAxis(): void {
     this.svg
       .append('g')
       .attr('class', 'y-axis-nolabel')
@@ -355,7 +351,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   /**
    * Draw score axis for each level
    */
-  drawScoreAxes() {
+  drawScoreAxes(): void {
     const d3 = this.d3;
     const trainingLevels =
       this.levelsData !== null
@@ -386,7 +382,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     this.drawScoreAxesLabel();
   }
 
-  drawScoreAxesLabel() {
+  drawScoreAxesLabel(): void {
     this.svg
       .append('text')
       .attr('transform', `translate(${AXES_CONFIG.yAxis.position.x - 50}, ${this.svgHeight / 2}) rotate(-90)`)
@@ -398,7 +394,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   /**
    * Draw players (circles) on each level bar indicating each level training time and achieved score
    */
-  drawPlayers() {
+  drawPlayers(): void {
     const levels = this.getTrainingLevels();
     levels.forEach((level, i) => {
       this.drawPlayersOnSingleBar(level.playerLevelData, i);
@@ -409,9 +405,8 @@ export class LevelsComponent implements OnInit, OnChanges {
    * Draw players on current level bar
    * @param players in current level
    * @param i number of level
-   * @param colorScale color of level
    */
-  drawPlayersOnSingleBar(players: PlayerLevelData[], i: number) {
+  drawPlayersOnSingleBar(players: PlayerLevelData[], i: number): void {
     const levelNumber = i + 1;
     const barCoordinateY = this.yScaleBandBars(levelNumber.toString());
     const barHeight = barCoordinateY + this.yScaleBandBars.bandwidth();
@@ -425,6 +420,9 @@ export class LevelsComponent implements OnInit, OnChanges {
       .domain([0, trainingLevels[i].maxParticipantScore]);
 
     const playersGroup = this.svg.append('g').attr('class', 'score-level-players').datum({ number: levelNumber });
+    if (this.standalone) {
+      players = players.filter((player) => this.filterPlayers.indexOf(player.trainingRunId) !== -1);
+    }
 
     const xScale = (this.xScale = this.d3.scaleLinear().range([0, this.barWidth]).domain([0, this.getMaxTime()]));
     playersGroup
@@ -446,7 +444,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   /**
    * Appends crosshair lines and its labels to the SVG and sets the opacity to 0
    */
-  buildCrosshair() {
+  buildCrosshair(): void {
     const crosshairGroup = this.svg.append('g').attr('class', 'focus-lines').style('opacity', 0);
 
     const crosshairLabelsGroup = this.svg.append('g').attr('class', 'focus-labels').style('opacity', 0);
@@ -456,7 +454,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     this.buildCrosshairLabels(crosshairLabelsGroup);
   }
 
-  buildScoreCrosshairLine(crosshairGroup) {
+  buildScoreCrosshairLine(crosshairGroup): void {
     crosshairGroup
       .append('line')
       .attr('id', 'focus-line-score')
@@ -464,7 +462,7 @@ export class LevelsComponent implements OnInit, OnChanges {
       .style('pointer-events', 'none'); // Prevents events triggering when interacting with parent element
   }
 
-  buildTimeCrosshairLine(crosshairGroup) {
+  buildTimeCrosshairLine(crosshairGroup): void {
     crosshairGroup
       .append('line')
       .attr('id', 'focus-line-time')
@@ -472,7 +470,7 @@ export class LevelsComponent implements OnInit, OnChanges {
       .style('pointer-events', 'none');
   }
 
-  buildCrosshairLabels(crosshairLabelsGroup) {
+  buildCrosshairLabels(crosshairLabelsGroup): void {
     crosshairLabelsGroup.append('text').attr('id', 'focus-label-score').attr('class', 'focus-label');
 
     crosshairLabelsGroup.append('text').attr('id', 'focus-label-time').attr('class', 'focus-label');
@@ -481,7 +479,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   /**
    * Add event listeners to players and bars
    */
-  addListeners() {
+  addListeners(): void {
     const svg = this.svg;
 
     svg
@@ -500,11 +498,11 @@ export class LevelsComponent implements OnInit, OnChanges {
     this.d3.select('#score-level-container').on('click', this.onContainerClick.bind(this));
   }
 
-  onBarMouseover() {
+  onBarMouseover(): void {
     this.showCrosshair();
   }
 
-  showCrosshair() {
+  showCrosshair(): void {
     this.svg.select('.focus-lines').style('opacity', 1);
     this.svg.select('.focus-labels').style('opacity', 1);
   }
@@ -513,7 +511,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    *
    * @param barData
    */
-  onBarMousemove(barData: Level) {
+  onBarMousemove(barData: Level): void {
     const d3 = this.d3;
     const crosshairLinesGroup = this.svg.select('.focus-lines');
     const crosshairLabelsGroup = this.svg.select('.focus-labels');
@@ -554,7 +552,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   updateCrosshair(
     groups: { lines: any; labels: any },
     playersData: { x: number; y: number; time: string; score: number }
-  ) {
+  ): void {
     this.updateScoreCrosshair(groups, playersData);
     this.updateTimeCrosshair(groups, playersData);
   }
@@ -567,7 +565,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   updateScoreCrosshair(
     groups: { lines: any; labels: any },
     playersData: { x: number; y: number; time: string; score: number }
-  ) {
+  ): void {
     const crosshairConfig = CROSSHAIR_CONFIG;
     groups.lines
       .select('#focus-line-score')
@@ -591,7 +589,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   updateTimeCrosshair(
     groups: { lines: any; labels: any },
     playersData: { x: number; y: number; time: string; score: number }
-  ) {
+  ): void {
     const crosshairConfig = CROSSHAIR_CONFIG;
     groups.lines
       .select('#focus-line-time')
@@ -610,14 +608,14 @@ export class LevelsComponent implements OnInit, OnChanges {
   /**
    * Hide crosshair when cursor leaves any bar
    */
-  onBarMouseout() {
+  onBarMouseout(): void {
     this.hideCrosshair();
   }
 
   /**
    * Sets crosshair's opacity to 0
    */
-  hideCrosshair() {
+  hideCrosshair(): void {
     this.svg.select('.focus-lines').style('opacity', 0);
     this.svg.select('.focus-labels').style('opacity', 0);
   }
@@ -625,8 +623,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   /**
    * Cancels player selection when clicked everywhere inside the container
    */
-  onContainerClick() {
-    this.outputSelectedTrainingRunId.emit();
+  onContainerClick(): void {
     this.playerClicked = false;
   }
 
@@ -634,23 +631,19 @@ export class LevelsComponent implements OnInit, OnChanges {
    * Highlights player, shows tooltip and crosshair on hover
    * @param player
    */
-  onPlayerPointMouseover(player: PlayerLevelData) {
+  onPlayerPointMouseover(player: PlayerLevelData): void {
     this.hideTooltip(); // Prevents showing multiple tooltips
     this.highlightHoveredPlayer(player);
     this.showTooltip(player);
     this.showCrosshair();
-
-    const noEventServiceWasPassed = typeof this.eventService === 'undefined' || this.eventService === null;
-    if (!noEventServiceWasPassed) {
-      this.eventService.clusteringLevelsOnPlayerMouseover(player);
-    }
+    this.emitSelectedTrainee(player.trainingRunId);
   }
 
   /**
    * Makes the <circle> bigger
    * @param player data held by player's <circle> element in __data__
    */
-  highlightHoveredPlayer(player: PlayerLevelData) {
+  highlightHoveredPlayer(player: PlayerLevelData): void {
     const players = this.d3.selectAll('.player-point.p' + player.trainingRunId);
     const isTraineesRun = player.trainingRunId === this.traineesTrainingRunId;
     const radius = isTraineesRun ? PLAYER_POINT_CONFIG.feedbackLearner.pointRadius : PLAYER_POINT_CONFIG.pointRadius;
@@ -668,7 +661,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    *
    * @param player data held by <circle> element in __data__ property
    */
-  showTooltip(player: PlayerLevelData) {
+  showTooltip(player: PlayerLevelData): void {
     const playerTooltip = this.d3.select('body').append('div').attr('class', 'player-tooltip').style('opacity', 0);
 
     playerTooltip.transition().duration(200).style('opacity', 0.9);
@@ -689,7 +682,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    * @param index of current circle
    * @param nodeList of all <circle> elements
    */
-  onPlayerPointMousemove(player, index, nodeList) {
+  onPlayerPointMousemove(player, index, nodeList): void {
     const d3 = this.d3;
     const playerElementNode = nodeList[index];
     const playersGroup = playerElementNode.parentNode;
@@ -720,32 +713,25 @@ export class LevelsComponent implements OnInit, OnChanges {
     };
 
     this.updateCrosshair(groups, playersData);
-    const noEventServiceWasPassed = typeof this.eventService === 'undefined' || this.eventService === null;
-    if (!noEventServiceWasPassed) {
-      this.eventService.clusteringLevelsOnPlayerMousemove(player);
-    }
+    this.emitSelectedTrainee(player.trainingRunId);
   }
 
   /**
    * Unhighlights the hovered player, hides tooltip and crosshair on mouseout event
    * @param player data held by <circle> element in __data__ property
    */
-  onPlayerPointMouseout(player: PlayerLevelData) {
+  onPlayerPointMouseout(player: PlayerLevelData): void {
     this.unhighlightHoveredPlayer(player);
     this.hideTooltip();
     this.hideCrosshair();
-
-    const noEventServiceWasPassed = typeof this.eventService === 'undefined' || this.eventService === null;
-    if (!noEventServiceWasPassed) {
-      this.eventService.clusteringLevelsOnPlayerMouseout(player);
-    }
+    this.emitSelectedTrainee(player.trainingRunId);
   }
 
   /**
    *
    * @param player data held by <circle> element in __data__ property
    */
-  unhighlightHoveredPlayer(player: PlayerLevelData) {
+  unhighlightHoveredPlayer(player: PlayerLevelData): void {
     const players = this.d3.selectAll('.player-point-highlighted.p' + player.trainingRunId);
     const isTraineesRun = player.trainingRunId === this.traineesTrainingRunId;
     const radius = isTraineesRun ? PLAYER_POINT_CONFIG.feedbackLearner.pointRadius : PLAYER_POINT_CONFIG.pointRadius;
@@ -755,7 +741,7 @@ export class LevelsComponent implements OnInit, OnChanges {
   /**
    * Removes player tooltip element from DOM
    */
-  hideTooltip() {
+  hideTooltip(): void {
     this.d3.selectAll('.player-tooltip').remove();
   }
 
@@ -763,20 +749,16 @@ export class LevelsComponent implements OnInit, OnChanges {
    * Emit selection to parent component for highlight in other component
    * @param player data held by <circle> element in __data__ property
    */
-  onPlayerPointClick(player: PlayerLevelData) {
+  onPlayerPointClick(player: PlayerLevelData): void {
     this.d3.event.stopPropagation();
-    this.outputSelectedTrainingRunId.emit(player.trainingRunId);
+    this.emitSelectedTrainee(player.trainingRunId);
     this.playerClicked = true;
-    const noEventServiceWasPassed = typeof this.eventService === 'undefined' || this.eventService === null;
-    if (!noEventServiceWasPassed) {
-      this.eventService.clusteringLevelsOnPlayerClick(player);
-    }
   }
 
   /**
    * Set player's circles in Score Level and Score Final components to bigger radius and fill color
    */
-  highlightSelectedTrainingRun() {
+  highlightSelectedTrainingRun(): void {
     this.hideTooltip(); // Prevents showing the tooltip when user quickly leaves the viz
     if (!this.selectedTrainingRunId) {
       return;
@@ -822,5 +804,11 @@ export class LevelsComponent implements OnInit, OnChanges {
       maxTime = level.maxParticipantTime > maxTime ? level.maxParticipantTime : maxTime;
     });
     return maxTime;
+  }
+
+  private emitSelectedTrainee(trainingRunId: number) {
+    if (this.selectedTrainingRunId !== trainingRunId) {
+      this.selectedTrainee.emit(trainingRunId);
+    }
   }
 }

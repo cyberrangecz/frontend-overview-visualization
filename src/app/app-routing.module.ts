@@ -6,18 +6,18 @@ const routes: Routes = [
   {
     path: 'visualization',
     loadChildren: () => import('src/app/visualization/visualization.module').then(m => m.VisualizationModule),
-    canActivate: [SentinelAuthGuardWithLogin],
+    // canActivate: [SentinelAuthGuardWithLogin],
   },
   {
     path: '',
     redirectTo: 'visualization',
     pathMatch: 'full',
   },
-  {
-    path: 'login',
-    component: SentinelAuthProviderListComponent,
-    canActivate: [SentinelNegativeAuthGuard]
-  },
+  // {
+  //   path: 'login',
+  //   component: SentinelAuthProviderListComponent,
+  //   canActivate: [SentinelNegativeAuthGuard]
+  // },
   {
     path: '**',
     redirectTo: 'visualization'

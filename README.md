@@ -40,7 +40,6 @@
 
 ```
 <kypo2-viz-overview-table
-    [useLocalMock]="true"         <--- if set to true, the visualization will use mocked data (available only when run localy!)
     [trainingDefinitionId]="1"
     [standalone]="true"           <--- this ensures that the table does not cooperate with the timeline visualization and can be run independently
     [trainingInstanceId]="1"
@@ -53,7 +52,6 @@
 
 ```
 <kypo2-viz-overview-clustering
-  [useLocalMock]="true"          <--- if set to true, the visualization will use mocked data (available only when run localy!)
   [feedbackLearnerId]="'player'" <--- the id should be set *only* for the trainee view - the vis. will provide a limited information
   [size]="{width: 800, height: 500}"
   [trainingInstanceId]="2"
@@ -66,7 +64,6 @@
 
 ```
 <kypo2-viz-overview-timeline
-  [useLocalMock]="true"          <--- if set to true, the visualization will use mocked data (available only when run localy!)
   [enableAllPlayers]="true"      <--- when set to false, it will hide the related filtering table and show only the line related to the feedbackLearnerId
   [feedbackLearnerId]="'player'" <--- the id should be set *only* for the trainee view - the vis. will provide a limited information
   [size]="{width: 1300, height: 700}"

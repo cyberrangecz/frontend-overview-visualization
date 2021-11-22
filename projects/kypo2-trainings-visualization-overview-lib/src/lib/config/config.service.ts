@@ -12,23 +12,24 @@ export class ConfigService {
     return this._trainingInstanceId;
   }
 
+  set trainingInstanceId(value: number) {
+    this._trainingInstanceId = value;
+  }
+
   get trainingRunId(): number {
     return this._trainingRunId;
+  }
+
+  set trainingRunId(value: number) {
+    this._trainingRunId = value;
   }
 
   get trainingDefinitionId(): number {
     return this._trainingDefinitionId;
   }
 
-  set trainingInstanceId(value: number) {
-    this._trainingInstanceId = value;
-  }
   set trainingDefinitionId(value: number) {
     this._trainingDefinitionId = value;
-  }
-
-  set trainingRunId(value: number) {
-    this._trainingRunId = value;
   }
 
   get config(): VisualizationOverviewConfig {

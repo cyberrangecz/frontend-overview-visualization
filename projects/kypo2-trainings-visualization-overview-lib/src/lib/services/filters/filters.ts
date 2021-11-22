@@ -1,10 +1,10 @@
-import { hintFilter } from './hint.filter';
 import { correctAnswerFilter } from './correct-answer.filter';
 import { wrongAnswerFilter } from './wrong-answer.filter';
 import { basicfilter } from './basicfilter';
 import { trainingLevelFilter } from './training-level.filter';
 import { assessmentLevelFilter } from './assessment-level.filter';
 import { infoLevelFilter } from './info-level.filter';
+import { hintFilter } from './hint.filter';
 
 // Add every new filter to this array
 export const FILTERS_ARRAY = [
@@ -19,7 +19,7 @@ export const FILTERS_ARRAY = [
 
 export const FILTERS_OBJECT = getFiltersObject(FILTERS_ARRAY);
 
-function getFiltersObject(filtersArray) {
+export function getFiltersObject(filtersArray) {
   const resultObject = {};
   filtersArray.forEach((filter) => {
     Object.defineProperty(resultObject, filter.name, {
