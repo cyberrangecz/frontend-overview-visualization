@@ -128,6 +128,9 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
   private tableRowMouseout: Subscription;
   private filterChanged: Subscription;
 
+  // Temp fix (https://stackoverflow.com/questions/67035992/d3-v6-brush-chart) implemented with transition from d3v5 -> d3v7
+  private sourceEvent = null;
+
   private traineesTrainingRun: number;
 
   constructor(
@@ -327,13 +330,13 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
   initializeZoomAndBrush(): void {
     this.zoom = this.d3
       .zoom()
-      .filter(() => {
-        if (this.d3.event.ctrlKey) {
-          this.d3.event.preventDefault();
+      .filter((event, _) => {
+        if (event.ctrlKey) {
+          event.preventDefault();
         }
-        if (this.d3.event.type === 'wheel') {
+        if (event.type === 'wheel') {
           // don't allow zooming without pressing [ctrl] key
-          return this.d3.event.ctrlKey;
+          return event.ctrlKey;
         }
         return true;
       })
@@ -346,9 +349,9 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
         [0, 0],
         [this.size.width, this.size.height],
       ])
-      .on('start', this.onZoomStart.bind(this))
-      .on('zoom', this.onZoom.bind(this))
-      .on('end', this.onZoomEnd.bind(this));
+      .on('start', (event, _) => this.onZoomStart(event))
+      .on('zoom', (event, _) => this.onZoom(event))
+      .on('end', (event, _) => this.onZoomEnd(event));
 
     this.brush = this.d3
       .brushX()
@@ -356,16 +359,16 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
         [0, 0],
         [this.size.width, 70],
       ])
-      .on('start', this.onBrushStart.bind(this))
-      .on('brush', this.onBrush.bind(this))
-      .on('end', this.onBrushEnd.bind(this));
+      .on('start', () => this.onBrushStart())
+      .on('brush', (event, _) => this.onBrush(event))
+      .on('end', () => this.onBrushEnd());
   }
 
   /**
    * Change cursor to grab and shrink clip to prevent showing events outside the area
    */
-  onZoomStart(): void {
-    if (this.d3.event.sourceEvent && this.d3.event.sourceEvent.type === 'mousedown') {
+  onZoomStart(event) {
+    if (event.sourceEvent && event.sourceEvent.type === 'mousedown') {
       // Panning start
       this.zoomableArea.classed('grabbed', true);
       this.clip.attr('x', 3);
@@ -375,16 +378,15 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
   /**
    * Main zoom and pan behavior
    */
-  onZoom(): void {
-    if (this.d3.event.sourceEvent && this.d3.event.sourceEvent.type === 'brush') {
-      return;
-    } // ignore brush-by-zoom (causes stack overflow)
+  onZoom(event) {
+    if (this.sourceEvent === "brush") return; // ignore zoom-by-brush
+    this.sourceEvent = "zoom";
     this.playersGroup
       .selectAll('circle') // Hide if out of area
       .style('opacity', function () {
         return this.cx.animVal.value < 0 ? 0 : 1;
       });
-    const transform = this.d3.event.transform;
+    const transform = event.transform;
     const newDomain = transform.rescaleX(this.contextTimeScale).domain();
     this.timeScale.domain(newDomain);
     const scaleDomainStart = new Date(0, 0, 0, 0, 0, newDomain[0], 0);
@@ -394,17 +396,18 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
     this.redrawAxes(transform.k);
     this.redrawPlayers();
     this.redrawBars(transform);
-    if (this.d3.event.sourceEvent && this.d3.event.sourceEvent.type !== 'dbclick') {
-      this.updateCrosshair();
+    if (event.sourceEvent && event.sourceEvent.type !== 'dbclick') {
+      this.updateCrosshair(event);
     }
     this.svg.select('.brush').call(this.brush.move, this.timeScale.range().map(transform.invertX, transform));
+    this.sourceEvent = null;
   }
 
   /**
    * Change cursor and clip to normal.
    */
-  onZoomEnd(): void {
-    if (this.d3.event.sourceEvent && this.d3.event.sourceEvent.type === 'mouseup') {
+  onZoomEnd(event) {
+    if (event.sourceEvent && event.sourceEvent.type === 'mouseup') {
       // Panning end
       this.zoomableArea.classed('grabbed', false);
       this.clip.attr('x', -7);
@@ -421,11 +424,10 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
   /**
    * Main brush behavior.
    */
-  onBrush(): void {
-    if (this.d3.event.sourceEvent && this.d3.event.sourceEvent.type === 'zoom') {
-      return;
-    } // ignore zoom-by-brush (causes stack overflow)
-    const selection = this.d3.event.selection || this.contextTimeScale;
+  onBrush(event) {
+    if (this.sourceEvent === "zoom") return; // ignore brush-by-zoom
+    this.sourceEvent = "brush";
+    const selection = event.selection || this.contextTimeScale;
     const newDomain = selection.map(this.contextTimeScale.invert, this.contextTimeScale);
     this.timeScale.domain(newDomain);
 
@@ -441,6 +443,7 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
     this.redrawPlayers();
     this.redrawBars(transform);
     this.svg.select('.score-progress-zoom').call(this.zoom.transform, transform);
+    this.sourceEvent = null;
   }
 
   /**
@@ -493,7 +496,7 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
   }
 
   /**
-   * Draw color hatched time bars indicating estimated training time
+   * Draw grey hatched time bar indicating estimated training run time
    */
   drawEstimatedTimeBar(): void {
     if (this.timelineData.timeline === null) {
@@ -759,7 +762,7 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
 
     this.zoomableArea
       .on('mouseover', this.onAreaMouseover.bind(this))
-      .on('mousemove', this.onAreaMousemove.bind(this))
+      .on('mousemove', (event, _) => this.onAreaMousemove(event))
       .on('mouseout', this.onAreaMouseout.bind(this));
   }
 
@@ -796,20 +799,20 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
   /**
    * Updates crosshair values and position
    */
-  onAreaMousemove(): void {
-    this.updateCrosshair();
+  onAreaMousemove(event) {
+    this.updateCrosshair(event);
   }
 
   /**
    * Updates crosshair's position and label values
    * @param staticCoordinates undefines if not passed otherwise static coordinates of hovered element (event) - for snapping
    */
-  updateCrosshair(staticCoordinates?: [number, number]): void {
+  updateCrosshair(event, staticCoordinates?: [number, number]) {
     const d3 = this.d3;
     const focusLines = d3.select('.score-progress-crosshair');
     const focusLabels = d3.select('.score-progress-crosshair');
     const isStaticCoordinatesUsed = staticCoordinates === undefined;
-    const coords = isStaticCoordinatesUsed ? this.d3.mouse(this.zoomableArea.node()) : staticCoordinates;
+    const coords = isStaticCoordinatesUsed ? this.d3.pointer(event, this.zoomableArea.node()) : staticCoordinates;
     const x = coords[0];
     const y = coords[1];
     const time = d3.timeFormat('%H:%M:%S')(new Date(0, 0, 0, 0, 0, this.timeScale.invert(x), 0));
@@ -956,21 +959,21 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
    */
   addListenersToLine(line): void {
     line
-      .on('mouseover', this.onLineMouseover.bind(this))
-      .on('mousemove', this.onLineMousemove.bind(this))
+      .on('mouseover', (event, datum) => this.onLineMouseover(event, datum))
+      .on('mousemove', (event, datum) => this.onLineMousemove(event, datum))
       .on('mouseout', this.onLineMouseout.bind(this))
-      .on('wheel', this.disableScrolling.bind(this));
+      .on('wheel', (event, _) => this.disableScrolling(event));
   }
 
   /**
    * Highlights the line, show tooltip and crosshair
    * @param player
    */
-  onLineMouseover(player: TimelinePlayer): void {
+  onLineMouseover(event, player: TimelinePlayer): void {
     this.highlightLine(player.trainingRunId);
     if(this.standalone) {
       this.lineTooltip = this.d3.select('body').append('div').style('display', 'none');
-      this.updateLineTooltip(player);
+      this.updateLineTooltip(event, player);
     }
     this.lineTooltip.style('display', 'inline');
     this.showCrosshair();
@@ -991,18 +994,18 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
   /**
    * Update tooltip and crosshair
    */
-  onLineMousemove(player: TimelinePlayer): void {
-    this.updateLineTooltip(player);
-    this.updateCrosshair();
+  onLineMousemove(event, player: TimelinePlayer) {
+    this.updateLineTooltip(event, player);
+    this.updateCrosshair(event);
   }
 
   /**
    * Add player's name/id to tooltip and updates its position
    * @param player
    */
-  updateLineTooltip(player: TimelinePlayer): void {
-    const x: number = this.d3.event.pageX;
-    const y: number = this.d3.event.pageY;
+  updateLineTooltip(event, player: TimelinePlayer) {
+    const x: number = event.pageX;
+    const y: number = event.pageY;
     const topMargin = -50;
     const top: number = y + topMargin;
 
@@ -1141,8 +1144,8 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
 
   addListenersToEvents(events): void {
     events
-      .on('mouseover', this.onEventMouseover.bind(this))
-      .on('mousemove', this.onEventMousemove.bind(this))
+      .on('mouseover', (event, datum) => this.onEventMouseover(event, datum))
+      .on('mousemove', (event, _) => this.onEventMousemove(event))
       .on('mouseout', this.onEventMouseout.bind(this))
       .on('wheel', this.disableScrolling.bind(this));
   }
@@ -1179,9 +1182,9 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
    * Shows tooltip and snaps crosshair.
    * @param player
    */
-  onEventMouseover(player): void {
+  onEventMouseover(event, player) {
     this.eventTooltip.style('display', 'inline');
-    this.updateEventTooltip(player);
+    this.updateEventTooltip(event, player);
     this.highlightLine(player.playerId);
     this.showCrosshair();
   }
@@ -1190,19 +1193,19 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
    * Updates tooltip details.
    * @param player
    */
-  updateEventTooltip(player): void {
+  updateEventTooltip(event, player) {
     const topMargin = -75;
     const leftMargin = 8;
-    const left = this.d3.event.pageX + leftMargin;
-    const top = this.d3.event.pageY + topMargin;
+    const left = event.pageX + leftMargin;
+    const top = event.pageY + topMargin;
     this.eventTooltip
       .attr('class', 'score-progress-tooltip')
       .style('left', left + 'px')
       .style('top', top + 'px');
-    const event = this.getEventMessage(player);
+    const eventMessage = this.getEventMessage(player);
     const scoreChange = player.score;
     const content = `
-    ${event}
+    ${eventMessage}
     <br>
     <b>${player.scoreChange > 0 ? '+' : ''}${player.scoreChange !== 0 ? player.scoreChange : ''}</b>
     <hr style='margin: 5px'>
@@ -1216,8 +1219,8 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
    * @param index
    * @param nodeList
    */
-  onEventMousemove(d: TimelineEvent, index, nodeList): void {
-    const eventElement = nodeList[index];
+  onEventMousemove(event) {
+    const eventElement = event.target;
     const x = eventElement.getAttribute('cx');
     const y = eventElement.getAttribute('cy');
     this.updateCrosshair([x, y]);
@@ -1247,8 +1250,8 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
   /**
    * Disables scrolling when wheeling over events
    */
-  disableScrolling(): void {
-    this.d3.event.preventDefault();
+  disableScrolling(event) {
+    event.preventDefault();
   }
 
   /**
