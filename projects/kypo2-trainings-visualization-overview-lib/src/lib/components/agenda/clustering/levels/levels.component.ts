@@ -484,16 +484,16 @@ export class LevelsComponent implements OnInit, OnChanges {
 
     svg
       .selectAll('.score-level-bar')
-      .on('mouseover', this.onBarMouseover.bind(this))
-      .on('mousemove', this.onBarMousemove.bind(this))
-      .on('mouseout', this.onBarMouseout.bind(this));
+      .on('mouseover', () => this.onBarMouseover())
+      .on('mousemove', (event, datum) => this.onBarMousemove(event, datum))
+      .on('mouseout', () => this.onBarMouseout());
 
     svg
       .selectAll('.player-point')
-      .on('mouseover', this.onPlayerPointMouseover.bind(this))
-      .on('mousemove', this.onPlayerPointMousemove.bind(this))
+      .on('mouseover', (event, datum) => this.onPlayerPointMouseover(event, datum))
+      .on('mousemove', (event, datum) => this.onPlayerPointMousemove(event, datum))
       .on('mouseout', this.onPlayerPointMouseout.bind(this))
-      .on('click', this.onPlayerPointClick.bind(this));
+      .on('click', (event, datum) => this.onPlayerPointClick(event, datum));
 
     this.d3.select('#score-level-container').on('click', this.onContainerClick.bind(this));
   }
@@ -511,12 +511,13 @@ export class LevelsComponent implements OnInit, OnChanges {
    *
    * @param barData
    */
-  onBarMousemove(barData: Level): void {
+  onBarMousemove(event, barData: Level) {
     const d3 = this.d3;
     const crosshairLinesGroup = this.svg.select('.focus-lines');
     const crosshairLabelsGroup = this.svg.select('.focus-labels');
     const bar = this.svg.select('#score-level-bar-max-' + barData.order);
-    const coordinates = d3.mouse(bar.node());
+
+    const coordinates = d3.pointer(event, bar.node());
     const x = coordinates[0];
     const y = coordinates[1];
     const trainingLevels =
@@ -631,10 +632,10 @@ export class LevelsComponent implements OnInit, OnChanges {
    * Highlights player, shows tooltip and crosshair on hover
    * @param player
    */
-  onPlayerPointMouseover(player: PlayerLevelData): void {
+  onPlayerPointMouseover(event, player: PlayerLevelData) {
     this.hideTooltip(); // Prevents showing multiple tooltips
     this.highlightHoveredPlayer(player);
-    this.showTooltip(player);
+    this.showTooltip(event, player);
     this.showCrosshair();
     this.emitSelectedTrainee(player.trainingRunId);
   }
@@ -661,30 +662,29 @@ export class LevelsComponent implements OnInit, OnChanges {
    *
    * @param player data held by <circle> element in __data__ property
    */
-  showTooltip(player: PlayerLevelData): void {
+  showTooltip(event, player: PlayerLevelData) {
     const playerTooltip = this.d3.select('body').append('div').attr('class', 'player-tooltip').style('opacity', 0);
 
     playerTooltip.transition().duration(200).style('opacity', 0.9);
 
-    const coordinates = this.d3.mouse(<ContainerElement>this.d3.select('#score-level-bars').node());
+    const coordinates = this.d3.pointer(event, <ContainerElement>this.d3.select('#score-level-bars').node());
     const groupHeight = this.yScaleBandBars.step() * this.levelsData.levels.length + SVG_MARGIN_CONFIG.top;
     const yOffset = groupHeight - coordinates[1] < 60 ? -50 : 10;
 
     playerTooltip
       .html(`<p><b>Player: ${player.name} <br> Score: ${player.participantLevelScore}</b>`)
-      .style('left', this.d3.event.pageX + 10 + 'px')
-      .style('top', this.d3.event.pageY + yOffset + 'px');
+      .style('left', event.pageX + 10 + 'px')
+      .style('top', event.pageY + yOffset + 'px');
   }
 
   /**
    * Show crosshair at fixed position (center of circle).
+   * @param event mouse move event
    * @param player data held by player's <circle> element in __data__
-   * @param index of current circle
-   * @param nodeList of all <circle> elements
    */
-  onPlayerPointMousemove(player, index, nodeList): void {
+  onPlayerPointMousemove(event, player) {
     const d3 = this.d3;
-    const playerElementNode = nodeList[index];
+    const playerElementNode = event.target;
     const playersGroup = playerElementNode.parentNode;
     const level = d3.select(playersGroup).datum()['number'];
     const trainingLevels =
@@ -749,8 +749,8 @@ export class LevelsComponent implements OnInit, OnChanges {
    * Emit selection to parent component for highlight in other component
    * @param player data held by <circle> element in __data__ property
    */
-  onPlayerPointClick(player: PlayerLevelData): void {
-    this.d3.event.stopPropagation();
+  onPlayerPointClick(event, player: PlayerLevelData) {
+    event.stopPropagation();
     this.emitSelectedTrainee(player.trainingRunId);
     this.playerClicked = true;
   }

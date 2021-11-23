@@ -527,20 +527,20 @@ export class FinalComponent implements OnInit, OnChanges {
   addListenersToPlayers(): void {
     this.svg
       .selectAll('.player-point')
-      .on('mouseover', this.onPlayerMouseover.bind(this))
-      .on('mousemove', this.onPlayerMousemove.bind(this))
-      .on('mouseout', this.onPlayerMouseout.bind(this))
-      .on('click', this.onPlayerClick.bind(this));
+      .on('mouseover', (event, datum) => this.onPlayerMouseover(event, datum))
+      .on('mousemove', (event, datum) => this.onPlayerMousemove(event, datum))
+      .on('mouseout', (_, datum) => this.onPlayerMouseout(datum))
+      .on('click', (event, datum) => this.onPlayerClick(event, datum));
   }
 
   /**
    * Highlights _ALL_ player's points (also in Score Level Component) and shows tooltip
    * @param player data held by player's <circle> element in __data__
    */
-  onPlayerMouseover(player: PlayerData): void {
+  onPlayerMouseover(event, player: PlayerData) {
     this.hideTooltip(); // Prevents showing multiple tooltips
     this.highlightHoveredPlayer(player.trainingRunId);
-    this.showTooltip(player);
+    this.showTooltip(event, player);
     this.showCrosshair();
     this.emitSelectedTrainee(player.trainingRunId);
   }
@@ -567,16 +567,15 @@ export class FinalComponent implements OnInit, OnChanges {
    * Shows tooltip with player's name and score
    * @param player data held by player's <circle> element in __data__
    */
-  showTooltip(player: PlayerData): void {
+  showTooltip(event, player: PlayerData) {
     const playerTooltip = this.d3.select('body').append('div').attr('class', 'player-tooltip').style('opacity', 0);
 
     playerTooltip.transition().duration(200).style('opacity', 0.9);
 
-    const coordinates = this.d3.mouse(<ContainerElement>this.d3.select('.score-final-bars').node());
+    const coordinates = this.d3.pointer(event, <ContainerElement>this.d3.select('.score-final-bars').node());
     const yOffset = coordinates[1] > 55 ? -50 : 10;
-
-    const x = this.d3.event.pageX + 10;
-    const y = this.d3.event.pageY + yOffset;
+    const x = event.pageX + 10;
+    const y = event.pageY + yOffset;
 
     playerTooltip
       .html(`<p><b>Player: ${player.name} <br> Score: ${player.trainingScore}</b>`)
@@ -598,12 +597,12 @@ export class FinalComponent implements OnInit, OnChanges {
    * @param index of current circle
    * @param nodeList of all <circle> elements
    */
-  onPlayerMousemove(player: PlayerData, index, nodeList): void {
+  onPlayerMousemove(event, player: PlayerData) {
     const d3 = this.d3;
     const crosshairLinesGroup = d3.select('.focus-lines');
     const crosshairLabelsGroup = d3.select('.focus-labels');
 
-    const playerElementNode = nodeList[index];
+    const playerElementNode = event.target;
 
     const groups = {
       lines: crosshairLinesGroup,
@@ -726,8 +725,8 @@ export class FinalComponent implements OnInit, OnChanges {
    * Emit selection to parent component for highlight in other component
    * @param player data held by <circle> element in __data__ property
    */
-  onPlayerClick(player: PlayerData): void {
-    this.d3.event.stopPropagation();
+  onPlayerClick(event, player: PlayerData) {
+    event.stopPropagation();
     this.playerClicked = true;
     this.emitSelectedTrainee(player.trainingRunId);
   }
@@ -739,7 +738,7 @@ export class FinalComponent implements OnInit, OnChanges {
     this.svg
       .select('.score-final-bars')
       .on('mouseover', this.onBarMouseover.bind(this))
-      .on('mousemove', this.onBarMousemove.bind(this))
+      .on('mousemove', (event, _) => this.onBarMousemove(event))
       .on('mouseout', this.onBarMouseout.bind(this));
 
     this.d3.select('#container').on('click', this.onContainerClick.bind(this));
@@ -755,12 +754,12 @@ export class FinalComponent implements OnInit, OnChanges {
   /**
    * Updates crosshair position and values
    */
-  onBarMousemove(): void {
+  onBarMousemove(event) {
     const d3 = this.d3;
     const crosshairConfig = CROSSHAIR_CONFIG;
     const crosshairLinesGroup = d3.select('.focus-lines');
     const crosshairLabelsGroup = d3.select('.focus-labels');
-    const coordinates = this.d3.mouse(<ContainerElement>this.d3.select('.score-final-bars').node());
+    const coordinates = this.d3.pointer(event, <ContainerElement>this.d3.select('.score-final-bars').node());
     this.yScale.clamp(true);
 
     const groups = {
