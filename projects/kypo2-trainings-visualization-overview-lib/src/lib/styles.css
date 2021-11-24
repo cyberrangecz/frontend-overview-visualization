@@ -23,7 +23,7 @@
   stroke-linecap: round;
 }
 
-.overview-visualization-container path, line {
+.overview-visualization-container path,.overview-visualization-container line {
   stroke: #888888;
 }
 
@@ -60,7 +60,7 @@
   font-size: initial;
 }
 
-.overview-visualization-container .score-progress path, line{
+.overview-visualization-container .score-progress path, .overview-visualization-container .score-progress line{
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke: #817f7f;

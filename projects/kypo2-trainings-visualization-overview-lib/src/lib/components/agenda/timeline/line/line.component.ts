@@ -961,7 +961,7 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
     line
       .on('mouseover', (event, datum) => this.onLineMouseover(event, datum))
       .on('mousemove', (event, datum) => this.onLineMousemove(event, datum))
-      .on('mouseout', this.onLineMouseout.bind(this))
+      .on('mouseout', (event, datum) => this.onLineMouseout(datum))
       .on('wheel', (event, _) => this.disableScrolling(event));
   }
 
@@ -1146,8 +1146,8 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
     events
       .on('mouseover', (event, datum) => this.onEventMouseover(event, datum))
       .on('mousemove', (event, _) => this.onEventMousemove(event))
-      .on('mouseout', this.onEventMouseout.bind(this))
-      .on('wheel', this.disableScrolling.bind(this));
+      .on('mouseout', (event, datum) => this.onEventMouseout(datum))
+      .on('wheel', (event) => this.disableScrolling(event));
   }
 
   /**
@@ -1223,7 +1223,7 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
     const eventElement = event.target;
     const x = eventElement.getAttribute('cx');
     const y = eventElement.getAttribute('cy');
-    this.updateCrosshair([x, y]);
+    this.updateCrosshair([x, y], [x, y]);
   }
 
   /**
