@@ -492,7 +492,7 @@ export class LevelsComponent implements OnInit, OnChanges {
       .selectAll('.player-point')
       .on('mouseover', (event, datum) => this.onPlayerPointMouseover(event, datum))
       .on('mousemove', (event, datum) => this.onPlayerPointMousemove(event, datum))
-      .on('mouseout', this.onPlayerPointMouseout.bind(this))
+      .on('mouseout', (_, datum) => this.onPlayerPointMouseout(datum))
       .on('click', (event, datum) => this.onPlayerPointClick(event, datum));
 
     this.d3.select('#score-level-container').on('click', this.onContainerClick.bind(this));
@@ -666,7 +666,6 @@ export class LevelsComponent implements OnInit, OnChanges {
     const playerTooltip = this.d3.select('body').append('div').attr('class', 'player-tooltip').style('opacity', 0);
 
     playerTooltip.transition().duration(200).style('opacity', 0.9);
-
     const coordinates = this.d3.pointer(event, <ContainerElement>this.d3.select('#score-level-bars').node());
     const groupHeight = this.yScaleBandBars.step() * this.levelsData.levels.length + SVG_MARGIN_CONFIG.top;
     const yOffset = groupHeight - coordinates[1] < 60 ? -50 : 10;
@@ -708,7 +707,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     const playersData = {
       x: playerElementNode.getAttribute('cx'),
       y: playerElementNode.getAttribute('cy'),
-      time: d3.timeFormat('%H:%M:%S')(new Date(0, 0, 0, 0, 0, player.time, 0)),
+      time: d3.timeFormat('%H:%M:%S')(new Date(0, 0, 0, 0, 0, player.trainingTime, 0)),
       score: player.participantLevelScore.toFixed(0),
     };
 
