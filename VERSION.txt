@@ -1,3 +1,4 @@
+12.1.1 Resolve problems with title of levels in clustering visualization.
 12.1.0 Resolve problems with d3v7
 12.0.9 Update to d3v7
 12.0.8 Fixed problems with estimated time bars.

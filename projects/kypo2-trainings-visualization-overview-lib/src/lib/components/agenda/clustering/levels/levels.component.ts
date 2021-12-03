@@ -252,14 +252,15 @@ export class LevelsComponent implements OnInit, OnChanges {
       // we only show training levels in this visualization
       if (level.levelType === LevelTypeEnum.TrainingLevel) {
         const bar = this.d3.select('#score-level-bar-max-' + level.order);
-        const barWidth = bar.attr('width');
+        const estimateBarWidth = Number(this.d3.select('#score-level-bar-estimate-' + level.order).attr('width'));
+        const maxBarWidth = Number(bar.attr('width'));
         const barY = bar.attr('y');
         const text = this.svg
           .append('g')
           .attr(
             'transform',
             `translate(
-           ${+barWidth + LEVEL_LABELS_CONFIG.padding.left},
+           ${+Math.max(estimateBarWidth, maxBarWidth) + LEVEL_LABELS_CONFIG.padding.left},
            ${+barY + LEVEL_LABELS_CONFIG.padding.top})`
           )
           .append('text');
