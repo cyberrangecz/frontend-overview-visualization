@@ -122,6 +122,7 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
   private lineTooltip;
   private zoomableArea;
   private tickLength = 1;
+  private zoomTransform;
 
   private tableRowClicked: Subscription;
   private tableRowMouseover: Subscription;
@@ -171,11 +172,16 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
       this.players = this.timelineData.timeline.playerData;
       this.redraw();
     }
+    if (this.zoomTransform) {
+      this.onZoom(null, this.zoomTransform)
+    }
 
     if ('highlightedTrainee' in changes) {
       if (changes.highlightedTrainee.currentValue !== changes.highlightedTrainee.previousValue) {
         if (!changes.highlightedTrainee.isFirstChange()) {
-          this.unhighlightLine(changes.highlightedTrainee.previousValue);
+          if (!this.zoomTransform) {
+            this.unhighlightLine(changes.highlightedTrainee.previousValue);
+          }
           this.highlightLine(this.highlightedTrainee);
         }
       }
@@ -378,25 +384,33 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
   /**
    * Main zoom and pan behavior
    */
-  onZoom(event) {
-    if (this.sourceEvent === "brush") return; // ignore zoom-by-brush
+  onZoom(event, transformZoom?) {
+    if (this.sourceEvent === "brush" && event) return; // ignore zoom-by-brush
     this.sourceEvent = "zoom";
     this.playersGroup
       .selectAll('circle') // Hide if out of area
       .style('opacity', function () {
         return this.cx.animVal.value < 0 ? 0 : 1;
       });
-    const transform = event.transform;
+    let transform;
+    if (event) {
+      transform = event.transform;
+    } else {
+      transform = transformZoom;
+    }
     const newDomain = transform.rescaleX(this.contextTimeScale).domain();
     this.timeScale.domain(newDomain);
     const scaleDomainStart = new Date(0, 0, 0, 0, 0, newDomain[0], 0);
     const scaleDomainEnd = new Date(0, 0, 0, 0, 0, newDomain[1], 0);
     this.timeAxisScale.domain([scaleDomainStart, scaleDomainEnd]);
 
+    if (transform.k !== 1) {
+      this.zoomTransform = transform;
+    }
     this.redrawAxes(transform.k);
     this.redrawPlayers();
     this.redrawBars(transform);
-    if (event.sourceEvent && event.sourceEvent.type !== 'dbclick') {
+    if (event && event.sourceEvent && event.sourceEvent.type !== 'dbclick') {
       this.updateCrosshair(event);
     }
     this.svg.select('.brush').call(this.brush.move, this.timeScale.range().map(transform.invertX, transform));
@@ -438,6 +452,11 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
     const transform = this.d3.zoomIdentity
       .scale(this.size.width / (selection[1] - selection[0]))
       .translate(-selection[0], 0);
+
+    // dont update stored zoom when brush zoom is really not happening
+    if (transform.k !== 1) {
+      this.zoomTransform = transform;
+    }
 
     this.redrawAxes(transform.k);
     this.redrawPlayers();
