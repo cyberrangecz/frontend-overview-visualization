@@ -5,6 +5,7 @@ import { trainingLevelFilter } from './training-level.filter';
 import { assessmentLevelFilter } from './assessment-level.filter';
 import { infoLevelFilter } from './info-level.filter';
 import { hintFilter } from './hint.filter';
+import {accessLevelFilter} from "./access-level.filter";
 
 // Add every new filter to this array
 export const FILTERS_ARRAY = [
@@ -14,6 +15,7 @@ export const FILTERS_ARRAY = [
   trainingLevelFilter,
   assessmentLevelFilter,
   infoLevelFilter,
+  accessLevelFilter,
   basicfilter,
 ];
 

@@ -37,6 +37,7 @@ import TimelineLevelTypeEnum = BasicLevelInfo.TimelineLevelTypeEnum;
 import { TimelineEvent } from '../../../model/timeline/timeline-event';
 import { InfoLevel } from '../../../model/timeline/info-level';
 import { AssessmentLevel } from '../../../model/timeline/assessment-level';
+import {AccessLevel} from "../../../model/timeline/access-level";
 
 @Component({
   selector: 'kypo2-viz-overview-line',
@@ -1340,6 +1341,8 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
         events = [...events, ...(level as InfoLevel).events];
       } else if (level.levelType === TimelineLevelTypeEnum.ASSESSMENT) {
         events = [...events, ...(level as AssessmentLevel).events];
+      } else if (level.levelType === TimelineLevelTypeEnum.ACCESS) {
+        events = [...events, ...(level as AccessLevel).events];
       }
     });
     return events;

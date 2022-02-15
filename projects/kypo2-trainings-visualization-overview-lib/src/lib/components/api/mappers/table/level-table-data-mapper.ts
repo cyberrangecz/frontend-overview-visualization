@@ -31,6 +31,8 @@ export class LevelTableDataMapper {
         return LevelTypeEnum.TrainingLevel;
       case BasicLevelInfoDTO.LevelTypeEnum.INFO:
         return LevelTypeEnum.InfoLevel;
+      case BasicLevelInfoDTO.LevelTypeEnum.ACCESS:
+        return LevelTypeEnum.InfoLevel;
       default: {
         console.error(
           `Attribute "level_type" of TableDTO with value: ${levelTypeDTO} does not match any of the Level types`
