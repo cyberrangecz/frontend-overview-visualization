@@ -1,3 +1,4 @@
+13.0.0 Update to Angular 13 and CI/CD optimization, access level added.
 12.1.2 Fix zoom reset problem.
 12.1.1 Resolve problems with title of levels in clustering visualization.
 12.1.0 Resolve problems with d3v7
