@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FILTERS_OBJECT, FILTERS_ARRAY } from './filters/filters';
-import { Subject } from 'rxjs';
+import { EMPTY, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -31,6 +31,6 @@ export class FiltersService {
   }
 
   filter(): void {
-    this.filterChanged.next();
+    this.filterChanged.next(EMPTY);
   }
 }
