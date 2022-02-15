@@ -6,7 +6,7 @@ const filterFunction = function (event: TimelineEvent) {
 
 export const correctAnswerFilter = {
   name: 'correctAnswerFilter',
-  labelName: 'Correct answers / finished levels',
+  labelName: 'Correct answers/passkeys / finished levels',
   checked: true,
   filterFunction: filterFunction,
 };

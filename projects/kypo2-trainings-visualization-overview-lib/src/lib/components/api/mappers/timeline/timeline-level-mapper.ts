@@ -7,6 +7,7 @@ import { AssessmentLevelMapper } from './assessment-level-mapper';
 import { AssessmentLevelDTO } from '../../dto/timeline/assessment-level-dto';
 import { InfoLevel } from '../../../model/timeline/info-level';
 import { EventMapper } from './event-mapper';
+import {AccessLevel} from "../../../model/timeline/access-level";
 
 /**
  * @dynamic
@@ -35,6 +36,12 @@ export class TimelineLevelMapper {
         level = AssessmentLevelMapper.fromDTO(dto as AssessmentLevelDTO);
         level.events = EventMapper.fromDTOs(dto.events, dto.order, dto.level_type);
         level.levelType = TimelineLevelTypeEnum.ASSESSMENT;
+        break;
+      }
+      case BasicLevelInfoDTO.TimelineLevelTypeEnum.ACCESS: {
+        level = new AccessLevel();
+        level.events = EventMapper.fromDTOs(dto.events, dto.order, dto.level_type);
+        level.levelType = TimelineLevelTypeEnum.ACCESS;
         break;
       }
     }

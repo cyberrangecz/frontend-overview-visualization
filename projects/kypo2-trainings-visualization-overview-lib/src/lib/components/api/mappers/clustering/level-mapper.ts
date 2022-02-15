@@ -35,6 +35,8 @@ export class LevelMapper {
         return LevelTypeEnum.TrainingLevel;
       case BasicLevelInfoDTO.LevelTypeEnum.INFO:
         return LevelTypeEnum.InfoLevel;
+      case BasicLevelInfoDTO.LevelTypeEnum.ACCESS:
+        return LevelTypeEnum.InfoLevel;
       default: {
         console.error(
           `Attribute "level_type" of ClusteringVisualizationResourceDTO with value: ${levelTypeDTO} does not match any of the Level types`
