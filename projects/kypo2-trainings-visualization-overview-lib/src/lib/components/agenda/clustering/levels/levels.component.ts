@@ -289,10 +289,8 @@ export class LevelsComponent implements OnInit, OnChanges {
     const timeScale = this.getTimeScale();
     const xAxis = d3
       .axisBottom(timeScale)
-      .tickArguments([d3.timeMinute.every(this.tickLength)])
-      .tickFormat((d: Date) => d3.timeFormat('%H:%M:%S')(d))
-      .tickSize(AXES_CONFIG.xAxis.tickSize)
-      .tickSizeOuter(0);
+      .tickFormat((d: number) => this.hoursMinutesSeconds(d))
+      .ticks(5);
 
     this.svg
       .append('g')
@@ -303,19 +301,20 @@ export class LevelsComponent implements OnInit, OnChanges {
     this.styleFirstTickOfTimeAxis();
   }
 
+  private hoursMinutesSeconds(timestamp): string {
+    const hours = Math.floor(timestamp / 3600).toString().padStart(2, '0');
+    const minutes = Math.floor(timestamp % 3600 / 60).toString().padStart(2,'0');
+    const seconds = Math.floor(timestamp % 60).toString().padStart(2,'0');
+    return `${hours}:${minutes}:${seconds}`;
+  }
+
   /**
    * @returns D3 TimeScale of x-axis
    */
   getTimeScale(): any {
-    const scaleDomainStart = new Date(0, 0, 0, 0, 0, 0, 0);
-    const scaleDomainEnd = new Date(0, 0, 0, 0, 0, this.getMaxTime(), 0);
-    const fullTimeAxis = Math.abs(scaleDomainEnd.getTime() - scaleDomainStart.getTime()) / 1000;
-
-    while (fullTimeAxis / this.tickLength > 600) {
-      this.tickLength *= this.tickLength === 1 || this.tickLength > 160 ? 5 : 2;
-    }
-
-    const timeScale = this.d3.scaleTime().range([0, this.barWidth]).domain([scaleDomainStart, scaleDomainEnd]);
+    const scaleDomainStart = 0;
+    const scaleDomainEnd = this.getMaxTime();
+    const timeScale = this.d3.scaleLinear().range([0, this.barWidth]).domain([scaleDomainStart, scaleDomainEnd]);
     return timeScale;
   }
 
@@ -541,7 +540,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     const playersData = {
       x: x,
       y: y,
-      time: d3.timeFormat('%H:%M:%S')(new Date(0, 0, 0, 0, 0, xScale.invert(x), 0)),
+      time: this.hoursMinutesSeconds(xScale.invert(coordinates[0])),
       score: +yScale(y - bar.attr('y')).toFixed(0),
     };
 
@@ -708,7 +707,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     const playersData = {
       x: playerElementNode.getAttribute('cx'),
       y: playerElementNode.getAttribute('cy'),
-      time: d3.timeFormat('%H:%M:%S')(new Date(0, 0, 0, 0, 0, player.trainingTime, 0)),
+      time: this.hoursMinutesSeconds(player.trainingTime),
       score: player.participantLevelScore.toFixed(0),
     };
 
