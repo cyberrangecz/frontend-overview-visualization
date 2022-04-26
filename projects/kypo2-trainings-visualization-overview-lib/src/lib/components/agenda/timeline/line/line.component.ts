@@ -105,7 +105,7 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
   public filtersArray;
   public isLoading: boolean;
   private clip;
-  private timeAxisScale: ScaleTime<number, number>;
+  private timeAxisScale: ScaleLinear<number, number>;
   private d3: D3;
   private svg;
   private timeScale: ScaleLinear<number, number>;
@@ -401,8 +401,8 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
     }
     const newDomain = transform.rescaleX(this.contextTimeScale).domain();
     this.timeScale.domain(newDomain);
-    const scaleDomainStart = new Date(0, 0, 0, 0, 0, newDomain[0], 0);
-    const scaleDomainEnd = new Date(0, 0, 0, 0, 0, newDomain[1], 0);
+    const scaleDomainStart = newDomain[0]
+    const scaleDomainEnd = newDomain[1]
     this.timeAxisScale.domain([scaleDomainStart, scaleDomainEnd]);
 
     if (transform.k !== 1) {
@@ -446,8 +446,8 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
     const newDomain = selection.map(this.contextTimeScale.invert, this.contextTimeScale);
     this.timeScale.domain(newDomain);
 
-    const scaleDomainStart = new Date(0, 0, 0, 0, 0, newDomain[0], 0);
-    const scaleDomainEnd = new Date(0, 0, 0, 0, 0, newDomain[1], 0);
+    const scaleDomainStart = newDomain[0];
+    const scaleDomainEnd = newDomain[1];
     this.timeAxisScale.domain([scaleDomainStart, scaleDomainEnd]);
 
     const transform = this.d3.zoomIdentity
@@ -481,15 +481,10 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
     this.playerColorScale = this.d3.scaleOrdinal().range(colorScheme);
     this.tableService.sendPlayerColorScale(this.playerColorScale);
 
-    const scaleDomainStart = new Date(0, 0, 0, 0, 0, 0, 0);
-    const scaleDomainEnd = new Date(0, 0, 0, 0, 0, this.timelineData.timeline.maxParticipantTime, 0);
+    const scaleDomainStart = 0
+    const scaleDomainEnd = this.timelineData.timeline.maxParticipantTime
 
-    const fullTimeAxis = Math.abs(scaleDomainEnd.getTime() - scaleDomainStart.getTime()) / 1000;
-    while (fullTimeAxis / this.tickLength > 600) {
-      this.tickLength *= this.tickLength === 1 || this.tickLength > 160 ? 5 : 2;
-    }
-
-    this.timeAxisScale = this.d3.scaleTime().range([0, this.size.width]).domain([scaleDomainStart, scaleDomainEnd]);
+    this.timeAxisScale = this.d3.scaleLinear().range([0, this.size.width]).domain([scaleDomainStart, scaleDomainEnd]);
     this.scoreScale = this.d3
       .scaleLinear()
       .range([this.size.height, 0])
@@ -567,16 +562,21 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
     const d3 = this.d3;
     this.xAxis = d3
       .axisBottom(this.timeAxisScale)
-      .tickArguments([d3.timeMinute.every(this.tickLength)])
-      .tickFormat((d: Date) => d3.timeFormat('%H:%M:%S')(d))
-      .tickSize(AXES_CONFIG.xAxis.tickSize)
-      .tickSizeOuter(0);
+      .tickFormat((d: number) => this.hoursMinutesSeconds(d))
+      .ticks(5);
 
     this.svg
       .append('g')
       .attr('class', 'score-progress x-axis')
       .attr('transform', `translate(${AXES_CONFIG.xAxis.position.x}, ${this.size.height + 20})`)
       .call(this.xAxis);
+  }
+
+  private hoursMinutesSeconds(timestamp: number): string {
+    const hours = Math.floor(timestamp / 3600).toString().padStart(2, '0');
+    const minutes = Math.floor(timestamp % 3600 / 60).toString().padStart(2,'0');
+    const seconds = Math.floor(timestamp % 60).toString().padStart(2,'0');
+    return `${hours}:${minutes}:${seconds}`;
   }
 
   /**
@@ -835,7 +835,7 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
     const coords = isStaticCoordinatesUsed ? this.d3.pointer(event, this.zoomableArea.node()) : staticCoordinates;
     const x = coords[0];
     const y = coords[1];
-    const time = d3.timeFormat('%H:%M:%S')(new Date(0, 0, 0, 0, 0, this.timeScale.invert(x), 0));
+    const time = this.timeScale.invert(x)
     // Vertical line - time
     focusLines
       .select('#focus-line-time')
@@ -1290,7 +1290,7 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
    * Calculate new ticks when zooming.
    */
   redrawAxes(k): void {
-    this.xAxis.tickArguments([this.d3.timeMinute.every(this.tickLength / Math.round(k))]);
+    // this.xAxis.tickArguments([this.d3.timeMinute.every(this.tickLength / Math.round(k))]);
     this.svg.select('.score-progress.x-axis').call(this.xAxis);
   }
 

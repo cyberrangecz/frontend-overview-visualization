@@ -354,11 +354,8 @@ export class FinalComponent implements OnInit, OnChanges {
     const d3 = this.d3;
     const xAxis = d3
       .axisBottom(timeScale)
-      .tickArguments([d3.timeMinute.every(this.tickLength)])
-      .tickFormat((d: Date) => d3.timeFormat('%H:%M:%S')(d))
-      .tickSize(AXES_CONFIG.xAxis.tickSize)
-      .tickSizeOuter(0);
-
+      .tickFormat((d: number) => this.hoursMinutesSeconds(d))
+      .ticks(5);
     this.svg
       .append('g')
       .attr('class', 'x-axis')
@@ -369,20 +366,21 @@ export class FinalComponent implements OnInit, OnChanges {
     this.styleFirstTickOfTimeAxis();
   }
 
+  private hoursMinutesSeconds(timestamp: number): string {
+    const hours = Math.floor(timestamp / 3600).toString().padStart(2, '0');
+    const minutes = Math.floor(timestamp % 3600 / 60).toString().padStart(2,'0');
+    const seconds = Math.floor(timestamp % 60).toString().padStart(2,'0');
+    return `${hours}:${minutes}:${seconds}`;
+  }
+
   /**
    * Initialize time scale of range [0, this.barWidth] and domain [0, maximum training time]
    * @returns D3 ScaleTime
    */
   getTimeScale(): any {
-    const scaleDomainStart = new Date(0, 0, 0, 0, 0, 0, 0);
-    const scaleDomainEnd = new Date(0, 0, 0, 0, 0, this.dataClusteringFinal.finalResults.maxParticipantTime, 0);
-    const fullTimeAxis = Math.abs(scaleDomainEnd.getTime() - scaleDomainStart.getTime()) / 1000;
-
-    while (fullTimeAxis / this.tickLength > 600) {
-      this.tickLength *= this.tickLength === 1 || this.tickLength > 160 ? 5 : 2;
-    }
-
-    const timeScale = this.d3.scaleTime().range([0, this.barWidth]).domain([scaleDomainStart, scaleDomainEnd]);
+    const scaleDomainStart = 0;
+    const scaleDomainEnd = this.dataClusteringFinal.finalResults.maxParticipantTime;
+    const timeScale = this.d3.scaleLinear().range([0, this.barWidth]).domain([scaleDomainStart, scaleDomainEnd]);
     return timeScale;
   }
 
@@ -446,7 +444,8 @@ export class FinalComponent implements OnInit, OnChanges {
     const playersGroup = this.svg.append('g').attr('class', 'score-final-players');
     let players = this.dataClusteringFinal.finalResults.playerData;
     if (this.standalone) {
-      players = this.dataClusteringFinal.finalResults.playerData.filter((player) => this.filterPlayers.indexOf(player.trainingRunId) !== -1);
+      players = this.dataClusteringFinal.finalResults.playerData
+        .filter((player) => this.filterPlayers.indexOf(player.trainingRunId) !== -1);
     }
 
     playersGroup
@@ -612,7 +611,7 @@ export class FinalComponent implements OnInit, OnChanges {
     const playersData = {
       x: playerElementNode.getAttribute('cx'),
       y: playerElementNode.getAttribute('cy'),
-      time: d3.timeFormat('%H:%M:%S')(new Date(0, 0, 0, 0, 0, player.trainingTime, 0)),
+      time: this.hoursMinutesSeconds(player.trainingTime),
       score: player.trainingScore,
     };
 
@@ -777,7 +776,7 @@ export class FinalComponent implements OnInit, OnChanges {
     const playersData = {
       x: coordinates[0],
       y: coordinates[1],
-      time: d3.timeFormat('%H:%M:%S')(new Date(0, 0, 0, 0, 0, xScale.invert(coordinates[0]), 0)),
+      time: this.hoursMinutesSeconds(xScale.invert(coordinates[0])),
       score: +this.yScale.invert(coordinates[1]).toFixed(0),
     };
 
