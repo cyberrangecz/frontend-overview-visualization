@@ -66,7 +66,6 @@ export class LevelsComponent implements OnInit, OnChanges {
   private svgWidth;
   private svgHeight;
   private barWidth;
-  private tickLength = 1;
 
   private playerClicked = false; // If no player is selected, hover out of player will cancel the highlight
   private traineesTrainingRunId: number;
@@ -133,7 +132,10 @@ export class LevelsComponent implements OnInit, OnChanges {
    * Initialize global D3 scales
    */
   initializeScales(): void {
-    this.xScale = this.d3.scaleLinear().range([0, this.barWidth]).domain([0, this.getMaxTime()]);
+    this.xScale = this.d3
+      .scaleLinear()
+      .range([0, this.barWidth])
+      .domain([0, this.getMaxTime()]);
   }
 
   /**
@@ -431,7 +433,7 @@ export class LevelsComponent implements OnInit, OnChanges {
       .enter()
       .append('circle')
       .attr('class', (d: PlayerLevelData) => 'player-point player-point-level-' + i + ' p' + d.trainingRunId)
-      .attr('cx', (d: PlayerLevelData) => xScale(d.trainingTime))
+      .attr('cx', (d: PlayerLevelData) => this.xScale(d.trainingTime))
       .attr('cy', (d: PlayerLevelData) => yBarScale(d.participantLevelScore))
       .attr('r', (d: PlayerLevelData) =>
         d.trainingRunId === this.traineesTrainingRunId
@@ -602,7 +604,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     groups.labels
       .select('#focus-label-time')
       .attr('x', +playersData.x + crosshairConfig.time.label.x)
-      .attr('y', crosshairConfig.time.label.y)
+      .attr('y', this.svgHeight + BARS_CONFIG.padding * BARS_CONFIG.padding - 5)
       .text(playersData.time);
   }
 

@@ -55,12 +55,12 @@
   cursor: pointer;
 }
 
-.overview-visualization-container .y-axis .tick text{
+.overview-visualization-container .y-axis .tick text {
   opacity: 0.65;
   font-size: initial;
 }
 
-.overview-visualization-container .score-progress path, .overview-visualization-container .score-progress line{
+.overview-visualization-container .score-progress path, .overview-visualization-container .score-progress line {
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke: #817f7f;
@@ -79,7 +79,7 @@
   stroke-dasharray: 15;
 }
 
-.overview-visualization-container .score-progress-list{
+.overview-visualization-container .score-progress-list {
   padding: 0;
   margin: 0;
   display: inline-block;
