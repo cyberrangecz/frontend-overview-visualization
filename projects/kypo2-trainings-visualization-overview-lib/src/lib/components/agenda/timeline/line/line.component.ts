@@ -122,7 +122,6 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
   private eventTooltip;
   private lineTooltip;
   private zoomableArea;
-  private tickLength = 1;
   private zoomTransform;
 
   private tableRowClicked: Subscription;
@@ -835,7 +834,7 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
     const coords = isStaticCoordinatesUsed ? this.d3.pointer(event, this.zoomableArea.node()) : staticCoordinates;
     const x = coords[0];
     const y = coords[1];
-    const time = this.timeScale.invert(x)
+    const time = this.hoursMinutesSeconds(this.timeScale.invert(x))
     // Vertical line - time
     focusLines
       .select('#focus-line-time')

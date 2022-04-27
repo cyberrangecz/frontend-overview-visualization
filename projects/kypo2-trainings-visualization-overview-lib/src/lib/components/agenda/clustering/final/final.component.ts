@@ -65,7 +65,6 @@ export class FinalComponent implements OnInit, OnChanges {
   private barWidth;
   private svgHeight;
   private svgWidth;
-  private tickLength = 1;
 
   private playerClicked = false; // If no player is selected, hover out of player will cancel the highlight
   private traineesTrainingRunId: number;
