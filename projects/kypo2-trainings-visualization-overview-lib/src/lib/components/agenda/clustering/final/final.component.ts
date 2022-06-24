@@ -56,7 +56,6 @@ export class FinalComponent implements OnInit, OnChanges {
    */
   @Input() standalone: boolean;
 
-
   private d3: D3;
   private xScale: ScaleLinear<number, number>;
   private yScale: ScaleLinear<number, number>;
@@ -211,7 +210,12 @@ export class FinalComponent implements OnInit, OnChanges {
       .attr('x', 0)
       .attr('y', 0)
       .attr('height', this.svgHeight)
-      .attr('width', this.xScale(data.estimatedTime) > this.barWidth ? this.xScale(data.maxParticipantTime) : this.xScale(data.estimatedTime))
+      .attr(
+        'width',
+        this.xScale(data.estimatedTime) > this.barWidth
+          ? this.xScale(data.maxParticipantTime)
+          : this.xScale(data.estimatedTime)
+      )
       .attr('fill', 'url(#diagonalHatchDarker)');
   }
 
@@ -366,9 +370,15 @@ export class FinalComponent implements OnInit, OnChanges {
   }
 
   private hoursMinutesSeconds(timestamp: number): string {
-    const hours = Math.floor(timestamp / 3600).toString().padStart(2, '0');
-    const minutes = Math.floor(timestamp % 3600 / 60).toString().padStart(2,'0');
-    const seconds = Math.floor(timestamp % 60).toString().padStart(2,'0');
+    const hours = Math.floor(timestamp / 3600)
+      .toString()
+      .padStart(2, '0');
+    const minutes = Math.floor((timestamp % 3600) / 60)
+      .toString()
+      .padStart(2, '0');
+    const seconds = Math.floor(timestamp % 60)
+      .toString()
+      .padStart(2, '0');
     return `${hours}:${minutes}:${seconds}`;
   }
 
@@ -443,8 +453,9 @@ export class FinalComponent implements OnInit, OnChanges {
     const playersGroup = this.svg.append('g').attr('class', 'score-final-players');
     let players = this.dataClusteringFinal.finalResults.playerData;
     if (this.standalone) {
-      players = this.dataClusteringFinal.finalResults.playerData
-        .filter((player) => this.filterPlayers.indexOf(player.trainingRunId) !== -1);
+      players = this.dataClusteringFinal.finalResults.playerData.filter(
+        (player) => this.filterPlayers.indexOf(player.trainingRunId) !== -1
+      );
     }
 
     playersGroup

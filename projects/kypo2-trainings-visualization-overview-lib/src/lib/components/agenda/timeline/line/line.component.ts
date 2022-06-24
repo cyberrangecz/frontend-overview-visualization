@@ -6,7 +6,8 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  Output, SimpleChanges
+  Output,
+  SimpleChanges,
 } from '@angular/core';
 import { ConfigService } from '../../../../config/config.service';
 import {
@@ -37,7 +38,7 @@ import TimelineLevelTypeEnum = BasicLevelInfo.TimelineLevelTypeEnum;
 import { TimelineEvent } from '../../../model/timeline/timeline-event';
 import { InfoLevel } from '../../../model/timeline/info-level';
 import { AssessmentLevel } from '../../../model/timeline/assessment-level';
-import {AccessLevel} from "../../../model/timeline/access-level";
+import { AccessLevel } from '../../../model/timeline/access-level';
 
 @Component({
   selector: 'kypo2-viz-overview-line',
@@ -173,7 +174,7 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
       this.redraw();
     }
     if (this.zoomTransform) {
-      this.onZoom(null, this.zoomTransform)
+      this.onZoom(null, this.zoomTransform);
     }
 
     if ('highlightedTrainee' in changes) {
@@ -270,7 +271,9 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
         return player;
       });
     } else {
-      this.players = this.filterPlayers ? this.players.filter((player) => this.filterPlayers.indexOf(player.trainingRunId) !== -1) : [];
+      this.players = this.filterPlayers
+        ? this.players.filter((player) => this.filterPlayers.indexOf(player.trainingRunId) !== -1)
+        : [];
     }
   }
 
@@ -385,8 +388,8 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
    * Main zoom and pan behavior
    */
   onZoom(event, transformZoom?) {
-    if (this.sourceEvent === "brush" && event) return; // ignore zoom-by-brush
-    this.sourceEvent = "zoom";
+    if (this.sourceEvent === 'brush' && event) return; // ignore zoom-by-brush
+    this.sourceEvent = 'zoom';
     this.playersGroup
       .selectAll('circle') // Hide if out of area
       .style('opacity', function () {
@@ -400,8 +403,8 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
     }
     const newDomain = transform.rescaleX(this.contextTimeScale).domain();
     this.timeScale.domain(newDomain);
-    const scaleDomainStart = newDomain[0]
-    const scaleDomainEnd = newDomain[1]
+    const scaleDomainStart = newDomain[0];
+    const scaleDomainEnd = newDomain[1];
     this.timeAxisScale.domain([scaleDomainStart, scaleDomainEnd]);
 
     if (transform.k !== 1) {
@@ -439,8 +442,8 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
    * Main brush behavior.
    */
   onBrush(event) {
-    if (this.sourceEvent === "zoom") return; // ignore brush-by-zoom
-    this.sourceEvent = "brush";
+    if (this.sourceEvent === 'zoom') return; // ignore brush-by-zoom
+    this.sourceEvent = 'brush';
     const selection = event.selection || this.contextTimeScale;
     const newDomain = selection.map(this.contextTimeScale.invert, this.contextTimeScale);
     this.timeScale.domain(newDomain);
@@ -480,8 +483,8 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
     this.playerColorScale = this.d3.scaleOrdinal().range(colorScheme);
     this.tableService.sendPlayerColorScale(this.playerColorScale);
 
-    const scaleDomainStart = 0
-    const scaleDomainEnd = this.timelineData.timeline.maxParticipantTime
+    const scaleDomainStart = 0;
+    const scaleDomainEnd = this.timelineData.timeline.maxParticipantTime;
 
     this.timeAxisScale = this.d3.scaleLinear().range([0, this.size.width]).domain([scaleDomainStart, scaleDomainEnd]);
     this.scoreScale = this.d3
@@ -572,9 +575,15 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
   }
 
   private hoursMinutesSeconds(timestamp: number): string {
-    const hours = Math.floor(timestamp / 3600).toString().padStart(2, '0');
-    const minutes = Math.floor(timestamp % 3600 / 60).toString().padStart(2,'0');
-    const seconds = Math.floor(timestamp % 60).toString().padStart(2,'0');
+    const hours = Math.floor(timestamp / 3600)
+      .toString()
+      .padStart(2, '0');
+    const minutes = Math.floor((timestamp % 3600) / 60)
+      .toString()
+      .padStart(2, '0');
+    const seconds = Math.floor(timestamp % 60)
+      .toString()
+      .padStart(2, '0');
     return `${hours}:${minutes}:${seconds}`;
   }
 
@@ -834,7 +843,7 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
     const coords = isStaticCoordinatesUsed ? this.d3.pointer(event, this.zoomableArea.node()) : staticCoordinates;
     const x = coords[0];
     const y = coords[1];
-    const time = this.hoursMinutesSeconds(this.timeScale.invert(x))
+    const time = this.hoursMinutesSeconds(this.timeScale.invert(x));
     // Vertical line - time
     focusLines
       .select('#focus-line-time')
@@ -990,7 +999,7 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
    */
   onLineMouseover(event, player: TimelinePlayer): void {
     this.highlightLine(player.trainingRunId);
-    if(this.standalone) {
+    if (this.standalone) {
       this.lineTooltip = this.d3.select('body').append('div').style('display', 'none');
       this.updateLineTooltip(event, player);
     }
@@ -1043,7 +1052,7 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
    */
   onLineMouseout(player: TimelinePlayer): void {
     if (this.standalone) {
-      this.d3.select('.score-progress-line-tooltip').remove()
+      this.d3.select('.score-progress-line-tooltip').remove();
     } else {
       this.unhighlightLine(player.trainingRunId);
     }

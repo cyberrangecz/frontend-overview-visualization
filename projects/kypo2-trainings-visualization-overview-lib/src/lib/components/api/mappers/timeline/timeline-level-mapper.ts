@@ -7,7 +7,7 @@ import { AssessmentLevelMapper } from './assessment-level-mapper';
 import { AssessmentLevelDTO } from '../../dto/timeline/assessment-level-dto';
 import { InfoLevel } from '../../../model/timeline/info-level';
 import { EventMapper } from './event-mapper';
-import {AccessLevel} from "../../../model/timeline/access-level";
+import { AccessLevel } from '../../../model/timeline/access-level';
 
 /**
  * @dynamic

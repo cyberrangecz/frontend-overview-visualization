@@ -89,9 +89,9 @@ export class LevelsComponent implements OnInit, OnChanges {
     }
 
     if ('selectedTrainingRunId' in changes) {
-        if (changes.selectedTrainingRunId.currentValue !== changes.selectedTrainingRunId.previousValue) {
-          if (!changes.selectedTrainingRunId.isFirstChange()) {
-            this.highlightSelectedTrainingRun();
+      if (changes.selectedTrainingRunId.currentValue !== changes.selectedTrainingRunId.previousValue) {
+        if (!changes.selectedTrainingRunId.isFirstChange()) {
+          this.highlightSelectedTrainingRun();
         }
       }
     }
@@ -132,10 +132,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    * Initialize global D3 scales
    */
   initializeScales(): void {
-    this.xScale = this.d3
-      .scaleLinear()
-      .range([0, this.barWidth])
-      .domain([0, this.getMaxTime()]);
+    this.xScale = this.d3.scaleLinear().range([0, this.barWidth]).domain([0, this.getMaxTime()]);
   }
 
   /**
@@ -212,7 +209,11 @@ export class LevelsComponent implements OnInit, OnChanges {
       .attr('x', 0)
       .attr('y', (level: Level) => this.yScaleBandBars(level.order.toString()))
       .attr('height', this.yScaleBandBars.bandwidth())
-      .attr('width', (level: Level) => this.xScale(level.estimatedTime) > this.barWidth ? this.xScale(level.maxParticipantTime) : this.xScale(level.estimatedTime))
+      .attr('width', (level: Level) =>
+        this.xScale(level.estimatedTime) > this.barWidth
+          ? this.xScale(level.maxParticipantTime)
+          : this.xScale(level.estimatedTime)
+      )
       .style('fill', (level: Level) => {
         if (level.order > 5) {
           return 'url(#diagonalHatch)';
@@ -304,9 +305,15 @@ export class LevelsComponent implements OnInit, OnChanges {
   }
 
   private hoursMinutesSeconds(timestamp): string {
-    const hours = Math.floor(timestamp / 3600).toString().padStart(2, '0');
-    const minutes = Math.floor(timestamp % 3600 / 60).toString().padStart(2,'0');
-    const seconds = Math.floor(timestamp % 60).toString().padStart(2,'0');
+    const hours = Math.floor(timestamp / 3600)
+      .toString()
+      .padStart(2, '0');
+    const minutes = Math.floor((timestamp % 3600) / 60)
+      .toString()
+      .padStart(2, '0');
+    const seconds = Math.floor(timestamp % 60)
+      .toString()
+      .padStart(2, '0');
     return `${hours}:${minutes}:${seconds}`;
   }
 
