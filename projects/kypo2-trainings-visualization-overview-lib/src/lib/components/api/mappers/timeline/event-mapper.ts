@@ -51,8 +51,7 @@ export class EventMapper {
         (text.includes('completed') && levelType !== BasicLevelInfoDTO.TimelineLevelTypeEnum.INFO): {
         return TimelineEventTypeEnum.CORRECT_ANSWER;
       }
-      case text.includes('Wrong answer') ||
-           text.includes('Wrong passkey'): {
+      case text.includes('Wrong answer') || text.includes('Wrong passkey'): {
         return TimelineEventTypeEnum.WRONG_ANSWER;
       }
       case text.includes('Hint'): {

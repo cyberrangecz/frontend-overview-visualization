@@ -9,7 +9,6 @@ import { Kypo2TraineeModeInfo } from '../../../shared/interfaces/kypo2-trainee-m
   styleUrls: ['./timeline.component.css'],
 })
 export class TimelineComponent implements OnChanges, OnInit {
-
   /**
    * Defines if all players should be displayed
    */

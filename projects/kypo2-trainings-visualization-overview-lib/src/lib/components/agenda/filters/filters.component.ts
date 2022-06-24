@@ -7,7 +7,6 @@ import { FiltersService } from '../../../services/filters.service';
   styleUrls: ['./filters.component.css'],
 })
 export class FiltersComponent implements OnInit {
-
   @Output() activeFilters: EventEmitter<any> = new EventEmitter();
   filtersArray;
 

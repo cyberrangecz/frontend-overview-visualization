@@ -27,7 +27,7 @@ export class FiltersService {
   }
 
   setFilters(filters: any[]): void {
-    this.filter()
+    this.filter();
   }
 
   filter(): void {
