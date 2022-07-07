@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "kypo2-trainings-visualization-overview": {
+    "kypo-trainings-visualization-overview": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/kypo2-trainings-visualization-overview",
+            "outputPath": "dist/kypo-trainings-visualization-overview",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -76,21 +76,21 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "kypo2-trainings-visualization-overview:build"
+            "browserTarget": "kypo-trainings-visualization-overview:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "kypo2-trainings-visualization-overview:build:production"
+              "browserTarget": "kypo-trainings-visualization-overview:build:production"
             },
             "local": {
-              "browserTarget": "kypo2-trainings-visualization-overview:build:local"
+              "browserTarget": "kypo-trainings-visualization-overview:build:local"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "kypo2-trainings-visualization-overview:build"
+            "browserTarget": "kypo-trainings-visualization-overview:build"
           }
         },
         "test": {
@@ -122,39 +122,39 @@
         }
       }
     },
-    "kypo2-trainings-visualization-overview-lib": {
-      "root": "projects/kypo2-trainings-visualization-overview-lib",
-      "sourceRoot": "projects/kypo2-trainings-visualization-overview-lib/src",
+    "kypo-trainings-visualization-overview-lib": {
+      "root": "projects/kypo-trainings-visualization-overview-lib",
+      "sourceRoot": "projects/kypo-trainings-visualization-overview-lib/src",
       "projectType": "library",
-      "prefix": "kypo2-viz-overview",
+      "prefix": "kypo-viz-overview",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "tsConfig": "projects/kypo2-trainings-visualization-overview-lib/tsconfig.lib.json",
-            "project": "projects/kypo2-trainings-visualization-overview-lib/ng-package.json"
+            "tsConfig": "projects/kypo-trainings-visualization-overview-lib/tsconfig.lib.json",
+            "project": "projects/kypo-trainings-visualization-overview-lib/ng-package.json"
           },
           "configurations": {
             "production": {
-              "project": "projects/kypo2-trainings-visualization-overview-lib/ng-package.prod.json",
-              "tsConfig": "projects/kypo2-trainings-visualization-overview-lib/tsconfig.lib.prod.json"
+              "project": "projects/kypo-trainings-visualization-overview-lib/ng-package.prod.json",
+              "tsConfig": "projects/kypo-trainings-visualization-overview-lib/tsconfig.lib.prod.json"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/kypo2-trainings-visualization-overview-lib/src/test.ts",
-            "tsConfig": "projects/kypo2-trainings-visualization-overview-lib/tsconfig.spec.json",
-            "karmaConfig": "projects/kypo2-trainings-visualization-overview-lib/karma.conf.js"
+            "main": "projects/kypo-trainings-visualization-overview-lib/src/test.ts",
+            "tsConfig": "projects/kypo-trainings-visualization-overview-lib/tsconfig.spec.json",
+            "karmaConfig": "projects/kypo-trainings-visualization-overview-lib/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": [
-              "projects/kypo2-trainings-visualization-overview-lib/**/*.ts",
-              "projects/kypo2-trainings-visualization-overview-lib/**/*.component.html"
+              "projects/kypo-trainings-visualization-overview-lib/**/*.ts",
+              "projects/kypo-trainings-visualization-overview-lib/**/*.component.html"
             ]
           }
         }

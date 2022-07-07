@@ -1,3 +1,4 @@
+14.0.1 Rename from kypo2 to kypo.
 14.0.0 Update to Angular 14.
 13.0.2 Fix timeline fixed crosshair coords to use actual svg height instead.
 13.0.1 Fix timeline X axis for clustering, final and line visualization.
