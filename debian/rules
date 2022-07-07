@@ -6,7 +6,7 @@ include /usr/share/dpkg/default.mk
 USER=kypo
 PROJECT_NAME=$(shell dpkg-parsechangelog --show-field source)
 PACKAGE_NAME=$(subst -,_,${PROJECT_NAME})
-PROJECT_DIR=/opt/kypo2/${PROJECT_NAME}
+PROJECT_DIR=/opt/kypo/${PROJECT_NAME}
 CWD=$(shell pwd)
 
 %:  

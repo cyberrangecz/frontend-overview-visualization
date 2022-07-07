@@ -3,7 +3,7 @@ import {NgModule} from '@angular/core';
 import {VisualizationOverviewComponent} from './visualization-overview.component';
 import {VisualizationRoutingModule} from './visualization-routing.module';
 import {CustomConfig} from '../custom-config';
-import {Kypo2TrainingsVisualizationOverviewLibModule} from '../../../projects/kypo2-trainings-visualization-overview-lib/src/public_api';
+import {KypoTrainingsVisualizationOverviewLibModule} from '../../../projects/kypo-trainings-visualization-overview-lib/src/public_api';
 
 @NgModule({
   declarations: [
@@ -12,8 +12,8 @@ import {Kypo2TrainingsVisualizationOverviewLibModule} from '../../../projects/ky
   imports: [
     CommonModule,
     VisualizationRoutingModule,
-    Kypo2TrainingsVisualizationOverviewLibModule.forRoot(CustomConfig),
-    Kypo2TrainingsVisualizationOverviewLibModule
+    KypoTrainingsVisualizationOverviewLibModule.forRoot(CustomConfig),
+    KypoTrainingsVisualizationOverviewLibModule
   ],
   exports: [
     VisualizationOverviewComponent

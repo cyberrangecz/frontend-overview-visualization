@@ -1,9 +1,9 @@
-Source: kypo2-trainings-visualization-overview
+Source: kypo-trainings-visualization-overview
 Build-depends: debhelper (>= 8.0.0)
 Section: misc
 Standards-Version: 3.9.8
 
-Package: kypo2-trainings-visualization-overview
+Package: kypo-trainings-visualization-overview
 Architecture: any
 Depends: ${misc:Depends}
 Priority: optional
