@@ -7,7 +7,6 @@ const HOME_URL = 'https://localhost:4200'
 export const environment = {
   production: false,
   trainingServiceUrl: 'http://localhost:3000/kypo-rest-training/api/v1/',
-  elasticSearchServiceUrl: 'http://172.19.0.22/kypo-elasticsearch-service/api/v1/',
   // OIDC SETTINGS
   // Url of the Identity Provider
   issuer: 'https://oidc.muni.cz/oidc/',
