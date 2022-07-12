@@ -3,5 +3,4 @@ import {VisualizationOverviewConfig} from '../../projects/kypo-trainings-visuali
 
 export const CustomConfig: VisualizationOverviewConfig = {
   trainingServiceUrl: environment.trainingServiceUrl,
-  elasticSearchServiceUrl: environment.elasticSearchServiceUrl
 };
