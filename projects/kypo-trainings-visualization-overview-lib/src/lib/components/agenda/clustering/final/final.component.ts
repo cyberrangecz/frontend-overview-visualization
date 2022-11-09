@@ -56,6 +56,11 @@ export class FinalComponent implements OnInit, OnChanges {
    */
   @Input() standalone: boolean;
 
+  /**
+   * If provided is used for aggregated view across data from several instances.
+   */
+  @Input() instanceIds: number[];
+
   private d3: D3;
   private xScale: ScaleLinear<number, number>;
   private yScale: ScaleLinear<number, number>;
@@ -83,7 +88,7 @@ export class FinalComponent implements OnInit, OnChanges {
 
   load(): void {
     this.dataService
-      .getAllData(this.traineeModeInfo)
+      .getAllData(this.traineeModeInfo, this.instanceIds)
       .pipe(take(1))
       .subscribe((res) => {
         this.dataClusteringFinal = res;
@@ -102,6 +107,10 @@ export class FinalComponent implements OnInit, OnChanges {
           this.highlightSelectedTrainingRun();
         }
       }
+    }
+
+    if ('instanceIds' in changes && !changes['instanceIds'].isFirstChange()) {
+      this.load();
     }
   }
 
@@ -164,6 +173,9 @@ export class FinalComponent implements OnInit, OnChanges {
     this.drawMaximumTimeBar(barsGroup, this.dataClusteringFinal.finalResults);
     this.drawEstimatedTimeBar(barsGroup, this.dataClusteringFinal.finalResults);
     this.drawAverageTimeLine(barsGroup, this.dataClusteringFinal.finalResults);
+    if (this.standalone) {
+      this.drawAverageScoreLine(barsGroup, this.dataClusteringFinal.finalResults);
+    }
     this.drawBarLabel();
   }
 
@@ -227,7 +239,7 @@ export class FinalComponent implements OnInit, OnChanges {
   drawAverageTimeLine(barsGroup, data: FinalResults): void {
     barsGroup
       .append('line')
-      .attr('id', 'score-final-line-average')
+      .attr('id', 'time-final-line-average')
       .style('stroke-dasharray', '5,5')
       .style('stroke-width', 2)
       .style('stroke', '#3C4445')
@@ -235,6 +247,24 @@ export class FinalComponent implements OnInit, OnChanges {
       .attr('y1', 1)
       .attr('x2', this.xScale(data.averageTime))
       .attr('y2', this.svgHeight + 1);
+  }
+
+  /**
+   * Creates average score line of training
+   * @param barsGroup D3 selection of group holding both bars
+   * @param data
+   */
+  drawAverageScoreLine(barsGroup, data: FinalResults): void {
+    barsGroup
+      .append('line')
+      .attr('id', 'score-final-line-average')
+      .style('stroke-dasharray', '5,5')
+      .style('stroke-width', 2)
+      .style('stroke', '#3C4445')
+      .attr('x1', 0)
+      .attr('y1', this.xScale(data.averageScore))
+      .attr('x2', this.d3.select('.score-final-bar-max').attr('width'))
+      .attr('y2', this.xScale(data.averageScore));
   }
 
   /**
@@ -250,13 +280,16 @@ export class FinalComponent implements OnInit, OnChanges {
   drawLegend(): void {
     const x = 0.75 * this.svgWidth;
     const y = this.svgHeight * 0.15;
-    const yOffset = 20;
-    const labelOffset = 25;
+    const yOffset = 30;
+    const labelOffset = 35;
     const timeLabelOffset = 35;
 
     this.drawMaximumTimeLegend({ x: x, y: y }, timeLabelOffset);
     this.drawEstimatedTimeLegend({ x: x, y: y + yOffset }, timeLabelOffset);
     this.drawAverageTimeLegend({ x: x, y: y + yOffset * 2 }, labelOffset);
+    if (this.standalone) {
+      this.drawAverageScoreLegend({ x: x, y: y + yOffset * 3 }, labelOffset);
+    }
 
     if (this.traineesTrainingRunId != null) {
       this.drawOtherPlayersLegend({ x: x, y: y + yOffset * 3 }, labelOffset);
@@ -302,14 +335,31 @@ export class FinalComponent implements OnInit, OnChanges {
       .style('stroke-width', 2)
       .style('stroke', '#3C4445')
       .attr('x1', coordinates.x + 5)
-      .attr('y1', coordinates.y)
+      .attr('y1', coordinates.y - 3)
       .attr('x2', coordinates.x + 5)
-      .attr('y2', coordinates.y + 15);
+      .attr('y2', coordinates.y + 20);
     this.svg
       .append('text')
       .attr('x', coordinates.x + labelOffset)
       .attr('y', coordinates.y + 9.5)
       .html('Average time');
+  }
+
+  drawAverageScoreLegend(coordinates: { x: number; y: number }, labelOffset): void {
+    this.svg
+      .append('line')
+      .style('stroke-dasharray', '3,5')
+      .style('stroke-width', 2)
+      .style('stroke', '#3C4445')
+      .attr('x1', coordinates.x + 5)
+      .attr('y1', coordinates.y + 5)
+      .attr('x2', coordinates.x + 28)
+      .attr('y2', coordinates.y + 5);
+    this.svg
+      .append('text')
+      .attr('x', coordinates.x + labelOffset)
+      .attr('y', coordinates.y + 9.5)
+      .html('Average score');
   }
 
   drawOtherPlayersLegend(coordinates: { x: number; y: number }, labelOffset): void {

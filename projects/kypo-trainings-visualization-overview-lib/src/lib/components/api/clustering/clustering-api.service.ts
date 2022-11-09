@@ -11,15 +11,29 @@ export class ClusteringApiService {
 
   constructor(private http: HttpClient, private configService: ConfigService) {}
 
-  getClusteringVisualizationData(): Observable<ClusteringVisualizationResourceDTO> {
-    return this.http.get<ClusteringVisualizationResourceDTO>(
-      `${this.trainingVisualizationEndpoint}/${this.configService.trainingInstanceId}/clustering`
-    );
+  /**
+   * Sends http request to obtain data for clustering visualization and if @instanceIds is provided used aggregated
+   * data from multiple instances specified by this parameter.
+   * @param instanceIds if present uses endpoint that aggregates data from multiple instances.
+   */
+  getClusteringVisualizationData(instanceIds?: number[]): Observable<ClusteringVisualizationResourceDTO> {
+    return this.buildRequest(instanceIds);
   }
 
   getAnonymizedClusteringVisualizationData(): Observable<ClusteringVisualizationResourceDTO> {
     return this.http.get<ClusteringVisualizationResourceDTO>(
       `${this.anonymizedTrainingVisualizationEndpoint}/${this.configService.trainingRunId}/clustering`
+    );
+  }
+
+  private buildRequest(instanceIds: number[]): Observable<ClusteringVisualizationResourceDTO> {
+    if (instanceIds) {
+      return this.http.get<ClusteringVisualizationResourceDTO>(`${this.trainingVisualizationEndpoint}/clustering`, {
+        params: { instanceIds: instanceIds },
+      });
+    }
+    return this.http.get<ClusteringVisualizationResourceDTO>(
+      `${this.trainingVisualizationEndpoint}/${this.configService.trainingInstanceId}/clustering`
     );
   }
 }

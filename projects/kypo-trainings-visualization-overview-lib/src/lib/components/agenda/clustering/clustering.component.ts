@@ -57,6 +57,10 @@ export class ClusteringComponent implements OnInit, OnChanges {
    * Id of trainees which should be displayed
    */
   @Input() displayedTrainees: number[];
+  /**
+   * If provided is used for aggregated view across data from several instances.
+   */
+  @Input() instanceIds: number[];
 
   constructor(private configService: ConfigService) {}
 
