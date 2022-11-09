@@ -58,6 +58,11 @@ export class LevelsComponent implements OnInit, OnChanges {
    */
   @Input() standalone: boolean;
 
+  /**
+   * If provided is used for aggregated view across data from several instances.
+   */
+  @Input() instanceIds: number[];
+
   private d3: D3;
   private xScale: ScaleLinear<number, number>;
   private yScaleBandBars: ScaleBand<string>;
@@ -95,11 +100,15 @@ export class LevelsComponent implements OnInit, OnChanges {
         }
       }
     }
+
+    if ('instanceIds' in changes && !changes['instanceIds'].isFirstChange()) {
+      this.load();
+    }
   }
 
   load(): void {
     this.dataService
-      .getAllData(this.traineeModeInfo)
+      .getAllData(this.traineeModeInfo, this.instanceIds)
       .pipe(take(1))
       .subscribe((res) => {
         this.levelsData = res;
@@ -158,6 +167,9 @@ export class LevelsComponent implements OnInit, OnChanges {
     this.drawMaximumBars(barsGroup, data);
     this.drawEstimateBars(barsGroup, data);
     this.drawAverageTimeLines(barsGroup, data);
+    if (this.standalone) {
+      this.drawAverageScoreLines(barsGroup, data);
+    }
     this.drawBarLabels();
   }
 
@@ -245,6 +257,27 @@ export class LevelsComponent implements OnInit, OnChanges {
   }
 
   /**
+   * Draw average score lines overlaying the maximum score bars
+   * @param barsGroup d3 selection of group holding each bar
+   * @param data holding necessary values for bar visualization
+   */
+  drawAverageScoreLines(barsGroup, data: Level[]): void {
+    barsGroup
+      .selectAll('.max-score-level-line-avg')
+      .data(data)
+      .enter()
+      .append('line')
+      .attr('class', 'score-level-line score-level-line-avg')
+      .style('stroke-dasharray', '5,5')
+      .style('stroke-width', 2)
+      .style('stroke', '#3C4445')
+      .attr('x1', () => 0)
+      .attr('y1', (level: Level) => this.yScaleBandBars(level.order.toString()) + this.xScale(level.averageScore))
+      .attr('x2', (level: Level) => this.d3.select('#score-level-bar-max-' + level.order).attr('width'))
+      .attr('y2', (level: Level) => this.yScaleBandBars(level.order.toString()) + this.xScale(level.averageScore));
+  }
+
+  /**
    * Draw bar labels (Level number and name) next to the maximum bars
    */
   drawBarLabels(): void {
@@ -264,7 +297,7 @@ export class LevelsComponent implements OnInit, OnChanges {
             'transform',
             `translate(
            ${+Math.max(estimateBarWidth, maxBarWidth) + LEVEL_LABELS_CONFIG.padding.left},
-           ${+barY + LEVEL_LABELS_CONFIG.padding.top})`
+           ${+barY})`
           )
           .append('text');
 

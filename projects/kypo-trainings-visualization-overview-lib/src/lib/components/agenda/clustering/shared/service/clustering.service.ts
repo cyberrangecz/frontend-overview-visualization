@@ -10,10 +10,15 @@ import { ClusteringTrainingData } from '../../../../model/clustering/clustering-
 export class ClusteringService {
   constructor(private clusteringFinalApiService: ClusteringApiService) {}
 
-  public getAllData(traineeModeInfo: KypoTraineeModeInfo): Observable<ClusteringTrainingData> {
+  /**
+   * Gets data for clustering and final visualization.
+   * @param traineeModeInfo if present anonymize the instance data.
+   * @param instanceIds if present uses endpoint that aggregates data from multiple instances.
+   */
+  public getAllData(traineeModeInfo: KypoTraineeModeInfo, instanceIds?: number[]): Observable<ClusteringTrainingData> {
     const service = KypoTraineeModeInfo.isTrainee(traineeModeInfo)
       ? this.clusteringFinalApiService.getAnonymizedClusteringVisualizationData()
-      : this.clusteringFinalApiService.getClusteringVisualizationData();
+      : this.clusteringFinalApiService.getClusteringVisualizationData(instanceIds);
 
     return service.pipe(
       map((data) => ClusteringMapper.fromDTO(data)),
