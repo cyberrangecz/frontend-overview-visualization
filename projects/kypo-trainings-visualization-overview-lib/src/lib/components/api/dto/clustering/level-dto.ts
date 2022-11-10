@@ -6,6 +6,7 @@ export class LevelDTO {
   level_type: BasicLevelInfoDTO.LevelTypeEnum;
   title: string;
   estimated_time: number;
+  max_achievable_score: number;
   max_participant_score: number;
   max_participant_time: number;
   average_time: number;

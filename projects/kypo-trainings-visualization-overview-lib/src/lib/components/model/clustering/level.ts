@@ -8,6 +8,7 @@ export class Level {
 
   title: string;
   estimatedTime: number;
+  maxAchievableScore: number;
   maxParticipantScore: number;
   maxParticipantTime: number;
   averageTime: number;
