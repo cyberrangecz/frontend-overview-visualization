@@ -15,6 +15,7 @@ import { ClusteringTrainingData } from '../../../model/clustering/clustering-tra
 import { FinalResults } from '../../../model/clustering/final-results';
 import { ClusteringService } from '../shared/service/clustering.service';
 import { PlayerData } from '../../../model/clustering/player-data';
+import { Level } from '../../../model/clustering/level';
 
 @Component({
   selector: 'kypo-viz-overview-final',
@@ -148,7 +149,7 @@ export class FinalComponent implements OnInit, OnChanges {
     this.yScale = this.d3
       .scaleLinear()
       .range([SVG_CONFIG.height, 0])
-      .domain([0, this.dataClusteringFinal.finalResults.maxParticipantTrainingScore]);
+      .domain([0, this.dataClusteringFinal.finalResults.maxAchievableScore]);
   }
 
   /**
@@ -255,6 +256,11 @@ export class FinalComponent implements OnInit, OnChanges {
    * @param data
    */
   drawAverageScoreLine(barsGroup, data: FinalResults): void {
+    const yScale = this.d3
+      .scaleLinear()
+      .range([SVG_CONFIG.height, 0])
+      .domain([0, this.dataClusteringFinal.finalResults.maxAchievableScore]);
+
     barsGroup
       .append('line')
       .attr('id', 'score-final-line-average')
@@ -262,9 +268,9 @@ export class FinalComponent implements OnInit, OnChanges {
       .style('stroke-width', 2)
       .style('stroke', '#3C4445')
       .attr('x1', 0)
-      .attr('y1', this.xScale(data.averageScore))
+      .attr('y1', yScale(data.averageScore))
       .attr('x2', this.d3.select('.score-final-bar-max').attr('width'))
-      .attr('y2', this.xScale(data.averageScore));
+      .attr('y2', yScale(data.averageScore));
   }
 
   /**
@@ -468,7 +474,7 @@ export class FinalComponent implements OnInit, OnChanges {
    */
   drawScoreAxis(): void {
     const axesConfig = AXES_CONFIG;
-    const maximumScore = this.dataClusteringFinal.finalResults.maxParticipantTrainingScore;
+    const maximumScore = this.dataClusteringFinal.finalResults.maxAchievableScore;
     const scoreScale = this.yScale;
 
     const yAxis = this.d3

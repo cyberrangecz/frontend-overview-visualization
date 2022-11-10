@@ -18,6 +18,7 @@ export class LevelMapper {
     level.order = dto.order;
     level.averageScore = dto.average_score;
     level.maxParticipantScore = dto.max_participant_score;
+    level.maxAchievableScore = dto.max_achievable_score;
     level.estimatedTime = dto.estimated_time / 1000;
     level.averageTime = dto.average_time / 1000;
     level.maxParticipantTime = dto.max_participant_time / 1000;

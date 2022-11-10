@@ -272,9 +272,21 @@ export class LevelsComponent implements OnInit, OnChanges {
       .style('stroke-width', 2)
       .style('stroke', '#3C4445')
       .attr('x1', () => 0)
-      .attr('y1', (level: Level) => this.yScaleBandBars(level.order.toString()) + this.xScale(level.averageScore))
+      .attr('y1', (level: Level) => {
+        const yScale = this.d3
+          .scaleLinear()
+          .range([this.yScaleBandBars.bandwidth(), 0])
+          .domain([0, level.maxAchievableScore]);
+        return this.yScaleBandBars(level.order.toString()) + yScale(level.averageScore);
+      })
       .attr('x2', (level: Level) => this.d3.select('#score-level-bar-max-' + level.order).attr('width'))
-      .attr('y2', (level: Level) => this.yScaleBandBars(level.order.toString()) + this.xScale(level.averageScore));
+      .attr('y2', (level: Level) => {
+        const yScale = this.d3
+          .scaleLinear()
+          .range([this.yScaleBandBars.bandwidth(), 0])
+          .domain([0, level.maxAchievableScore]);
+        return this.yScaleBandBars(level.order.toString()) + yScale(level.averageScore);
+      });
   }
 
   /**
@@ -403,11 +415,11 @@ export class LevelsComponent implements OnInit, OnChanges {
       const yScale = d3
         .scaleLinear()
         .range([this.yScaleBandBars.bandwidth(), 0])
-        .domain([0, trainingLevels[bar['order'] - 1].maxParticipantScore]);
+        .domain([0, trainingLevels[bar['order'] - 1].maxAchievableScore]);
       const yAxis = d3
         .axisLeft(yScale)
         .tickSize(AXES_CONFIG.yAxis.tickSize)
-        .tickValues([0, trainingLevels[bar['order'] - 1].maxParticipantScore])
+        .tickValues([0, trainingLevels[bar['order'] - 1].maxAchievableScore])
         .tickPadding(AXES_CONFIG.yAxis.tickPadding)
         .tickFormat((d) => (d === 0 ? '' : d.toString()));
       const barY = d3.select('#score-level-bar-max-' + bar['order']).attr('y');
@@ -459,7 +471,7 @@ export class LevelsComponent implements OnInit, OnChanges {
         barHeight, // bottom coordinate
         barCoordinateY, // top coordinate (y values goes from top to bottom)
       ])
-      .domain([0, trainingLevels[i].maxParticipantScore]);
+      .domain([0, trainingLevels[i].maxAchievableScore]);
 
     const playersGroup = this.svg.append('g').attr('class', 'score-level-players').datum({ number: levelNumber });
     if (this.standalone) {
@@ -570,7 +582,7 @@ export class LevelsComponent implements OnInit, OnChanges {
     xScale.clamp(true);
     const yScale = d3
       .scaleLinear()
-      .range([0, trainingLevels[barData.order - 1].maxParticipantScore])
+      .range([0, trainingLevels[barData.order - 1].maxAchievableScore])
       .domain([this.yScaleBandBars.bandwidth(), 0]);
     yScale.clamp(true);
 
@@ -734,7 +746,7 @@ export class LevelsComponent implements OnInit, OnChanges {
         : [];
     const yScale = d3
       .scaleLinear()
-      .range([0, trainingLevels[level - 1].maxParticipantScore])
+      .range([0, trainingLevels[level - 1].maxAchievableScore])
       .domain([this.yScaleBandBars.bandwidth(), 0]);
     yScale.clamp(true);
     const crosshairLinesGroup = this.svg.select('.focus-lines');
