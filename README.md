@@ -14,7 +14,7 @@
 
 ## How to use with other visualizations
 
-- If cross visualization communication is required, see project's [wiki](https://gitlab.ics.muni.cz/kypo/frontend-new/kypo-trainings-visualization-overview/wikis/home) for instructions
+- If cross visualization communication is required, see project's [wiki](https://gitlab.ics.muni.cz/muni-kypo-crp/frontend-angular/components/kypo-trainings-visualization-overview/-/wikis/home) for instructions
 
 ## Input parameters of _kypo-viz-overview-clustering_ component
 
