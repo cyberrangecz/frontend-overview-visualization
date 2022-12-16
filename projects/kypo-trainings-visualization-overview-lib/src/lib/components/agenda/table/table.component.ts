@@ -5,7 +5,6 @@ import { ConfigService } from '../../../config/config.service';
 import { KypoTraineeModeInfo } from '../../../shared/interfaces/kypo-trainee-mode-info';
 import { take } from 'rxjs/operators';
 import { TableData } from '../../model/table/table-data';
-import { TABLE_RESULTS } from '../../../shared/mocks/table.mock';
 import { PlayerTableData } from '../../model/table/player-table-data';
 import { LevelTableData } from '../../model/table/level-table-data';
 import { TableDataService } from './service/table-data.service';
@@ -26,11 +25,6 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
    * JSON data to use instead of data from API
    */
   @Input() jsonTableData: TableData = { players: null };
-  /**
-   * Flag to use local mock
-   * @deprecated
-   */
-  @Input() useLocalMock = false;
   /**
    * Flag to use in standalone mode
    */
@@ -74,13 +68,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit() {
-    if (this.useLocalMock) {
-      this.tableData = { players: TABLE_RESULTS };
-      this.redraw();
-      this.getMaxReachedLevel();
-    } else {
-      this.load();
-    }
+    this.load();
   }
 
   ngOnChanges() {

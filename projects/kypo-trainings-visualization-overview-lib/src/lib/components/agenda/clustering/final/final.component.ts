@@ -633,7 +633,11 @@ export class FinalComponent implements OnInit, OnChanges {
    * @param player data held by player's <circle> element in __data__
    */
   showTooltip(event, player: PlayerData) {
-    const playerTooltip = this.d3.select('body').append('div').attr('class', 'player-tooltip').style('opacity', 0);
+    const playerTooltip = this.d3
+      .select('body')
+      .append('div')
+      .attr('class', 'clustering-overview-player-tooltip')
+      .style('opacity', 0);
 
     playerTooltip.transition().duration(200).style('opacity', 0.9);
 
@@ -775,7 +779,7 @@ export class FinalComponent implements OnInit, OnChanges {
    * Removes player tooltip element from DOM
    */
   hideTooltip(): void {
-    this.d3.selectAll('.player-tooltip').remove();
+    this.d3.selectAll('.clustering-overview-player-tooltip').remove();
   }
 
   /**

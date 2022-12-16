@@ -15,7 +15,8 @@
         "@angular-eslint/component-selector": [
           "error",
           { "type": "element", "prefix": "kypo", "style": "kebab-case" }
-        ]
+        ],
+        "@typescript-eslint/no-namespace": "off"
       }
     },
     {
