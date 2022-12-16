@@ -717,7 +717,11 @@ export class LevelsComponent implements OnInit, OnChanges {
    * @param player data held by <circle> element in __data__ property
    */
   showTooltip(event, player: PlayerLevelData) {
-    const playerTooltip = this.d3.select('body').append('div').attr('class', 'player-tooltip').style('opacity', 0);
+    const playerTooltip = this.d3
+      .select('body')
+      .append('div')
+      .attr('class', 'clustering-overview-player-tooltip')
+      .style('opacity', 0);
 
     playerTooltip.transition().duration(200).style('opacity', 0.9);
     const coordinates = this.d3.pointer(event, <ContainerElement>this.d3.select('#score-level-bars').node());
@@ -795,7 +799,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    * Removes player tooltip element from DOM
    */
   hideTooltip(): void {
-    this.d3.selectAll('.player-tooltip').remove();
+    this.d3.selectAll('.clustering-overview-player-tooltip').remove();
   }
 
   /**
