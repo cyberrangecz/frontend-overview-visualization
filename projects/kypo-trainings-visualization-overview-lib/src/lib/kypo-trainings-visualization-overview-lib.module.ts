@@ -10,11 +10,11 @@ import { FormsModule } from '@angular/forms';
 import { FiltersComponent } from './components/agenda/filters/filters.component';
 import { VisualizationOverviewConfig } from './config/kypo-trainings-visualization-overview-lib';
 import { ConfigService } from './config/config.service';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
 import { MatSortModule } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatLegacyTableModule as MatTableModule } from '@angular/material/legacy-table';
+import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
 import { CdkColumnDef, CdkHeaderCellDef } from '@angular/cdk/table';
 import { D3Service } from '@muni-kypo-crp/d3-service';
 import { ClusteringService } from './components/agenda/clustering/shared/service/clustering.service';
@@ -23,7 +23,7 @@ import { TableDataService } from './components/agenda/table/service/table-data.s
 import { TableApiService } from './components/api/table/table-api.service';
 import { TimelineService } from './components/agenda/timeline/service/timeline.service';
 import { TimelineApiService } from './components/api/timeline/timeline-api.service';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
 
 @NgModule({
   imports: [
