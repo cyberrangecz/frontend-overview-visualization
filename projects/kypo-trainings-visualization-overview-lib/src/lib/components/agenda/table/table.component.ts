@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import { FiltersService } from '../../../services/filters.service';
 import { ConfigService } from '../../../config/config.service';
 import { KypoTraineeModeInfo } from '../../../shared/interfaces/kypo-trainee-mode-info';
-import { take } from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
 import { TableData } from '../../model/table/table-data';
 import { PlayerTableData } from '../../model/table/player-table-data';
 import { LevelTableData } from '../../model/table/level-table-data';

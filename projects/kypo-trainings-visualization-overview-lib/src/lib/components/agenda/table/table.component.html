@@ -84,9 +84,9 @@
           </th>
         </tr>
       </thead>
-      <tbody>
+      <tbody role="rowgroup" class="mdc-data-table__content">
         <ng-container *ngFor="let player of playersOrdered">
-          <tr class="mat-row" *ngIf="player"
+          <tr class="mat-mdc-row" *ngIf="player"
             [ngStyle]="{'cursor': standalone ? 'default' : 'pointer' }"
             (click)="!standalone ? onRowClick(player) : null"
             (mouseover)="!standalone ?  onRowMouseover(player): null"
@@ -105,7 +105,7 @@
               </ng-container>
             </td>
             <ng-container *ngFor="let level of player.levels">
-              <td class="mat-cell">
+              <td class="mat-mdc-cell">
                 <ng-container *ngIf="level">
                     {{ level.participantLevelScore }}
                     <span *ngIf="standalone || filters.wrongAnswerFilter.checked">
