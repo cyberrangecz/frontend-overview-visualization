@@ -31,7 +31,7 @@ import { TimelineApiService } from './components/api/timeline/timeline-api.servi
     MatButtonModule,
     MatCheckboxModule,
     MatSortModule,
-    MatSortModule
+    MatSortModule,
   ],
   declarations: [
     TimelineComponent,
