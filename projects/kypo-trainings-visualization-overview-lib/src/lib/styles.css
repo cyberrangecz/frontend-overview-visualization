@@ -27,6 +27,10 @@
   stroke: #888888;
 }
 
+.overview-visualization-container .mdc-checkbox path{
+  stroke: #ffffff;
+}
+
 .overview-visualization-container .y-axis-nolabel {
   stroke: #888888;
   stroke-width: 1.95px;
