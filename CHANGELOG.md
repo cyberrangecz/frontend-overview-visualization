@@ -1,3 +1,271 @@
+### 16.0.1 Update sentinel auth version.
+* c5a63ce -- [CI/CD] Update packages.json version based on GitLab tag.
+*   d18d65c -- Merge branch 'update-sentinel-versions' into 'master'
+|\  
+| * e5dbd94 -- update version
+| * 79bb457 -- Update sentinel auth version
+|/  
+* 2356abb -- [CI/CD] CHANGELOG.md file updated with commits between the current and previous tag.
+* 8467ffd -- [CI/CD] Update packages.json version based on GitLab tag.
+*   f936ae7 -- Merge branch '79-update-to-angular-16' into 'master'
+|\  
+| * 1fb38bc -- Update environment variables to accept keycloak
+| * ef1aa2c -- Refactor new material components
+| * 4154dfe -- Update to Angular 16
+|/  
+* fef40af -- [CI/CD] CHANGELOG.md file updated with commits between the current and previous tag.
+* d21250c -- [CI/CD] Update packages.json version based on GitLab tag.
+*   13f7928 -- Merge branch '78-update-to-angular-15' into 'master'
+|\  
+| * 6716c9f -- Update project version
+* | 50a7148 -- Merge branch '78-update-to-angular-15' into 'master'
+|\| 
+| * 81cd50e -- Update to Angular 15
+|/  
+*   700118c -- Merge branch '30-fix-global-styling-of-the-components' into 'master'
+|\  
+| * 1bba8b3 -- Remove the deprecated mock dependency
+| * 3c88654 -- Refactor and simplify CSS usage
+* | a95ca67 -- Update README.md
+|/  
+* e5c79cf -- [CI/CD] CHANGELOG.md file updated with commits between the current and previous tag.
+* cc7b902 -- [CI/CD] Update packages.json version based on GitLab tag.
+*   a80ae75 -- Merge branch 'add-support-for-max-achievable-score' into 'master'
+|\  
+| * d07cffb -- Added support for max achievable score for clustering and final visualization
+|/  
+* becc6c7 -- [CI/CD] CHANGELOG.md file updated with commits between the current and previous tag.
+* a016d22 -- [CI/CD] Update packages.json version based on GitLab tag.
+*   c27611e -- Merge branch 'add-support-for-statistical-dashboard' into 'master'
+|\  
+| * 8fc507d -- Add enpoint for aggregated instance data of clustering visualization and...
+|/  
+* b2c2e32 -- [CI/CD] CHANGELOG.md file updated with commits between the current and previous tag.
+* dbee20b -- [CI/CD] Update packages.json version based on GitLab tag.
+*   44167f1 -- Merge branch '77-remove-elastic-search-service-from-configs' into 'master'
+|\  
+| * 0cceba1 -- Resolve "Remove elastic search service from configs"
+|/  
+* 967be28 -- [CI/CD] CHANGELOG.md file updated with commits between the current and previous tag.
+* 7636ca2 -- [CI/CD] Update packages.json version based on GitLab tag.
+*   4ad1e9f -- Merge branch '76-rename-from-kypo2-to-kypo' into 'master'
+|\  
+| * 6c91fda -- Resolve "Rename from kypo2 to kypo"
+|/  
+* 325b147 -- [CI/CD] CHANGELOG.md file updated with commits between the current and previous tag.
+* 4b9565e -- [CI/CD] Update packages.json version based on GitLab tag.
+*   0f09f6e -- Merge branch '75-update-to-angular-14' into 'master'
+|\  
+| * e8bd3d1 -- Resolve "Update to Angular 14"
+|/  
+* 899e34c -- [CI/CD] CHANGELOG.md file updated with commits between the current and previous tag.
+* 5072d41 -- [CI/CD] Update packages.json version based on GitLab tag.
+*   9368e7f -- Merge branch '74-fix-timeline-fixed-crosshair-coords' into 'master'
+|\  
+| * cb22795 -- Resolve "Fix timeline fixed crosshair coords"
+|/  
+* 0c36f28 -- [CI/CD] CHANGELOG.md file updated with commits between the current and previous tag.
+* ace6b62 -- [CI/CD] Update packages.json version based on GitLab tag.
+*   5d1ebf7 -- Merge branch '73-fix-timelines-for-training-that-span-over-multiple-days' into 'master'
+|\  
+| * 3e68347 -- Resolve "Fix timelines for training that span over multiple days"
+|/  
+* dbf4a5f -- [CI/CD] CHANGELOG.md file updated with commits between the current and previous tag.
+* c5a46ec -- [CI/CD] Update packages.json version based on GitLab tag.
+*   cad97d1 -- Merge branch '72-update-to-angular-13' into 'master'
+|\  
+| * 01653fa -- Resolve "Update to Angular 13"
+|/  
+*   7e5a8ea -- Merge branch '71-add-new-type-of-level-access-level' into 'master'
+|\  
+| * 4632311 -- Resolve "Add new type of level - access level"
+|/  
+* 67fdab1 -- [CI/CD] CHANGELOG.md file updated with commits between the current and previous tag.
+* fb2d127 -- [CI/CD] Update packages.json version based on GitLab tag.
+*   e6a76ae -- Merge branch '70-keep-previous-zoom-settings-after-highlight-change-from-outside' into 'master'
+|\  
+| * d90fc6c -- Resolve "Keep previous zoom settings after highlight change from outside"
+|/  
+* 29de5d4 -- [CI/CD] CHANGELOG.md file updated with commits between the current and previous tag.
+* 52a733b -- [CI/CD] Update packages.json version based on GitLab tag.
+*   eca97ae -- Merge branch '69-fix-title-of-levels-in-clustering' into 'master'
+|\  
+| * 09c7bc5 -- Fix level title
+|/  
+* 35e820e -- [CI/CD] CHANGELOG.md file updated with commits between the current and previous tag.
+* 94e68f6 -- [CI/CD] Update packages.json version based on GitLab tag.
+*   1a8ee57 -- Merge branch '68-fix-d3-update-problems' into 'master'
+|\  
+| * 5b2326a -- Resolve "Fix d3 update problems"
+|/  
+* 24a0832 -- [CI/CD] CHANGELOG.md file updated with commits between the current and previous tag.
+* a94fa35 -- [CI/CD] Update packages.json version based on GitLab tag.
+*   43fec16 -- Merge branch '67-bump-version-of-d3' into 'master'
+|\  
+| * 71ff3c3 -- Resolve "Bump version of d3"
+|/  
+*   0e41628 -- Merge branch '65-add-posibility-to-emit-and-consume-events-for-player-highlight' into 'master'
+|\  
+| * fd59781 -- Resolve "Add posibility to emit and consume events for player highlight"
+|/  
+*   b304d69 -- Merge branch '66-add-license-file' into 'master'
+|\  
+| * e034962 -- Add license file
+|/  
+* e3943ec -- [CI/CD] CHANGELOG.md file updated with commits between the current and previous tag.
+* 2b61d15 -- [CI/CD] Update packages.json version based on GitLab tag.
+*   611a067 -- Merge branch '64-create-tag-with-latest-changes' into 'master'
+|\  
+| * 53fde3b -- Tag message
+|/  
+*   ab55018 -- Merge branch '63-fix-estimated-time-bar' into 'master'
+|\  
+| * 9644433 -- Fix estimated time bars
+|/  
+* a3cb303 -- [CI/CD] CHANGELOG.md file updated with commits between the current and previous tag.
+* d391685 -- [CI/CD] Update packages.json version based on GitLab tag.
+*   aebcaf5 -- Merge branch '62-create-tag-with-latest-changes' into 'master'
+|\  
+| * 85502ca -- Tag notes
+|/  
+*   7f2bfcf -- Merge branch '60-add-new-features-visible-from-the-trainee-view' into 'master'
+|\  
+| * 9c87191 -- Resolve "Add new features visible from the trainee view"
+|/  
+* f29cad5 -- [CI/CD] CHANGELOG.md file updated with commits between the current and previous tag.
+* eea8901 -- [CI/CD] Update packages.json version based on GitLab tag.
+* 2954d38 -- Update VERSION.txt
+*   9f95530 -- Merge branch '61-rename-terms-that-have-been-changed-on-backend' into 'master'
+|\  
+| * 8cda2bf -- Renaming flag to answer and game level to training level.
+|/  
+*   4540fc8 -- Merge branch '59-add-build-example-app-to-ci' into 'master'
+|\  
+| * c052ec6 -- Add build example app
+|/  
+*   ed6cdd5 -- Merge branch '58-fix-local-config-paths' into 'master'
+|\  
+| * add23b5 -- Fix paths
+|/  
+* f0807fc -- [CI/CD] CHANGELOG.md file updated with commits between the current and previous tag.
+* 02d812b -- [CI/CD] Update packages.json version based on GitLab tag.
+*   01258f2 -- Merge branch '57-bump-version' into 'master'
+|\  
+| * e626493 -- Bumped version
+|/  
+* 1725e8f -- [CI/CD] CHANGELOG.md file updated with commits between the current and previous tag.
+* 97dc78d -- [CI/CD] Update packages.json version based on GitLab tag.
+*   e75e60e -- Merge branch '56-bump-version' into 'master'
+|\  
+| * 7ce1265 -- Bump version
+|/  
+*   7fa91f4 -- Merge branch '54-fix-filtering-and-add-spinner' into 'master'
+|\  
+| * 8e303b8 -- Resolve "Fix filtering and add spinner"
+|/  
+* ab705bb -- [CI/CD] CHANGELOG.md file updated with commits between the current and previous tag.
+* 97140c8 -- [CI/CD] Update packages.json version based on GitLab tag.
+*   ea2e257 -- Merge branch '55-simplify-gitlab-ci-cd-using-csirt-mu-docker-image' into 'master'
+|\  
+| * 7368115 -- Update gitlab CI
+|/  
+* 8f45faa -- Update project package.json version based on GitLab tag. Done by CI
+*   ad4408f -- Merge branch '52-create-json-server' into 'master'
+|\  
+| * 503be9f -- Resolve "Create JSON server"
+* | dd803eb -- Update project package.json version based on GitLab tag. Done by CI
+* |   4ae9a12 -- Merge branch '53-fix-traineemodeinfo' into 'master'
+|\ \  
+| |/  
+|/|   
+| * 064ca2c -- Fix traineeModeInfo
+|/  
+* eb6fa51 -- Update project package.json version based on GitLab tag. Done by CI
+*   4dbca39 -- Merge branch '51-update-to-angular-12' into 'master'
+|\  
+| * 5629901 -- Resolve "Update to Angular 12"
+|/  
+*   e2a1e32 -- Merge branch '49-refactor-visualizations' into 'master'
+|\  
+| * 4eeaede -- Resolve "Refactor visualizations"
+|/  
+*   91d1957 -- Merge branch '50-update-oidc-configuration' into 'master'
+|\  
+| * 58b69b0 -- Resolve "Update oidc configuration"
+|/  
+* 9e00f99 -- Update project package.json version based on GitLab tag. Done by CI
+*   845730a -- Merge branch '48-update-to-angular-11' into 'master'
+|\  
+| * 47aebba -- Resolve "Update to Angular 11"
+|/  
+*   79d7729 -- Merge branch '47-recreate-package-lock-for-new-package-registry' into 'master'
+|\  
+| * 9dfbcf8 -- Resolve "Recreate package lock for new package registry"
+|/  
+*   78dc582 -- Merge branch '46-migrate-from-tslint-to-eslint' into 'master'
+|\  
+| * 9f43993 -- Resolve "Migrate from tslint to eslint"
+|/  
+* 7f4d269 -- Update project package.json version based on GitLab tag. Done by CI
+*   53857c6 -- Merge branch '45-rename-package-scope-to-muni-kypo-crp' into 'master'
+|\  
+| * b5619c6 -- Rename package scope and update dependencies
+|/  
+* a8c7140 -- Update project package.json version based on GitLab tag. Done by CI
+*   fb27030 -- Merge branch '44-update-dependencies-to-new-format' into 'master'
+|\  
+| * efaf691 -- Update dependencies
+|/  
+* 03841c0 -- Update project package.json version based on GitLab tag. Done by CI
+*   046cb33 -- Merge branch '43-rename-package-to-kypo-overview-visualization' into 'master'
+|\  
+| * 4f270b7 -- Rename the package
+|/  
+* d5f36d3 -- Update project package.json version based on GitLab tag. Done by CI
+*   2b82ea6 -- Merge branch '42-remove-tooltips' into 'master'
+|\  
+| * 7ed5145 -- Resolve "Remove tooltips"
+|/  
+* 3e50c79 -- Delete VERSION.txt
+*   6033868 -- Merge branch '41-overview-visualization-page-does-not-display' into 'master'
+|\  
+| * e9ee3c0 -- Resolve "Overview visualization page does not display"
+|/  
+*   dafd208 -- Merge branch '40-clear-personal-data-of-developers-from-the-source-code' into 'master'
+|\  
+| * a867dc6 -- Remove personal data
+| * f36fef9 -- Remove personal data
+|/  
+* 93e6e23 -- Update project package.json version based on GitLab tag. Done by CI
+*   fb29035 -- Merge branch '39-replace-dependency-on-kypo2-auth-with-sentinel-auth' into 'master'
+|\  
+| * 14f2f7d -- Resolve "Replace dependency on kypo2-auth with sentinel-auth"
+|/  
+* 6c1c037 -- Update project package.json version based on GitLab tag. Done by CI
+*   a1904ad -- Merge branch '37-update-endpoint-for-training-events' into 'master'
+|\  
+| * 28a4c88 -- Updated training-events to training-platform-events to match new backend endpoint
+|/  
+*   4af6287 -- Merge branch '36-use-cypress-image-in-ci' into 'master'
+|\  
+| * bb2c14e -- Resolve "Use Cypress image in CI"
+|/  
+* 5dc6a08 -- Update project package.json version based on GitLab tag. Done by CI
+*   dce41e0 -- Merge branch '35-update-config-to-support-new-elasticsearch-backend-service' into 'master'
+|\  
+| * 14cd806 -- Resolve "Update config to support new elasticsearch backend service"
+|/  
+* 460af69 -- Update project package.json version based on GitLab tag. Done by CI
+*   c5d967a -- Merge branch '34-update-to-angular-10' into 'master'
+|\  
+| * 0f122ac -- Resolve "Update to Angular 10"
+|/  
+*   c7db29b -- Merge branch '33-make-the-ci-build-stage-build-with-prod-param' into 'master'
+|\  
+| * 4a75c4a -- Resolve "Make the CI build stage build with prod param"
+|/  
+* 2e159c5 -- Merge branch 'xhamern2-master-patch-44047' into 'master'
+* 70f2618 -- Remove package-lock from gitignore
 ### 16.0.0 Update to Angular 16 and update local issuer to keycloak.
 * 8467ffd -- [CI/CD] Update packages.json version based on GitLab tag.
 *   f936ae7 -- Merge branch '79-update-to-angular-16' into 'master'
