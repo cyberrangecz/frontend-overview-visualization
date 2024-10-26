@@ -75,7 +75,10 @@ export class LevelsComponent implements OnInit, OnChanges {
   private playerClicked = false; // If no player is selected, hover out of player will cancel the highlight
   private traineesTrainingRunId: number;
 
-  constructor(d3: D3Service, private dataService: ClusteringService) {
+  constructor(
+    d3: D3Service,
+    private dataService: ClusteringService,
+  ) {
     this.d3 = d3.getD3();
   }
 
@@ -224,7 +227,7 @@ export class LevelsComponent implements OnInit, OnChanges {
       .attr('width', (level: Level) =>
         this.xScale(level.estimatedTime) > this.barWidth
           ? this.xScale(level.maxParticipantTime)
-          : this.xScale(level.estimatedTime)
+          : this.xScale(level.estimatedTime),
       )
       .style('fill', (level: Level) => {
         if (level.order > 5) {
@@ -309,7 +312,7 @@ export class LevelsComponent implements OnInit, OnChanges {
             'transform',
             `translate(
            ${+Math.max(estimateBarWidth, maxBarWidth) + LEVEL_LABELS_CONFIG.padding.left},
-           ${+barY})`
+           ${+barY})`,
           )
           .append('text');
 
@@ -490,7 +493,7 @@ export class LevelsComponent implements OnInit, OnChanges {
       .attr('r', (d: PlayerLevelData) =>
         d.trainingRunId === this.traineesTrainingRunId
           ? PLAYER_POINT_CONFIG.feedbackLearner.pointRadius
-          : PLAYER_POINT_CONFIG.pointRadius
+          : PLAYER_POINT_CONFIG.pointRadius,
       )
       .style('fill', (d: PlayerLevelData) => d.avatarColor);
   }
@@ -606,7 +609,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    */
   updateCrosshair(
     groups: { lines: any; labels: any },
-    playersData: { x: number; y: number; time: string; score: number }
+    playersData: { x: number; y: number; time: string; score: number },
   ): void {
     this.updateScoreCrosshair(groups, playersData);
     this.updateTimeCrosshair(groups, playersData);
@@ -619,7 +622,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    */
   updateScoreCrosshair(
     groups: { lines: any; labels: any },
-    playersData: { x: number; y: number; time: string; score: number }
+    playersData: { x: number; y: number; time: string; score: number },
   ): void {
     const crosshairConfig = CROSSHAIR_CONFIG;
     groups.lines
@@ -643,7 +646,7 @@ export class LevelsComponent implements OnInit, OnChanges {
    */
   updateTimeCrosshair(
     groups: { lines: any; labels: any },
-    playersData: { x: number; y: number; time: string; score: number }
+    playersData: { x: number; y: number; time: string; score: number },
   ): void {
     const crosshairConfig = CROSSHAIR_CONFIG;
     groups.lines

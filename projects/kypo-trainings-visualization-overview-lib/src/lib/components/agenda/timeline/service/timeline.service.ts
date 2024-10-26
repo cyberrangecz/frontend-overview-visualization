@@ -19,7 +19,7 @@ export class TimelineService {
       map((data) => TimelineMapper.fromDTO(data)),
       catchError((error) => {
         return throwError('timeline service not connect to API: ' + error.message);
-      })
+      }),
     );
   }
 }

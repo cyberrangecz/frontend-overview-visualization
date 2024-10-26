@@ -56,7 +56,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     private tableService: TableService,
     private filtersService: FiltersService,
     private dataService: TableDataService,
-    private configService: ConfigService
+    private configService: ConfigService,
   ) {
     this.playerColorScaleSource = this.tableService.playerColorScale$.subscribe((scale) => {
       setTimeout(() => (this.playerColorScale = scale), 0);

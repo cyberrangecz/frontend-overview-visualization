@@ -1,7 +1,5 @@
 import { AssessmentLevel } from '../../../model/timeline/assessment-level';
-import { QuestionMapper } from './question-mapper';
 import { AssessmentLevelDTO } from '../../dto/timeline/assessment-level-dto';
-import { TimelineLevel } from '../../../model/timeline/timeline-level';
 
 export class AssessmentLevelMapper {
   static fromDTO(dto: AssessmentLevelDTO): AssessmentLevel {

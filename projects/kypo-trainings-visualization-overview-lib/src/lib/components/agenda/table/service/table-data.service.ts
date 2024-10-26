@@ -19,7 +19,7 @@ export class TableDataService {
       map((data) => TableMapper.fromDTO(data)),
       catchError((error) => {
         return throwError('tableService not connect to API: ' + error.message);
-      })
+      }),
     );
   }
 }

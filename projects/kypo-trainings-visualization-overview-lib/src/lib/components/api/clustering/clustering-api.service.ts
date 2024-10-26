@@ -9,7 +9,10 @@ export class ClusteringApiService {
   private readonly trainingVisualizationEndpoint = `${this.configService.config.trainingServiceUrl}visualizations/training-instances`;
   private readonly anonymizedTrainingVisualizationEndpoint = `${this.configService.config.trainingServiceUrl}visualizations/training-runs`;
 
-  constructor(private http: HttpClient, private configService: ConfigService) {}
+  constructor(
+    private http: HttpClient,
+    private configService: ConfigService,
+  ) {}
 
   /**
    * Sends http request to obtain data for clustering visualization and if @instanceIds is provided used aggregated
@@ -22,7 +25,7 @@ export class ClusteringApiService {
 
   getAnonymizedClusteringVisualizationData(): Observable<ClusteringVisualizationResourceDTO> {
     return this.http.get<ClusteringVisualizationResourceDTO>(
-      `${this.anonymizedTrainingVisualizationEndpoint}/${this.configService.trainingRunId}/clustering`
+      `${this.anonymizedTrainingVisualizationEndpoint}/${this.configService.trainingRunId}/clustering`,
     );
   }
 
@@ -33,7 +36,7 @@ export class ClusteringApiService {
       });
     }
     return this.http.get<ClusteringVisualizationResourceDTO>(
-      `${this.trainingVisualizationEndpoint}/${this.configService.trainingInstanceId}/clustering`
+      `${this.trainingVisualizationEndpoint}/${this.configService.trainingInstanceId}/clustering`,
     );
   }
 }

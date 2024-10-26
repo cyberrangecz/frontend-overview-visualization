@@ -68,13 +68,13 @@ export class KypoTrainingsVisualizationOverviewLibModule {
   constructor(@Optional() @SkipSelf() parentModule: KypoTrainingsVisualizationOverviewLibModule) {
     if (parentModule) {
       throw new Error(
-        'KypoTrainingsVisualizationOverviewLibModule is already loaded. Import it in the main module only'
+        'KypoTrainingsVisualizationOverviewLibModule is already loaded. Import it in the main module only',
       );
     }
   }
 
   static forRoot(
-    config: VisualizationOverviewConfig
+    config: VisualizationOverviewConfig,
   ): ModuleWithProviders<KypoTrainingsVisualizationOverviewLibModule> {
     return {
       ngModule: KypoTrainingsVisualizationOverviewLibModule,
