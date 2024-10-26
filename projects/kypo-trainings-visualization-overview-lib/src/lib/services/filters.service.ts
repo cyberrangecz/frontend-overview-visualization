@@ -26,10 +26,6 @@ export class FiltersService {
     return this.filtersArray;
   }
 
-  setFilters(filters: any[]): void {
-    this.filter();
-  }
-
   filter(): void {
     this.filterChanged.next(EMPTY);
   }

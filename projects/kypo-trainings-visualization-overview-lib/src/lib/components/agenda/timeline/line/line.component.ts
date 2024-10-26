@@ -140,7 +140,7 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
     private tableService: TableService,
     private filtersService: FiltersService,
     private timelineService: TimelineService,
-    private configService: ConfigService
+    private configService: ConfigService,
   ) {
     this.d3 = d3service.getD3();
     this.tableRowClicked = this.tableService.tableRowClicked$.subscribe((player: TimelinePlayer) => {
@@ -542,7 +542,7 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
       .attr('y', 0)
       .attr(
         'width',
-        this.timelineData.timeline.estimatedTime - Math.abs(this.size.width - this.timelineData.timeline.estimatedTime)
+        this.timelineData.timeline.estimatedTime - Math.abs(this.size.width - this.timelineData.timeline.estimatedTime),
       )
       .attr('height', this.size.height)
       .attr('fill', 'url(#diagonalHatch)');
@@ -1192,7 +1192,7 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
     levelUpsInnerFill = levelUpsInnerFill
       .enter()
       .filter(
-        (event) => event.text.toUpperCase().split(' ')[0] === 'CORRECT' && event.level !== this.getLevels().length
+        (event) => event.text.toUpperCase().split(' ')[0] === 'CORRECT' && event.level !== this.getLevels().length,
       )
       .append('circle')
       .attr('class', 'level-up')
@@ -1297,7 +1297,7 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
   /**
    * Calculate new ticks when zooming.
    */
-  redrawAxes(k): void {
+  redrawAxes(_k): void {
     // this.xAxis.tickArguments([this.d3.timeMinute.every(this.tickLength / Math.round(k))]);
     this.svg.select('.score-progress.x-axis').call(this.xAxis);
   }
@@ -1332,7 +1332,7 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
 
     // Filter duplicate levels
     levels = levels.filter(
-      (level, index, self) => index === self.findIndex((t) => t.id === level.id && t.name === level.name)
+      (level, index, self) => index === self.findIndex((t) => t.id === level.id && t.name === level.name),
     );
     return levels;
   }

@@ -40,7 +40,7 @@ export class LevelMapper {
         return LevelTypeEnum.InfoLevel;
       default: {
         console.error(
-          `Attribute "level_type" of ClusteringVisualizationResourceDTO with value: ${levelTypeDTO} does not match any of the Level types`
+          `Attribute "level_type" of ClusteringVisualizationResourceDTO with value: ${levelTypeDTO} does not match any of the Level types`,
         );
         return undefined;
       }

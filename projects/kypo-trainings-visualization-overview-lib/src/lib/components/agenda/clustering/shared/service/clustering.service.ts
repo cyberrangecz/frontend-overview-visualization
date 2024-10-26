@@ -24,7 +24,7 @@ export class ClusteringService {
       map((data) => ClusteringMapper.fromDTO(data)),
       catchError((error) => {
         return throwError('clusteringService not connect to API: ' + error.message);
-      })
+      }),
     );
   }
 }

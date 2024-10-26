@@ -10,7 +10,7 @@ export class EventMapper {
   static fromDTOs(
     dtos: TimelineEventDTO[],
     levelOrder: number,
-    levelType: BasicLevelInfoDTO.TimelineLevelTypeEnum
+    levelType: BasicLevelInfoDTO.TimelineLevelTypeEnum,
   ): TimelineEvent[] {
     dtos = dtos.filter((event) => !event.text.includes('Correct answer'));
     return EventMapper.scoreChange(dtos.map((dto) => EventMapper.fromDTO(dto, levelOrder, levelType)));
@@ -19,7 +19,7 @@ export class EventMapper {
   static fromDTO(
     dto: TimelineEventDTO,
     levelOrder: number,
-    levelType: BasicLevelInfoDTO.TimelineLevelTypeEnum
+    levelType: BasicLevelInfoDTO.TimelineLevelTypeEnum,
   ): TimelineEvent {
     const event = new TimelineEvent();
     event.score = dto.score;

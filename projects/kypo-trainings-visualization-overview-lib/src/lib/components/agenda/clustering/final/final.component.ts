@@ -74,7 +74,10 @@ export class FinalComponent implements OnInit, OnChanges {
   private playerClicked = false; // If no player is selected, hover out of player will cancel the highlight
   private traineesTrainingRunId: number;
 
-  constructor(d3: D3Service, private dataService: ClusteringService) {
+  constructor(
+    d3: D3Service,
+    private dataService: ClusteringService,
+  ) {
     this.d3 = d3.getD3();
   }
 
@@ -227,7 +230,7 @@ export class FinalComponent implements OnInit, OnChanges {
         'width',
         this.xScale(data.estimatedTime) > this.barWidth
           ? this.xScale(data.maxParticipantTime)
-          : this.xScale(data.estimatedTime)
+          : this.xScale(data.estimatedTime),
       )
       .attr('fill', 'url(#diagonalHatchDarker)');
   }
@@ -510,7 +513,7 @@ export class FinalComponent implements OnInit, OnChanges {
     let players = this.dataClusteringFinal.finalResults.playerData;
     if (this.standalone) {
       players = this.dataClusteringFinal.finalResults.playerData.filter(
-        (player) => this.filterPlayers.indexOf(player.trainingRunId) !== -1
+        (player) => this.filterPlayers.indexOf(player.trainingRunId) !== -1,
       );
     }
 
@@ -526,7 +529,7 @@ export class FinalComponent implements OnInit, OnChanges {
       .attr('r', (playerData: PlayerData) =>
         playerData.trainingRunId === this.traineesTrainingRunId
           ? PLAYER_POINT_CONFIG.feedbackLearner.pointRadius
-          : PLAYER_POINT_CONFIG.pointRadius
+          : PLAYER_POINT_CONFIG.pointRadius,
       )
       .style('fill', (playerData: PlayerData) => playerData.avatarColor);
   }
@@ -694,7 +697,7 @@ export class FinalComponent implements OnInit, OnChanges {
    */
   updateCrosshair(
     groups: { lines: any; labels: any },
-    playersData: { x: number; y: number; time: string; score: number }
+    playersData: { x: number; y: number; time: string; score: number },
   ): void {
     this.updateScoreCrosshair(groups, playersData);
     this.updateTimeCrosshair(groups, playersData);
@@ -707,7 +710,7 @@ export class FinalComponent implements OnInit, OnChanges {
    */
   updateScoreCrosshair(
     groups: { lines: any; labels: any },
-    playersData: { x: number; y: number; time: string; score: number }
+    playersData: { x: number; y: number; time: string; score: number },
   ): void {
     const crosshairConfig = CROSSHAIR_CONFIG;
     groups.lines
@@ -731,7 +734,7 @@ export class FinalComponent implements OnInit, OnChanges {
    */
   updateTimeCrosshair(
     groups: { lines: any; labels: any },
-    playersData: { x: number; y: number; time: string; score: number }
+    playersData: { x: number; y: number; time: string; score: number },
   ): void {
     const crosshairConfig = CROSSHAIR_CONFIG;
     groups.lines
