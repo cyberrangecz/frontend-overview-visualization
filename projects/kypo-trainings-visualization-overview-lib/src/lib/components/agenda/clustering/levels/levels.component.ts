@@ -8,7 +8,7 @@ import {
   SVG_CONFIG,
   SVG_MARGIN_CONFIG,
 } from './config';
-import { ContainerElement, D3, D3Service, ScaleBand, ScaleLinear } from '@muni-kypo-crp/d3-service';
+import { ContainerElement, D3, D3Service, ScaleBand, ScaleLinear } from '@cyberrangecz-platform/d3-service';
 import { SvgConfig } from '../../../../shared/interfaces/configurations/svg-config';
 import { KypoTraineeModeInfo } from '../../../../shared/interfaces/kypo-trainee-mode-info';
 import { take } from 'rxjs/operators';

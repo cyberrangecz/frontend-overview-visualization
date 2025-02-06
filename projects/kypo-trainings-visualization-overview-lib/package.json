@@ -1,11 +1,11 @@
 {
-    "name": "@muni-kypo-crp/overview-visualization",
-    "version": "16.0.1",
+    "name": "@cyberrangecz-platform/overview-visualization",
+    "version": "0.0.1",
     "peerDependencies": {
-        "@angular/common": "^18.2.7",
-        "@angular/core": "^18.2.7",
-        "@angular/material": "^18.2.7",
-        "@muni-kypo-crp/d3-service": "^18.0.0",
+        "@angular/common": "^18.2.13",
+        "@angular/core": "^18.2.13",
+        "@angular/material": "^18.2.13",
+        "@cyberrangecz-platform/d3-service": "^18.0.0",
         "d3": "^7.9.0",
         "@types/d3": "^7.4.3"
     },

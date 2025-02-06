@@ -1,4 +1,3 @@
-import { ColorScheme } from '../../../../shared/interfaces/color-scheme';
 import { SvgConfig } from '../../../../shared/interfaces/configurations/svg-config';
 import { SvgMarginConfig } from '../../../../shared/interfaces/configurations/svg-margin-config';
 import { AxesConfig } from '../../../../shared/interfaces/configurations/axes-config';

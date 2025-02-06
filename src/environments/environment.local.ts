@@ -8,38 +8,38 @@ const BASE_URL = AUTH_URL;
 const HOME_URL = 'https://localhost:4200';
 
 export const environment = {
-  production: false,
-  trainingServiceUrl: BASE_URL + '/kypo-rest-training/api/v1/',
-  authConfig: {
-    guardMainPageRedirect: 'visualization',
-    guardLoginPageRedirect: 'login',
-    interceptorAllowedUrls: [
-      'https://localhost',
-      AUTH_URL
-    ],
-    authorizationStrategyConfig: {
-      authorizationUrl: AUTH_URL + '/kypo-rest-user-and-group/api/v1/users/info',
-    },
-    // OIDC SETTINGS
-    providers: [
-      {
-        label: 'Login with local issuer',
-        textColor: 'white',
-        backgroundColor: '#002776',
-        oidcConfig: {
-          requireHttps: true,
-          issuer: AUTH_URL + '/keycloak/realms/KYPO',
-          clientId: 'KYPO-client',
-          redirectUri: HOME_URL,
-          scope: 'openid email profile',
-          logoutUrl: AUTH_URL + '/keycloak/realms/KYPO/protocol/openid-connect/logout',
-          silentRefreshRedirectUri: AUTH_URL + '/silent-refresh.html',
-          postLogoutRedirectUri: HOME_URL + '/logout-confirmed',
-          clearHashAfterLogin: true
+    production: false,
+    trainingServiceUrl: BASE_URL + '/kypo-rest-training/api/v1/',
+    authConfig: {
+        guardMainPageRedirect: 'visualization',
+        guardLoginPageRedirect: 'login',
+        interceptorAllowedUrls: [
+            'https://localhost',
+            AUTH_URL
+        ],
+        authorizationStrategyConfig: {
+            authorizationUrl: AUTH_URL + '/kypo-rest-user-and-group/api/v1/users/info',
         },
-      },
-    ],
-  },
+        // OIDC SETTINGS
+        providers: [
+            {
+                label: 'Login with local issuer',
+                textColor: 'white',
+                backgroundColor: '#002776',
+                oidcConfig: {
+                    requireHttps: true,
+                    issuer: AUTH_URL + '/keycloak/realms/KYPO',
+                    clientId: 'KYPO-client',
+                    redirectUri: HOME_URL,
+                    scope: 'openid email profile',
+                    logoutUrl: AUTH_URL + '/keycloak/realms/KYPO/protocol/openid-connect/logout',
+                    silentRefreshRedirectUri: AUTH_URL + '/silent-refresh.html',
+                    postLogoutRedirectUri: HOME_URL + '/logout-confirmed',
+                    clearHashAfterLogin: true
+                },
+            },
+        ],
+    },
 };
 
 /*

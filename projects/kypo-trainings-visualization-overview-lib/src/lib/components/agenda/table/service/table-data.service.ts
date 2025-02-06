@@ -3,7 +3,7 @@ import { TableApiService } from '../../../api/table/table-api.service';
 import { KypoTraineeModeInfo } from '../../../../shared/interfaces/kypo-trainee-mode-info';
 import { Observable, throwError } from 'rxjs';
 import { TableData } from '../../../model/table/table-data';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { TableMapper } from '../../../api/mappers/table/table-mapper';
 
 @Injectable()

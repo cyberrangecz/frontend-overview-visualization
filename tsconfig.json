@@ -1,32 +1,32 @@
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "baseUrl": "./",
-    "downlevelIteration": true,
-    "importHelpers": true,
-    "module": "esnext",
-    "outDir": "./dist/out-tsc",
-    "sourceMap": true,
-    "declaration": false,
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "target": "ES2022",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2022",
-      "dom"
-    ],
-    "paths": {
-      "kypo-trainings-visualization-overview-lib": [
-        "dist/kypo-trainings-visualization-overview-lib"
-      ],
-      "kypo-trainings-visualization-overview-lib/*": [
-        "dist/kypo-trainings-visualization-overview-lib/*"
-      ]
-    },
-    "useDefineForClassFields": false
-  }
+    "compileOnSave": false,
+    "compilerOptions": {
+        "baseUrl": "./",
+        "downlevelIteration": true,
+        "importHelpers": true,
+        "module": "esnext",
+        "outDir": "./dist/out-tsc",
+        "sourceMap": true,
+        "declaration": false,
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "target": "ES2022",
+        "typeRoots": [
+            "node_modules/@types"
+        ],
+        "lib": [
+            "es2022",
+            "dom"
+        ],
+        "paths": {
+            "kypo-trainings-visualization-overview-lib": [
+                "dist/kypo-trainings-visualization-overview-lib"
+            ],
+            "kypo-trainings-visualization-overview-lib/*": [
+                "dist/kypo-trainings-visualization-overview-lib/*"
+            ]
+        },
+        "useDefineForClassFields": false
+    }
 }

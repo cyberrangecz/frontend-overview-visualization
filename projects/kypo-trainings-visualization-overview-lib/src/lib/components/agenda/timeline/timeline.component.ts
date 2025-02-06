@@ -1,4 +1,4 @@
-import { Component, OnChanges, Input, ViewChild, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { LineComponent } from './line/line.component';
 import { ConfigService } from '../../../config/config.service';
 import { KypoTraineeModeInfo } from '../../../shared/interfaces/kypo-trainee-mode-info';

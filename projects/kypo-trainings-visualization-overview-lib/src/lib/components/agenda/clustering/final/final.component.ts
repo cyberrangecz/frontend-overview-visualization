@@ -1,12 +1,12 @@
-import { Component, OnInit, Input, EventEmitter, Output, OnChanges, SimpleChanges } from '@angular/core';
-import { D3, ScaleLinear, D3Service, ContainerElement } from '@muni-kypo-crp/d3-service';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ContainerElement, D3, D3Service, ScaleLinear } from '@cyberrangecz-platform/d3-service';
 import {
+  AXES_CONFIG,
   BAR_CONFIG,
+  CROSSHAIR_CONFIG,
+  PLAYER_POINT_CONFIG,
   SVG_CONFIG,
   SVG_MARGIN_CONFIG,
-  PLAYER_POINT_CONFIG,
-  AXES_CONFIG,
-  CROSSHAIR_CONFIG,
 } from './config';
 import { SvgConfig } from '../../../../shared/interfaces/configurations/svg-config';
 import { KypoTraineeModeInfo } from '../../../../shared/interfaces/kypo-trainee-mode-info';
@@ -15,7 +15,6 @@ import { ClusteringTrainingData } from '../../../model/clustering/clustering-tra
 import { FinalResults } from '../../../model/clustering/final-results';
 import { ClusteringService } from '../shared/service/clustering.service';
 import { PlayerData } from '../../../model/clustering/player-data';
-import { Level } from '../../../model/clustering/level';
 
 @Component({
   selector: 'kypo-viz-overview-final',

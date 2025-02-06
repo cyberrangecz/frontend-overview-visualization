@@ -11,16 +11,15 @@ import {
 } from '@angular/core';
 import { ConfigService } from '../../../../config/config.service';
 import {
-  D3,
-  D3Service,
   Axis,
   BrushBehavior,
+  D3,
+  D3Service,
   Line,
   ScaleLinear,
   ScaleOrdinal,
-  ScaleTime,
   ZoomBehavior,
-} from '@muni-kypo-crp/d3-service';
+} from '@cyberrangecz-platform/d3-service';
 import { AXES_CONFIG, colorScheme, CONTEXT_CONFIG, SVG_MARGIN_CONFIG } from './config';
 import { SvgConfig } from '../../../../shared/interfaces/configurations/svg-config';
 import { SvgMarginConfig } from '../../../../shared/interfaces/configurations/svg-margin-config';
@@ -34,11 +33,11 @@ import { TimelineService } from '../service/timeline.service';
 import { TimelinePlayer } from '../../../model/timeline/timeline-player';
 import { BasicLevelInfo, TimelineLevel } from '../../../model/timeline/timeline-level';
 import { TrainingLevel } from '../../../model/timeline/training-level';
-import TimelineLevelTypeEnum = BasicLevelInfo.TimelineLevelTypeEnum;
 import { TimelineEvent } from '../../../model/timeline/timeline-event';
 import { InfoLevel } from '../../../model/timeline/info-level';
 import { AssessmentLevel } from '../../../model/timeline/assessment-level';
 import { AccessLevel } from '../../../model/timeline/access-level';
+import TimelineLevelTypeEnum = BasicLevelInfo.TimelineLevelTypeEnum;
 
 @Component({
   selector: 'kypo-viz-overview-line',
@@ -256,6 +255,7 @@ export class LineComponent implements OnDestroy, OnChanges, OnInit {
       }
     }
   }
+
   /**
    * Sets checked attribute of feedback learner in players array to true
    */

@@ -15,7 +15,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { CdkColumnDef, CdkHeaderCellDef } from '@angular/cdk/table';
-import { D3Service } from '@muni-kypo-crp/d3-service';
+import { D3Service } from '@cyberrangecz-platform/d3-service';
 import { ClusteringService } from './components/agenda/clustering/shared/service/clustering.service';
 import { ClusteringApiService } from './components/api/clustering/clustering-api.service';
 import { TableDataService } from './components/agenda/table/service/table-data.service';

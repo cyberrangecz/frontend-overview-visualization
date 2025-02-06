@@ -1,89 +1,89 @@
 {
-  "root": true,
-  "overrides": [
-    {
-      "files": [
-        "*.ts"
-      ],
-      "parserOptions": {
-        "project": [
-          "tsconfig.*?.json"
-        ],
-        "createDefaultProgram": true
-      },
-      "plugins": [
-        "@typescript-eslint"
-      ],
-      "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:@angular-eslint/recommended"
-      ],
-      "rules": {
-        "max-len": [
-          "error",
-          {
-            "code": 140,
-            "ignorePattern": "import .*"
-          }
-        ],
-        "@angular-eslint/directive-selector": [
-          "error",
-          {
-            "type": "attribute",
-            "prefix": "app",
-            "style": "camelCase"
-          }
-        ],
-        "@angular-eslint/component-selector": [
-          "error",
-          {
-            "type": "element",
-            "prefix": "app",
-            "style": "kebab-case"
-          }
-        ],
-        "quotes": [
-          "error",
-          "single",
-          {
-            "allowTemplateLiterals": true
-          }
-        ],
-        // TODO Remove these once this issue is fixed
-        "@typescript-eslint/no-explicit-any": "warn",
-        "@typescript-eslint/no-unused-vars": [
-          "warn",
-          {
-            "argsIgnorePattern": "^_",
-            "varsIgnorePattern": "^_"
-          }
-        ]
-      }
-    },
-    {
-      "files": [
-        "*.component.html"
-      ],
-      "extends": [
-        "plugin:@angular-eslint/template/recommended"
-      ],
-      "rules": {
-        "max-len": [
-          "error",
-          {
-            "code": 140
-          }
-        ]
-      }
-    },
-    {
-      "files": [
-        "*.component.ts"
-      ],
-      "extends": [
-        "plugin:@angular-eslint/template/process-inline-templates"
-      ]
-    }
-  ]
+    "root": true,
+    "overrides": [
+        {
+            "files": [
+                "*.ts"
+            ],
+            "parserOptions": {
+                "project": [
+                    "tsconfig.*?.json"
+                ],
+                "createDefaultProgram": true
+            },
+            "plugins": [
+                "@typescript-eslint"
+            ],
+            "extends": [
+                "eslint:recommended",
+                "plugin:@typescript-eslint/recommended",
+                "plugin:@angular-eslint/recommended"
+            ],
+            "rules": {
+                "max-len": [
+                    "error",
+                    {
+                        "code": 140,
+                        "ignorePattern": "import .*"
+                    }
+                ],
+                "@angular-eslint/directive-selector": [
+                    "error",
+                    {
+                        "type": "attribute",
+                        "prefix": "app",
+                        "style": "camelCase"
+                    }
+                ],
+                "@angular-eslint/component-selector": [
+                    "error",
+                    {
+                        "type": "element",
+                        "prefix": "app",
+                        "style": "kebab-case"
+                    }
+                ],
+                "quotes": [
+                    "error",
+                    "single",
+                    {
+                        "allowTemplateLiterals": true
+                    }
+                ],
+                // TODO Remove these once this issue is fixed
+                "@typescript-eslint/no-explicit-any": "warn",
+                "@typescript-eslint/no-unused-vars": [
+                    "warn",
+                    {
+                        "argsIgnorePattern": "^_",
+                        "varsIgnorePattern": "^_"
+                    }
+                ]
+            }
+        },
+        {
+            "files": [
+                "*.component.html"
+            ],
+            "extends": [
+                "plugin:@angular-eslint/template/recommended"
+            ],
+            "rules": {
+                "max-len": [
+                    "error",
+                    {
+                        "code": 140
+                    }
+                ]
+            }
+        },
+        {
+            "files": [
+                "*.component.ts"
+            ],
+            "extends": [
+                "plugin:@angular-eslint/template/process-inline-templates"
+            ]
+        }
+    ]
 }

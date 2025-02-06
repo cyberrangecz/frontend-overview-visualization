@@ -1,6 +1,5 @@
 import { BasicLevelInfoDTO, TimelineLevelDataDTO } from '../../dto/timeline/timeline-level-data-dto';
 import { BasicLevelInfo, TimelineLevel } from '../../../model/timeline/timeline-level';
-import TimelineLevelTypeEnum = BasicLevelInfo.TimelineLevelTypeEnum;
 import { TrainingLevelMapper } from './training-level-mapper';
 import { TrainingLevelDto } from '../../dto/timeline/training-level-dto';
 import { AssessmentLevelMapper } from './assessment-level-mapper';
@@ -8,6 +7,7 @@ import { AssessmentLevelDTO } from '../../dto/timeline/assessment-level-dto';
 import { InfoLevel } from '../../../model/timeline/info-level';
 import { EventMapper } from './event-mapper';
 import { AccessLevel } from '../../../model/timeline/access-level';
+import TimelineLevelTypeEnum = BasicLevelInfo.TimelineLevelTypeEnum;
 
 /**
  * @dynamic

@@ -1,7 +1,7 @@
 {
-  "/kypo-rest-training/api/v1/visualizations/training-runs/:id/clustering": "/clustering",
-  "/kypo-rest-training/api/v1/visualizations/training-instances/clustering?instanceIds=:ids": "/clustering",
-  "/kypo-rest-training/api/v1/visualizations/training-runs/:id/table": "/table",
-  "/kypo-rest-training/api/v1/visualizations/training-runs/:id/timeline": "/timeline",
-  "/kypo-rest-training/api/v1/visualizations/training-instances/:id/timeline": "/timeline"
+    "/kypo-rest-training/api/v1/visualizations/training-runs/:id/clustering": "/clustering",
+    "/kypo-rest-training/api/v1/visualizations/training-instances/clustering?instanceIds=:ids": "/clustering",
+    "/kypo-rest-training/api/v1/visualizations/training-runs/:id/table": "/table",
+    "/kypo-rest-training/api/v1/visualizations/training-runs/:id/timeline": "/timeline",
+    "/kypo-rest-training/api/v1/visualizations/training-instances/:id/timeline": "/timeline"
 }

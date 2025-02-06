@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FILTERS_OBJECT, FILTERS_ARRAY } from './filters/filters';
+import { FILTERS_ARRAY, FILTERS_OBJECT } from './filters/filters';
 import { EMPTY, Subject } from 'rxjs';
 
 @Injectable({

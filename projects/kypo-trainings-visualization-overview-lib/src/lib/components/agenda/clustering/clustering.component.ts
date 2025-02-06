@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, ViewChild, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FinalComponent } from './final/final.component';
 import { LevelsComponent } from './levels/levels.component';
 import { ConfigService } from '../../../config/config.service';

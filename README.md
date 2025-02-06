@@ -3,13 +3,13 @@
 ## How to integrate
 
 - Install npm package into your Angular app
-- Add `node_modules/@muni-kypo-crp/overview-visualization/styles.scss` to your styles in `angular.json`
+- Add `node_modules/@cyberrangecz-platform/overview-visualization/styles.scss` to your styles in `angular.json`
 
 ## How to use json-server as mock backend with provided dummy data
 
-1.  Run `npm install`.
-2.  Run the json server with `npm run api` or manually with provided parameters `json-server -w ./utils/json-server/db.js --routes ./utils/json-server/routes.json --middlewares ./utils/json-server/server.js`.
-3.  Run the app in local environment and ssl `npm start` and access it on `https://localhost:4200`.
+1. Run `npm install`.
+2. Run the json server with `npm run api` or manually with provided parameters `json-server -w ./utils/json-server/db.js --routes ./utils/json-server/routes.json --middlewares ./utils/json-server/server.js`.
+3. Run the app in local environment and ssl `npm start` and access it on `https://localhost:4200`.
 
 ## How to use with other visualizations
 
