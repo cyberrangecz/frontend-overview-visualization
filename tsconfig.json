@@ -21,10 +21,10 @@
         ],
         "paths": {
             "kypo-trainings-visualization-overview-lib": [
-                "dist/kypo-trainings-visualization-overview-lib"
+                "dist/trainings-visualization-overview-lib"
             ],
             "kypo-trainings-visualization-overview-lib/*": [
-                "dist/kypo-trainings-visualization-overview-lib/*"
+                "dist/trainings-visualization-overview-lib/*"
             ]
         },
         "useDefineForClassFields": false

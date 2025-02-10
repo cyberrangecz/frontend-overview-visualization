@@ -13,9 +13,9 @@
 
 ## How to use with other visualizations
 
-- If cross visualization communication is required, see project's [wiki](https://gitlab.ics.muni.cz/muni-kypo-crp/frontend-angular/components/kypo-trainings-visualization-overview/-/wikis/home) for instructions
+- If cross visualization communication is required, see project's [wiki](LINK-HERE) for instructions
 
-## Input parameters of _kypo-viz-overview-clustering_ component
+## Input parameters of _crczp-viz-overview-clustering_ component
 
 `useLocalMock: boolean` to use local jsons of a visualization
 
@@ -38,36 +38,36 @@
 ### Overview Table
 
 ```
-<kypo-viz-overview-table
+<crczp-viz-overview-table
     [trainingDefinitionId]="1"
     [standalone]="true"           <--- this ensures that the table does not cooperate with the timeline visualization and can be run independently
     [trainingInstanceId]="1"
     [trainingRunId]="4"
     [feedbackLearnerId]="'player'"> <--- the id should be set *only* for the trainee view - the vis. will provide a limited information
-</kypo-viz-overview-table>
+</crczp-viz-overview-table>
 ```
 
 ### Clustering
 
 ```
-<kypo-viz-overview-clustering
+<crczp-viz-overview-clustering
   [feedbackLearnerId]="'player'" <--- the id should be set *only* for the trainee view - the vis. will provide a limited information
   [size]="{width: 800, height: 500}"
   [trainingInstanceId]="2"
   [trainingRunId]="4"
   [trainingDefinitionId]="3">
-</kypo-viz-overview-clustering>
+</crczp-viz-overview-clustering>
 ```
 
 ### Timeline
 
 ```
-<kypo-viz-overview-timeline
+<crczp-viz-overview-timeline
   [enableAllPlayers]="true"      <--- when set to false, it will hide the related filtering table and show only the line related to the feedbackLearnerId
   [feedbackLearnerId]="'player'" <--- the id should be set *only* for the trainee view - the vis. will provide a limited information
   [size]="{width: 1300, height: 700}"
   [trainingInstanceId]="2"
   [trainingRunId]="4"
   [trainingDefinitionId]="3">
-</kypo-viz-overview-timeline>
+</crczp-viz-overview-timeline>
 ```

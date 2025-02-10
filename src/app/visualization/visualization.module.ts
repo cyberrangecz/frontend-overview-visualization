@@ -4,8 +4,8 @@ import { VisualizationOverviewComponent } from './visualization-overview.compone
 import { VisualizationRoutingModule } from './visualization-routing.module';
 import { CustomConfig } from '../custom-config';
 import {
-    KypoTrainingsVisualizationOverviewLibModule
-} from '../../../projects/kypo-trainings-visualization-overview-lib/src/public_api';
+    TrainingsVisualizationsOverviewLibModule
+} from '../../../projects/trainings-visualization-overview-lib/src/public_api';
 
 @NgModule({
     declarations: [
@@ -14,8 +14,8 @@ import {
     imports: [
         CommonModule,
         VisualizationRoutingModule,
-        KypoTrainingsVisualizationOverviewLibModule.forRoot(CustomConfig),
-        KypoTrainingsVisualizationOverviewLibModule
+        TrainingsVisualizationsOverviewLibModule.forRoot(CustomConfig),
+        TrainingsVisualizationsOverviewLibModule
     ],
     exports: [
         VisualizationOverviewComponent
