@@ -1,7 +1,0 @@
-{
-    "/training/api/v1/visualizations/training-runs/:id/clustering": "/clustering",
-    "/training/api/v1/visualizations/training-instances/clustering?instanceIds=:ids": "/clustering",
-    "/training/api/v1/visualizations/training-runs/:id/table": "/table",
-    "/training/api/v1/visualizations/training-runs/:id/timeline": "/timeline",
-    "/training/api/v1/visualizations/training-instances/:id/timeline": "/timeline"
-}

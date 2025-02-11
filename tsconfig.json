@@ -20,10 +20,10 @@
             "dom"
         ],
         "paths": {
-            "kypo-trainings-visualization-overview-lib": [
+            "trainings-visualization-overview-lib": [
                 "dist/trainings-visualization-overview-lib"
             ],
-            "kypo-trainings-visualization-overview-lib/*": [
+            trainings-visualization-overview-lib/*": [
                 "dist/trainings-visualization-overview-lib/*"
             ]
         },

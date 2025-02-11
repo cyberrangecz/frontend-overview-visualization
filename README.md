@@ -5,11 +5,13 @@
 - Install npm package into your Angular app
 - Add `node_modules/@cyberrangecz-platform/overview-visualization/styles.scss` to your styles in `angular.json`
 
-## How to use json-server as mock backend with provided dummy data
+## Running the demo app
 
-1. Run `npm install`.
-2. Run the json server with `npm run api` or manually with provided parameters `json-server -w ./utils/json-server/db.js --routes ./utils/json-server/routes.json --middlewares ./utils/json-server/server.js`.
-3. Run the app in local environment and ssl `npm start` and access it on `https://localhost:4200`.
+1. Configure and run the [Training service](https://github.com/cyberrangecz/backend-training) and the [User and group service](https://github.com/cyberrangecz/backend-user-and-group) or the whole [deployment](https://github.com/cyberrangecz/devops-helm).
+2. Configure the [environment.local.ts](src/environments/environment.local.ts) file, pointing to the services.
+3. Run `npm install` to install dependencies.
+4. Run the app in local environment and ssl via `npm run start`.
+5. Navigate to `https://localhost:4200/`. The app will automatically reload if you change any of the source files. The app will use a self-signed certificate, so you will need to accept it in the browser.
 
 ## How to use with other visualizations
 
