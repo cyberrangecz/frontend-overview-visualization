@@ -104,21 +104,21 @@
             }
         },
         "trainings-visualization-overview": {
-            "root": "projects/trainings-visualization-overview-lib",
-            "sourceRoot": "projects/trainings-visualization-overview-lib/src",
+            "root": "projects/overview-visualization",
+            "sourceRoot": "projects/overview-visualization/src",
             "projectType": "library",
             "prefix": "crczp",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:ng-packagr",
                     "options": {
-                        "tsConfig": "projects/trainings-visualization-overview-lib/tsconfig.lib.json",
-                        "project": "projects/trainings-visualization-overview-lib/ng-package.json"
+                        "tsConfig": "projects/overview-visualization/tsconfig.lib.json",
+                        "project": "projects/overview-visualization/ng-package.json"
                     },
                     "configurations": {
                         "production": {
-                            "project": "projects/trainings-visualization-overview-lib/ng-package.prod.json",
-                            "tsConfig": "projects/trainings-visualization-overview-lib/tsconfig.lib.prod.json"
+                            "project": "projects/overview-visualization/ng-package.prod.json",
+                            "tsConfig": "projects/overview-visualization/tsconfig.lib.prod.json"
                         }
                     }
                 },
@@ -126,8 +126,8 @@
                     "builder": "@angular-eslint/builder:lint",
                     "options": {
                         "lintFilePatterns": [
-                            "projects/trainings-visualization-overview-lib/**/*.ts",
-                            "projects/trainings-visualization-overview-lib/**/*.component.html"
+                            "projects/overview-visualization/**/*.ts",
+                            "projects/overview-visualization/**/*.component.html"
                         ]
                     }
                 }

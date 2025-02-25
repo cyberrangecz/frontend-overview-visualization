@@ -5,7 +5,7 @@ import { VisualizationRoutingModule } from './visualization-routing.module';
 import { CustomConfig } from '../custom-config';
 import {
     TrainingsVisualizationsOverviewLibModule
-} from '../../../projects/trainings-visualization-overview-lib/src/public_api';
+} from '../../../projects/overview-visualization/src/public_api';
 
 @NgModule({
     declarations: [

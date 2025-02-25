@@ -9,7 +9,7 @@
             ],
             "parserOptions": {
                 "project": [
-                    "projects/trainings-visualization-overview-lib/tsconfig.*?.json"
+                    "projects/overview-visualization/tsconfig.*?.json"
                 ],
                 "createDefaultProgram": true
             },
