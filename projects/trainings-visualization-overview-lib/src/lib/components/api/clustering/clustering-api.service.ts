@@ -6,37 +6,43 @@ import { ClusteringVisualizationResourceDTO } from '../dto/clustering/clustering
 
 @Injectable()
 export class ClusteringApiService {
-  private readonly trainingVisualizationEndpoint = `${this.configService.config.trainingServiceUrl}visualizations/training-instances`;
-  private readonly anonymizedTrainingVisualizationEndpoint = `${this.configService.config.trainingServiceUrl}visualizations/training-runs`;
+    private readonly trainingVisualizationEndpoint =
+        this.configService.config.trainingServiceUrl + 'visualizations/training-instances';
 
-  constructor(
-    private http: HttpClient,
-    private configService: ConfigService,
-  ) {}
+    private readonly anonymizedTrainingVisualizationEndpoint =
+        this.configService.config.trainingServiceUrl + 'visualizations/training-runs';
 
-  /**
-   * Sends http request to obtain data for clustering visualization and if @instanceIds is provided used aggregated
-   * data from multiple instances specified by this parameter.
-   * @param instanceIds if present uses endpoint that aggregates data from multiple instances.
-   */
-  getClusteringVisualizationData(instanceIds?: number[]): Observable<ClusteringVisualizationResourceDTO> {
-    return this.buildRequest(instanceIds);
-  }
+    constructor(
+        private http: HttpClient,
+        private configService: ConfigService,
+    ) {}
 
-  getAnonymizedClusteringVisualizationData(): Observable<ClusteringVisualizationResourceDTO> {
-    return this.http.get<ClusteringVisualizationResourceDTO>(
-      `${this.anonymizedTrainingVisualizationEndpoint}/${this.configService.trainingRunId}/clustering`,
-    );
-  }
-
-  private buildRequest(instanceIds: number[]): Observable<ClusteringVisualizationResourceDTO> {
-    if (instanceIds) {
-      return this.http.get<ClusteringVisualizationResourceDTO>(`${this.trainingVisualizationEndpoint}/clustering`, {
-        params: { instanceIds: instanceIds },
-      });
+    /**
+     * Sends http request to obtain data for clustering visualization and if @instanceIds is provided used aggregated
+     * data from multiple instances specified by this parameter.
+     * @param instanceIds if present uses endpoint that aggregates data from multiple instances.
+     */
+    getClusteringVisualizationData(instanceIds?: number[]): Observable<ClusteringVisualizationResourceDTO> {
+        return this.buildRequest(instanceIds);
     }
-    return this.http.get<ClusteringVisualizationResourceDTO>(
-      `${this.trainingVisualizationEndpoint}/${this.configService.trainingInstanceId}/clustering`,
-    );
-  }
+
+    getAnonymizedClusteringVisualizationData(): Observable<ClusteringVisualizationResourceDTO> {
+        return this.http.get<ClusteringVisualizationResourceDTO>(
+            `${this.anonymizedTrainingVisualizationEndpoint}/${this.configService.trainingRunId}/clustering`,
+        );
+    }
+
+    private buildRequest(instanceIds: number[]): Observable<ClusteringVisualizationResourceDTO> {
+        if (instanceIds) {
+            return this.http.get<ClusteringVisualizationResourceDTO>(
+                `${this.trainingVisualizationEndpoint}/clustering`,
+                {
+                    params: { instanceIds: instanceIds },
+                },
+            );
+        }
+        return this.http.get<ClusteringVisualizationResourceDTO>(
+            `${this.trainingVisualizationEndpoint}/${this.configService.trainingInstanceId}/clustering`,
+        );
+    }
 }

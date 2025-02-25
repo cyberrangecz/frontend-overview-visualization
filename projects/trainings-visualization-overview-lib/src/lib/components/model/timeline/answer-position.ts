@@ -1,4 +1,4 @@
 export class AnswerPosition {
-  row: string;
-  column: string;
+    row: string;
+    column: string;
 }

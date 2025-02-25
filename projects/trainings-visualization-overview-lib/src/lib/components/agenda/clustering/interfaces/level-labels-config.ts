@@ -2,8 +2,8 @@
  * Configuration for level labels.
  */
 export interface LevelLabelsConfig {
-  padding: {
-    left: number;
-    top: number;
-  };
+    padding: {
+        left: number;
+        top: number;
+    };
 }

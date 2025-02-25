@@ -6,23 +6,26 @@ import { ConfigService } from '../../../config/config.service';
 
 @Injectable()
 export class TimelineApiService {
-  private readonly trainingVisualizationEndpoint = `${this.configService.config.trainingServiceUrl}visualizations/training-instances`;
-  private readonly anonymizedTrainingVisualizationEndpoint = `${this.configService.config.trainingServiceUrl}visualizations/training-runs`;
+    private readonly trainingVisualizationEndpoint =
+        this.configService.config.trainingServiceUrl + 'visualizations/training-instances;';
 
-  constructor(
-    private http: HttpClient,
-    private configService: ConfigService,
-  ) {}
+    private readonly anonymizedTrainingVisualizationEndpoint =
+        this.configService.config.trainingServiceUrl + 'visualizations/training-runs';
 
-  getTimelineVisualizationData(): Observable<TimelineDataDTO> {
-    return this.http.get<TimelineDataDTO>(
-      `${this.trainingVisualizationEndpoint}/${this.configService.trainingInstanceId}/timeline`,
-    );
-  }
+    constructor(
+        private http: HttpClient,
+        private configService: ConfigService,
+    ) {}
 
-  getAnonymizedTimelineVisualizationData(): Observable<TimelineDataDTO> {
-    return this.http.get<TimelineDataDTO>(
-      `${this.anonymizedTrainingVisualizationEndpoint}/${this.configService.trainingRunId}/timeline`,
-    );
-  }
+    getTimelineVisualizationData(): Observable<TimelineDataDTO> {
+        return this.http.get<TimelineDataDTO>(
+            `${this.trainingVisualizationEndpoint}/${this.configService.trainingInstanceId}/timeline`,
+        );
+    }
+
+    getAnonymizedTimelineVisualizationData(): Observable<TimelineDataDTO> {
+        return this.http.get<TimelineDataDTO>(
+            `${this.anonymizedTrainingVisualizationEndpoint}/${this.configService.trainingRunId}/timeline`,
+        );
+    }
 }

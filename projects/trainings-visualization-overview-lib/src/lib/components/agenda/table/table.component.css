@@ -15,12 +15,10 @@ table {
 }
 
 .row-stripe {
-    display: inline-block;
+    position: absolute;
     width: 7px;
     height: 33px;
-    position: absolute;
-    margin-top: -6.5px;
-    margin-left: -13px;
+    translate: 0 -8px;
 }
 
 th, td {

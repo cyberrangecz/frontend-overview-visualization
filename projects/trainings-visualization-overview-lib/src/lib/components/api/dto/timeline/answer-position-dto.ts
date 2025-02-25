@@ -1,4 +1,4 @@
 export class AnswerPositionDTO {
-  row: string;
-  column: string;
+    row: string;
+    column: string;
 }

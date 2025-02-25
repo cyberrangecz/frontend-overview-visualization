@@ -1,5 +1,5 @@
 <div class="overview-visualization-container">
-    <crczp-viz-overview-final
+    <crczp-visualization-overview-final
         [dataClusteringFinal]="clusteringTrainingData"
         (selectedTrainee)='selectPlayer($event)'
         [selectedTrainingRunId]='selectedTrainingRunId'
@@ -10,9 +10,9 @@
         [filterPlayers]='filterPlayers'
         [instanceIds]='instanceIds'
     >
-    </crczp-viz-overview-final>
+    </crczp-visualization-overview-final>
 
-    <crczp-viz-overview-levels
+    <crczp-visualization-overview-levels
         [levelsData]="clusteringTrainingData"
         [selectedTrainingRunId]='selectedTrainingRunId'
         (selectedTrainee)='selectPlayer($event)'
@@ -23,5 +23,5 @@
         [filterPlayers]='filterPlayers'
         [instanceIds]='instanceIds'
     >
-    </crczp-viz-overview-levels>
+    </crczp-visualization-overview-levels>
 </div>

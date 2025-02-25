@@ -2,5 +2,5 @@
  * Configuration for context chart.
  */
 export interface ContextConfig {
-  height: number;
+    height: number;
 }

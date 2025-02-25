@@ -8,18 +8,18 @@ import { TimelineMapper } from '../../../api/mappers/timeline/timeline-mapper';
 
 @Injectable()
 export class TimelineService {
-  constructor(private timelineApiService: TimelineApiService) {}
+    constructor(private timelineApiService: TimelineApiService) {}
 
-  getAllData(traineeModeInfo: TraineeModeInfo): Observable<Timeline> {
-    const service = TraineeModeInfo.isTrainee(traineeModeInfo)
-      ? this.timelineApiService.getAnonymizedTimelineVisualizationData()
-      : this.timelineApiService.getTimelineVisualizationData();
+    getAllData(traineeModeInfo: TraineeModeInfo): Observable<Timeline> {
+        const service = TraineeModeInfo.isTrainee(traineeModeInfo)
+            ? this.timelineApiService.getAnonymizedTimelineVisualizationData()
+            : this.timelineApiService.getTimelineVisualizationData();
 
-    return service.pipe(
-      map((data) => TimelineMapper.fromDTO(data)),
-      catchError((error) => {
-        return throwError('timeline service not connect to API: ' + error.message);
-      }),
-    );
-  }
+        return service.pipe(
+            map((data) => TimelineMapper.fromDTO(data)),
+            catchError((error) => {
+                return throwError('timeline service not connect to API: ' + error.message);
+            }),
+        );
+    }
 }

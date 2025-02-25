@@ -1,5 +1,5 @@
 export interface Filter {
-  name: string;
-  labelName: string;
-  checked: boolean;
+    name: string;
+    labelName: string;
+    checked: boolean;
 }

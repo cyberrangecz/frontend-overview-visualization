@@ -1,13 +1,5 @@
 # Training run overview visualizations
 
-## Running the demo app
-
-1. Configure and run the [Training service](https://github.com/cyberrangecz/backend-training) and the [User and group service](https://github.com/cyberrangecz/backend-user-and-group) or the whole [deployment](https://github.com/cyberrangecz/devops-helm).
-2. Configure the [environment.local.ts](src/environments/environment.local.ts) file, pointing to the services.
-3. Run `npm install` to install dependencies.
-4. Run the app in local environment and ssl via `npm run start`.
-5. Navigate to `https://localhost:4200/`. The app will automatically reload if you change any of the source files. The app will use a self-signed certificate, so you will need to accept it in the browser.
-
 ## Input parameters of _crczp-visualization-overview-clustering_ component
 
 `useLocalMock: boolean` to use local jsons of a visualization

@@ -8,23 +8,23 @@ import { ClusteringTrainingData } from '../../../../model/clustering/clustering-
 
 @Injectable()
 export class ClusteringService {
-  constructor(private clusteringFinalApiService: ClusteringApiService) {}
+    constructor(private clusteringFinalApiService: ClusteringApiService) {}
 
-  /**
-   * Gets data for clustering and final visualization.
-   * @param traineeModeInfo if present anonymize the instance data.
-   * @param instanceIds if present uses endpoint that aggregates data from multiple instances.
-   */
-  public getAllData(traineeModeInfo: TraineeModeInfo, instanceIds?: number[]): Observable<ClusteringTrainingData> {
-    const service = TraineeModeInfo.isTrainee(traineeModeInfo)
-      ? this.clusteringFinalApiService.getAnonymizedClusteringVisualizationData()
-      : this.clusteringFinalApiService.getClusteringVisualizationData(instanceIds);
+    /**
+     * Gets data for clustering and final visualization.
+     * @param traineeModeInfo if present anonymize the instance data.
+     * @param instanceIds if present uses endpoint that aggregates data from multiple instances.
+     */
+    public getAllData(traineeModeInfo: TraineeModeInfo, instanceIds?: number[]): Observable<ClusteringTrainingData> {
+        const service = TraineeModeInfo.isTrainee(traineeModeInfo)
+            ? this.clusteringFinalApiService.getAnonymizedClusteringVisualizationData()
+            : this.clusteringFinalApiService.getClusteringVisualizationData(instanceIds);
 
-    return service.pipe(
-      map((data) => ClusteringMapper.fromDTO(data)),
-      catchError((error) => {
-        return throwError('clusteringService not connect to API: ' + error.message);
-      }),
-    );
-  }
+        return service.pipe(
+            map((data) => ClusteringMapper.fromDTO(data)),
+            catchError((error) => {
+                return throwError('clusteringService not connect to API: ' + error.message);
+            }),
+        );
+    }
 }

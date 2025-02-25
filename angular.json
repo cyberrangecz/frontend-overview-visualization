@@ -3,28 +3,33 @@
     "version": 1,
     "newProjectRoot": "projects",
     "projects": {
-        "trainings-visualization-overview": {
+        "trainings-visualization-overview-example-app": {
             "root": "",
             "sourceRoot": "src",
             "projectType": "application",
-            "prefix": "app",
-            "schematics": {},
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
-                        "outputPath": "dist/trainings-visualization-overview",
+                        "outputPath": "dist/trainings-visualization-overview-example-app",
                         "index": "src/index.html",
                         "main": "src/main.ts",
                         "polyfills": "src/polyfills.ts",
                         "tsConfig": "src/tsconfig.app.json",
                         "assets": [
-                            "src/favicon.ico",
-                            "src/assets"
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/@crczp/theme/assets",
+                                "output": "assets/"
+                            }
                         ],
+                        "stylePreprocessorOptions": {
+                            "includePaths": [
+                                "node_modules/@crczp/theme/"
+                            ]
+                        },
                         "styles": [
-                            "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-                            "./projects/trainings-visualization-overview-lib/src/lib/styles.css"
+                            "node_modules/@crczp/theme/theming/apply-all.scss"
                         ],
                         "scripts": [],
                         "vendorChunk": true,
@@ -76,39 +81,15 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                        "browserTarget": "trainings-visualization-overview:build"
+                        "buildTarget": "trainings-visualization-overview-example-app:build"
                     },
                     "configurations": {
                         "production": {
-                            "browserTarget": "trainings-visualization-overview:build:production"
+                            "buildTarget": "trainings-visualization-overview-example-app:build:production"
                         },
                         "local": {
-                            "browserTarget": "trainings-visualization-overview:build:local"
+                            "buildTarget": "trainings-visualization-overview-example-app:build:local"
                         }
-                    }
-                },
-                "extract-i18n": {
-                    "builder": "@angular-devkit/build-angular:extract-i18n",
-                    "options": {
-                        "browserTarget": "trainings-visualization-overview:build"
-                    }
-                },
-                "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
-                    "options": {
-                        "main": "src/test.ts",
-                        "polyfills": "src/polyfills.ts",
-                        "tsConfig": "src/tsconfig.spec.json",
-                        "karmaConfig": "src/karma.conf.js",
-                        "styles": [
-                            "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-                            "./projects/trainings-visualization-overview-lib/src/lib/styles.css"
-                        ],
-                        "scripts": [],
-                        "assets": [
-                            "src/favicon.ico",
-                            "src/assets"
-                        ]
                     }
                 },
                 "lint": {
@@ -122,11 +103,11 @@
                 }
             }
         },
-        "trainings-visualization-overview-lib": {
+        "trainings-visualization-overview": {
             "root": "projects/trainings-visualization-overview-lib",
             "sourceRoot": "projects/trainings-visualization-overview-lib/src",
             "projectType": "library",
-            "prefix": "viz-overview",
+            "prefix": "crczp",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:ng-packagr",
@@ -139,14 +120,6 @@
                             "project": "projects/trainings-visualization-overview-lib/ng-package.prod.json",
                             "tsConfig": "projects/trainings-visualization-overview-lib/tsconfig.lib.prod.json"
                         }
-                    }
-                },
-                "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
-                    "options": {
-                        "main": "projects/trainings-visualization-overview-lib/src/test.ts",
-                        "tsConfig": "projects/trainings-visualization-overview-lib/tsconfig.spec.json",
-                        "karmaConfig": "projects/trainings-visualization-overview-lib/karma.conf.js"
                     }
                 },
                 "lint": {

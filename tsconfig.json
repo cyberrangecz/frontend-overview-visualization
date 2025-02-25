@@ -20,10 +20,10 @@
             "dom"
         ],
         "paths": {
-            "trainings-visualization-overview-lib": [
+            "trainings-visualization-overview": [
                 "dist/trainings-visualization-overview-lib"
             ],
-            trainings-visualization-overview-lib/*": [
+            "trainings-visualization-overview/*": [
                 "dist/trainings-visualization-overview-lib/*"
             ]
         },

@@ -5,12 +5,12 @@ import { BasicEventInfo, TimelineEvent } from '../../components/model/timeline/t
  * @param event
  */
 const filterFunction = function (event: TimelineEvent) {
-  return event.type === BasicEventInfo.TimelineEventTypeEnum.BASE_EVENTS;
+    return event.type === BasicEventInfo.TimelineEventTypeEnum.BASE_EVENTS;
 };
 
 export const basicfilter = {
-  name: 'basicFilter',
-  labelName: 'Run events',
-  checked: false,
-  filterFunction: filterFunction,
+    name: 'basicFilter',
+    labelName: 'Run events',
+    checked: false,
+    filterFunction: filterFunction,
 };

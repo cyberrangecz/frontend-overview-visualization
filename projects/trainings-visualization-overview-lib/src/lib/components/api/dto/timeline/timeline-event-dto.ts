@@ -1,5 +1,5 @@
 export class TimelineEventDTO {
-  text: string;
-  time: number;
-  score: number;
+    text: string;
+    time: number;
+    score: number;
 }

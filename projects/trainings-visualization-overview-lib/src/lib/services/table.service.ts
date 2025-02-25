@@ -7,32 +7,32 @@ import { PlayerTableData } from '../components/model/table/player-table-data';
  */
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root',
 })
 export class TableService {
-  private tableRowClicked = new Subject<any>();
-  private tableRowMouseover = new Subject<number>();
-  private tableRowMouseout = new Subject<number>();
-  private playerColorScale = new BehaviorSubject<any>(() => 'black');
+    private tableRowClicked = new Subject<any>();
+    private tableRowMouseover = new Subject<number>();
+    private tableRowMouseout = new Subject<number>();
+    private playerColorScale = new BehaviorSubject<any>(() => 'black');
 
-  tableRowClicked$ = this.tableRowClicked.asObservable();
-  tableRowMouseover$ = this.tableRowMouseover.asObservable();
-  tableRowMouseout$ = this.tableRowMouseout.asObservable();
-  playerColorScale$ = this.playerColorScale.asObservable();
+    tableRowClicked$ = this.tableRowClicked.asObservable();
+    tableRowMouseover$ = this.tableRowMouseover.asObservable();
+    tableRowMouseout$ = this.tableRowMouseout.asObservable();
+    playerColorScale$ = this.playerColorScale.asObservable();
 
-  sendTableRowClick(player: PlayerTableData) {
-    this.tableRowClicked.next(player);
-  }
+    sendTableRowClick(player: PlayerTableData) {
+        this.tableRowClicked.next(player);
+    }
 
-  sendTableRowMouseover(id: number) {
-    this.tableRowMouseover.next(id);
-  }
+    sendTableRowMouseover(id: number) {
+        this.tableRowMouseover.next(id);
+    }
 
-  sendTableRowMouseout(id: number) {
-    this.tableRowMouseout.next(id);
-  }
+    sendTableRowMouseout(id: number) {
+        this.tableRowMouseout.next(id);
+    }
 
-  sendPlayerColorScale(scale: any) {
-    this.playerColorScale.next(scale);
-  }
+    sendPlayerColorScale(scale: any) {
+        this.playerColorScale.next(scale);
+    }
 }

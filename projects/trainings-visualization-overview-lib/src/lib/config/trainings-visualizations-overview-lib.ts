@@ -1,3 +1,3 @@
 export class VisualizationOverviewConfig {
-  trainingServiceUrl: string;
+    trainingServiceUrl: string;
 }
