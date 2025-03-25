@@ -1,6 +1,7 @@
 {
     "name": "@crczp/overview-visualization",
     "version": "1.0.0",
+    "license": "MIT",
     "peerDependencies": {
         "@angular/common": "^18.2.13",
         "@angular/core": "^18.2.13",
