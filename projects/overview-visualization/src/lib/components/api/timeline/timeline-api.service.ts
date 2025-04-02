@@ -7,7 +7,7 @@ import { ConfigService } from '../../../config/config.service';
 @Injectable()
 export class TimelineApiService {
     private readonly trainingVisualizationEndpoint =
-        this.configService.config.trainingServiceUrl + 'visualizations/training-instances;';
+        this.configService.config.trainingServiceUrl + 'visualizations/training-instances';
 
     private readonly anonymizedTrainingVisualizationEndpoint =
         this.configService.config.trainingServiceUrl + 'visualizations/training-runs';
